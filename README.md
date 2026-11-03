@@ -112,9 +112,9 @@ El rol es único por cuenta y no se puede cambiar desde la API.
 
 ## Estado actual
 
-- Implementado: registro por perfil, login básico, persistencia en SQL Server, rol en la respuesta del login.
+- Implementado: registro por perfil, login básico, persistencia en SQL Server, rol en la respuesta del login, JWT, GET /auth/me y protección por rol.
 - El frontend aún no está conectado a estos endpoints (el diseño visual no se modificó).
-- Pendiente a propósito: JWT/sesiones, subida de documentos, verificación de universitarios y de correo institucional, asociación familiar ↔ adulto mayor, servicios, solicitudes, pagos, chat, SOS, notificaciones.
+- Pendiente a propósito: subida de documentos, verificación de universitarios y de correo institucional, asociación familiar ↔ adulto mayor, servicios, solicitudes, pagos, chat, SOS, notificaciones.
 
 ## Documentación
 
