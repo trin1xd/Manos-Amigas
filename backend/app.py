@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 from werkzeug.exceptions import HTTPException
 
 from config import Config
@@ -10,6 +11,29 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     CORS(app, origins=Config.CORS_ORIGINS)
+
+    jwt = JWTManager(app)
+
+    @jwt.unauthorized_loader
+    def custom_unauthorized_response(error_string):
+        return jsonify({
+            "success": False,
+            "message": "Token de autenticación no proporcionado.",
+        }), 401
+
+    @jwt.invalid_token_loader
+    def custom_invalid_token_response(error_string):
+        return jsonify({
+            "success": False,
+            "message": "Token de autenticación inválido.",
+        }), 401
+
+    @jwt.expired_token_loader
+    def custom_expired_token_response(jwt_header, jwt_payload):
+        return jsonify({
+            "success": False,
+            "message": "El token de autenticación ha expirado.",
+        }), 401
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
 
