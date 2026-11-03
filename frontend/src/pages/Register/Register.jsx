@@ -49,6 +49,7 @@ function FamilyIcon() {
 
 export default function CreateAccount({
     onNavigateHome,
+    onSelectRole,
 }) {
     return (
         <div className={styles.page}>
@@ -85,6 +86,7 @@ export default function CreateAccount({
                     <button
                         type="button"
                         className={`${styles.card} ${styles.adultCard}`}
+                        onClick={() => onSelectRole('ADULTO_MAYOR')}
                     >
                         <span
                             className={`${styles.icon} ${styles.adultIcon}`}
@@ -107,6 +109,7 @@ export default function CreateAccount({
                     <button
                         type="button"
                         className={`${styles.card} ${styles.studentCard}`}
+                        onClick={() => onSelectRole('UNIVERSITARIO')}
                     >
                         <span
                             className={`${styles.icon} ${styles.studentIcon}`}
@@ -129,6 +132,7 @@ export default function CreateAccount({
                     <button
                         type="button"
                         className={`${styles.card} ${styles.familyCard}`}
+                        onClick={() => onSelectRole('FAMILIAR')}
                     >
                         <span
                             className={`${styles.icon} ${styles.familyIcon}`}
