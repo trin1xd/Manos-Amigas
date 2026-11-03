@@ -5,9 +5,8 @@ INSERT INTO Roles (nombre)
 SELECT v.nombre
 FROM (VALUES
     ('ADULTO_MAYOR'),
-    ('FAMILIAR'),
-    ('ESTUDIANTE'),
-    ('ADMINISTRADOR')
+    ('UNIVERSITARIO'),
+    ('FAMILIAR')
 ) v(nombre)
 WHERE NOT EXISTS (
     SELECT 1 FROM Roles r WHERE r.nombre = v.nombre
