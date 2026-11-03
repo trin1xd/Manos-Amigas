@@ -1,4 +1,4 @@
-import styles from './CreateAccount.module.css';
+import styles from './Register.module.css';
 
 function HeartIcon() {
     return (
