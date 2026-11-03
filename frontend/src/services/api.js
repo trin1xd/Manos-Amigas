@@ -12,7 +12,9 @@ export async function apiRequest(path, options = {}) {
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(data?.message || 'Error al comunicarse con el servidor.');
+    const error = new Error(data?.message || 'Error al comunicarse con el servidor.');
+    error.fields = data?.errors || {};
+    throw error;
   }
 
   return data;

@@ -7,9 +7,23 @@ export function login(credentials) {
   });
 }
 
-export function register(userData) {
-  return apiRequest('/auth/register', {
+export function registerAdultoMayor(data) {
+  return apiRequest('/auth/register/adulto-mayor', {
     method: 'POST',
-    body: JSON.stringify(userData),
+    body: JSON.stringify(data),
+  });
+}
+
+export function registerUniversitario(data) {
+  return apiRequest('/auth/register/universitario', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export function registerFamiliar(data) {
+  return apiRequest('/auth/register/familiar', {
+    method: 'POST',
+    body: JSON.stringify(data),
   });
 }
