@@ -1,0 +1,143 @@
+/* ---- Servicios Section (App-Style) ---- */
+.section {
+  background: var(--color-surface-alt);
+  padding: clamp(1.25rem, 4vw, 2.5rem) 0;
+  width: 100%;
+}
+
+.sectionHeader {
+  margin-bottom: clamp(0.75rem, 2.5vw, 1.25rem);
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  margin-bottom: 4px;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 4.5vw, 1.8rem);
+  font-weight: 900;
+  color: var(--color-text);
+  margin-bottom: 4px;
+  line-height: 1.25;
+  overflow-wrap: break-word;
+}
+
+.sectionSubtitle {
+  font-size: clamp(0.8rem, 2.2vw, 0.9rem);
+  color: var(--color-text-muted);
+  max-width: 440px;
+  margin: 0 auto;
+  overflow-wrap: break-word;
+}
+
+/* Fluid responsive grid: adapts automatically */
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 136px), 1fr));
+  gap: clamp(0.5rem, 1.8vw, 0.875rem);
+  width: 100%;
+}
+
+/* App-style compact card */
+.serviceCard {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(0.6rem, 2vw, 0.875rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 6px;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  cursor: pointer;
+  min-height: 110px;
+  height: 100%;
+}
+
+.serviceCard:hover,
+.serviceCard:active {
+  transform: translateY(-2px);
+  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.emojiWrap {
+  width: clamp(34px, 7vw, 42px);
+  height: clamp(34px, 7vw, 42px);
+  min-width: clamp(34px, 7vw, 42px);
+  background: var(--gradient-hero);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji {
+  font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+  line-height: 1;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: clamp(0.84rem, 2.4vw, 0.98rem);
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1.25;
+  overflow-wrap: break-word;
+}
+
+.cardDesc {
+  font-size: clamp(0.72rem, 2vw, 0.8rem);
+  color: var(--color-text-muted);
+  line-height: 1.35;
+  overflow-wrap: break-word;
+}
+
+/* Bottom CTA */
+.bottomCta {
+  margin-top: clamp(0.75rem, 2.5vw, 1.25rem);
+}
+
+.bottomCtaText {
+  font-size: clamp(0.76rem, 2.2vw, 0.85rem);
+  color: var(--color-text-muted);
+  overflow-wrap: break-word;
+}
+
+.bottomCtaLink {
+  color: var(--color-primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Desktop expansion */
+@media (min-width: 768px) {
+  .servicesGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+  .serviceCard {
+    padding: var(--space-md) var(--space-lg);
+    min-height: 125px;
+  }
+}
+

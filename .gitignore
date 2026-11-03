@@ -1,0 +1,31 @@
+# Entornos y dependencias
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Builds
+frontend/dist/
+dist/
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs
+*.log
+logs/
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Pruebas / cobertura
+.pytest_cache/
+.coverage
+htmlcov/
