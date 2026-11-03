@@ -1,8 +1,9 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, g, jsonify, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
 from services import auth_service
 from services.auth_service import ADULTO_MAYOR, FAMILIAR, UNIVERSITARIO, ServiceError
+from utils.auth_decorators import require_role
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -74,3 +75,13 @@ def get_me():
     except ServiceError as error:
         return _error(error)
     return jsonify({"success": True, "user": user})
+
+
+@auth_bp.get("/prueba-universitario")
+@require_role(UNIVERSITARIO)
+def prueba_universitario():
+    return jsonify({
+        "success": True,
+        "message": "Acceso permitido a universitario.",
+        "user": g.current_user,
+    })
