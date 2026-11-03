@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
 from services import auth_service
 from services.auth_service import ADULTO_MAYOR, FAMILIAR, UNIVERSITARIO, ServiceError
@@ -63,3 +63,14 @@ def login():
         "user": user,
         "access_token": access_token,
     })
+
+
+@auth_bp.get("/me")
+@jwt_required()
+def get_me():
+    user_id = get_jwt_identity()
+    try:
+        user = auth_service.get_user_by_id(user_id)
+    except ServiceError as error:
+        return _error(error)
+    return jsonify({"success": True, "user": user})
