@@ -1,14 +1,19 @@
 import { useState } from 'react';
 import styles from './AdultoMayorDashboard.module.css';
+import SolicitarTarea, { formatoFecha, formatoPesos } from './SolicitarTarea';
 
-// Datos de ejemplo para diseñar la interfaz. NO provienen de SQL Server.
+// Catálogo temporal del prototipo. Las tareas y precios definitivos vendrán del backend.
 const SERVICIOS_DEMO = [
-  { id: 'aseo', icono: '🧹', nombre: 'Aseo y orden', descripcion: 'Ayuda para mantener la casa ordenada.' },
-  { id: 'compras', icono: '🛍️', nombre: 'Compras', descripcion: 'Apoyo con compras del supermercado o feria.' },
-  { id: 'compania', icono: '💛', nombre: 'Compañía', descripcion: 'Conversar, pasear o compartir actividades.' },
-  { id: 'tecnologia', icono: '📱', nombre: 'Ayuda con tecnología', descripcion: 'Aprender a usar el celular o hacer videollamadas.' },
+  { id: 'lena', icono: '🪵', nombre: 'Cortar leña', descripcion: 'Cortar, apilar y acercar la leña a la estufa.' },
+  { id: 'aseo', icono: '🧹', nombre: 'Aseo y orden', descripcion: 'Limpiar, ordenar y ayudar con tareas del hogar.' },
+  { id: 'cocina', icono: '🥣', nombre: 'Cocina y comida', descripcion: 'Preparar comidas sencillas o ayudar con la cocina.' },
+  { id: 'tramites', icono: '📄', nombre: 'Trámites', descripcion: 'Acompañamiento en trámites cotidianos.' },
+  { id: 'compras', icono: '🛍️', nombre: 'Compras', descripcion: 'Ayuda con compras en el supermercado o feria.' },
   { id: 'jardin', icono: '🌿', nombre: 'Jardín y huerto', descripcion: 'Regar plantas y cuidar el jardín.' },
-  { id: 'cocina', icono: '🥣', nombre: 'Cocina y comida', descripcion: 'Ayuda para preparar comidas sencillas.' },
+  { id: 'arreglos', icono: '🛠️', nombre: 'Arreglos menores', descripcion: 'Ayuda con ajustes simples en el hogar.' },
+  { id: 'compania', icono: '💛', nombre: 'Compañía', descripcion: 'Conversar, pasear o compartir actividades.' },
+  { id: 'mascotas', icono: '🐾', nombre: 'Mascotas', descripcion: 'Pasear mascotas y ayudar con su cuidado cotidiano.' },
+  { id: 'tecnologia', icono: '📱', nombre: 'Ayuda con tecnología', descripcion: 'Aprender a usar el celular o hacer videollamadas.' },
 ];
 
 const SECCIONES = [
@@ -20,15 +25,25 @@ const SECCIONES = [
 
 export default function AdultoMayorDashboard() {
   const [vista, setVista] = useState('inicio');
-  const [aviso, setAviso] = useState('');
+  const [servicioElegido, setServicioElegido] = useState(null);
+  const [solicitudesDemo, setSolicitudesDemo] = useState([]);
 
   function navegar(destino) {
     setVista(destino);
-    setAviso('');
+    if (destino !== 'nueva-solicitud') setServicioElegido(null);
   }
 
-  function consultarServicio(nombre) {
-    setAviso(`“${nombre}” está disponible como ejemplo. La creación real de solicitudes se implementará en una etapa posterior.`);
+  function elegirServicio(servicio) {
+    setServicioElegido(servicio);
+    setVista('nueva-solicitud');
+  }
+
+  function confirmarSolicitud(datos) {
+    // Solo memoria local de React: no hace peticiones a Flask ni guarda datos.
+    setSolicitudesDemo((previas) => [
+      { ...datos, id: `demo-${previas.length + 1}` },
+      ...previas,
+    ]);
   }
 
   return (
@@ -53,10 +68,10 @@ export default function AdultoMayorDashboard() {
         <nav className={styles.navegacion} aria-label="Secciones del panel de adulto mayor">
           {SECCIONES.map(({ clave, etiqueta }) => (
             <button
-              className={`${styles.pestana} ${vista === clave ? styles.pestanaActiva : ''}`}
+              className={`${styles.pestana} ${((vista === 'nueva-solicitud' && clave === 'catalogo') || vista === clave) ? styles.pestanaActiva : ''}`}
               key={clave}
               type="button"
-              aria-current={vista === clave ? 'page' : undefined}
+              aria-current={((vista === 'nueva-solicitud' && clave === 'catalogo') || vista === clave) ? 'page' : undefined}
               onClick={() => navegar(clave)}
             >
               {etiqueta}
@@ -90,7 +105,7 @@ export default function AdultoMayorDashboard() {
                   <button type="button" className={styles.acceso} onClick={() => navegar('solicitudes')}>
                     <span aria-hidden="true" className={styles.accesoIcono}>📋</span>
                     <strong>Mis solicitudes</strong>
-                    <span>Consultar servicios solicitados</span>
+                    <span>Consultar solicitudes de demostración</span>
                   </button>
                   <button type="button" className={styles.acceso} onClick={() => navegar('perfil')}>
                     <span aria-hidden="true" className={styles.accesoIcono}>👤</span>
@@ -105,31 +120,63 @@ export default function AdultoMayorDashboard() {
           {vista === 'catalogo' && (
             <section aria-labelledby="titulo-catalogo">
               <h2 id="titulo-catalogo" className={styles.tituloSeccion}>Tareas disponibles</h2>
-              <p className={styles.textoAyuda}>Elige una tarea. En esta demostración todavía no se crean solicitudes reales.</p>
+              <p className={styles.textoAyuda}>Elige una tarea para completar una solicitud de demostración.</p>
               <div className={styles.grillaServicios}>
                 {SERVICIOS_DEMO.map((servicio) => (
                   <article key={servicio.id} className={styles.servicio}>
                     <span className={styles.servicioIcono} aria-hidden="true">{servicio.icono}</span>
                     <h3>{servicio.nombre}</h3>
                     <p>{servicio.descripcion}</p>
-                    <button type="button" className={styles.botonSecundario} onClick={() => consultarServicio(servicio.nombre)}>
+                    <button type="button" className={styles.botonSecundario} onClick={() => elegirServicio(servicio)}>
                       Elegir esta tarea
                     </button>
                   </article>
                 ))}
               </div>
-              {aviso && <p className={styles.aviso} role="status">{aviso}</p>}
-              <p className={styles.nota}>Manos Amigas no ofrece servicios médicos, medicamentos ni tratamientos de salud.</p>
+              <p className={styles.nota}>No incluye tareas médicas: curaciones, inyecciones, medicamentos ni tratamientos de salud.</p>
             </section>
           )}
 
+          {vista === 'nueva-solicitud' && servicioElegido && (
+            <SolicitarTarea
+              servicio={servicioElegido}
+              onVolver={() => navegar('catalogo')}
+              onConfirmar={confirmarSolicitud}
+              onVerSolicitudes={() => navegar('solicitudes')}
+            />
+          )}
+
           {vista === 'solicitudes' && (
-            <section className={styles.panelVacio} aria-labelledby="titulo-solicitudes">
-              <span className={styles.iconoVacio} aria-hidden="true">📋</span>
-              <h2 id="titulo-solicitudes">Mis solicitudes</h2>
-              <p>Este es el espacio donde podrás consultar los servicios que hayas pedido.</p>
-              <p className={styles.textoAyuda}>En la demostración no se muestran solicitudes reales.</p>
-              <button type="button" className={styles.botonPrimario} onClick={() => navegar('catalogo')}>Explorar tareas</button>
+            <section aria-labelledby="titulo-solicitudes">
+              <h2 id="titulo-solicitudes" className={styles.tituloSeccion}>Mis solicitudes</h2>
+              <p className={styles.alertaDemo}>Estas solicitudes son simuladas y solo existen mientras esta página esté abierta. No están guardadas en SQL Server ni se han enviado a estudiantes.</p>
+              {solicitudesDemo.length === 0 ? (
+                <div className={styles.panelVacio}>
+                  <span className={styles.iconoVacio} aria-hidden="true">📋</span>
+                  <p>Todavía no has creado solicitudes de demostración.</p>
+                  <button type="button" className={styles.botonPrimario} onClick={() => navegar('catalogo')}>
+                    Explorar tareas
+                  </button>
+                </div>
+              ) : (
+                <div className={styles.listaSolicitudes}>
+                  {solicitudesDemo.map((solicitud) => (
+                    <article className={styles.tarjetaSolicitud} key={solicitud.id}>
+                      <div className={styles.encabezadoSolicitud}>
+                        <h3>{solicitud.servicioIcono} {solicitud.servicioNombre}</h3>
+                        <span className={styles.estadoDemo}>Simulada</span>
+                      </div>
+                      <p><strong>Fecha:</strong> {formatoFecha(solicitud.fecha)} · {solicitud.hora}</p>
+                      <p><strong>Duración:</strong> {solicitud.duracion} {solicitud.duracion === 1 ? 'hora' : 'horas'}</p>
+                      <p><strong>Descripción:</strong> {solicitud.descripcion}</p>
+                      <p><strong>Precio referencial de ejemplo:</strong> {formatoPesos(solicitud.precioEstimado)}</p>
+                    </article>
+                  ))}
+                  <button type="button" className={styles.botonPrimario} onClick={() => navegar('catalogo')}>
+                    Pedir otra tarea de prueba
+                  </button>
+                </div>
+              )}
             </section>
           )}
 
