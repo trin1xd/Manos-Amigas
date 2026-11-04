@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import styles from '../../components/dashboard/DashboardLayout.module.css';
+import TareasDisponibles from './TareasDisponibles';
+import MisPostulaciones from './MisPostulaciones';
 
 const NAVEGACION = [
   { id: 'inicio', nombre: 'Inicio', icono: '🏠' },
@@ -17,7 +19,7 @@ const ESTADOS = {
   },
   VERIFICADO: {
     etiqueta: 'Perfil verificado',
-    descripcion: 'Tu perfil figura como verificado. El catálogo y las postulaciones reales aún deben conectarse al backend.',
+    descripcion: 'Tu perfil figura como verificado. Ya puedes revisar las tareas disponibles y postular.',
     estilo: styles.estadoOk,
   },
   RECHAZADO: {
@@ -39,7 +41,6 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
     descripcion: 'No pudimos determinar el estado de verificación de tu perfil. No se habilitan tareas.',
     estilo: styles.estadoAlerta,
   };
-  const verificado = usuario?.estado_verificacion === 'VERIFICADO';
 
   return (
     <DashboardLayout
@@ -76,7 +77,7 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
               <article className={styles.tarjeta}>
                 <span className={styles.tarjetaIcono} aria-hidden="true">🧹</span>
                 <h3>Explorar tareas</h3>
-                <p>El listado de solicitudes de adultos mayores estará disponible al integrar la API.</p>
+                <p>Revisa las solicitudes abiertas de adultos mayores y postula cuando tu perfil esté verificado.</p>
                 <button type="button" className={styles.tarjetaBoton} onClick={() => setVista('oportunidades')}>
                   Ver sección de tareas <span aria-hidden="true">→</span>
                 </button>
@@ -84,7 +85,7 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
               <article className={styles.tarjeta}>
                 <span className={styles.tarjetaIcono} aria-hidden="true">📋</span>
                 <h3>Mis postulaciones</h3>
-                <p>Aquí podrás seguir tus postulaciones a solicitudes de ayuda cuando se implemente esa función.</p>
+                <p>Sigue el estado de tus postulaciones: pendientes, aceptadas o rechazadas.</p>
                 <button type="button" className={styles.tarjetaBoton} onClick={() => setVista('postulaciones')}>
                   Ver mis postulaciones <span aria-hidden="true">→</span>
                 </button>
@@ -105,24 +106,11 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
       )}
 
       {vista === 'oportunidades' && (
-        <section className={`${styles.panel} ${styles.vacio}`} aria-labelledby="uni-oportunidades">
-          <span className={styles.vacioIcono} aria-hidden="true">🧹</span>
-          <h2 id="uni-oportunidades">Tareas disponibles</h2>
-          <p>{verificado
-            ? 'Tu perfil está verificado, pero todavía no existe una API de tareas disponibles conectada a este panel.'
-            : 'Primero necesitas un perfil verificado. Además, el listado de tareas reales aún está en desarrollo.'}</p>
-          <span className={`${styles.estado} ${estado.estilo}`}>{estado.etiqueta}</span>
-          <p className={styles.aviso}>No se muestran tareas ficticias ni datos personales de adultos mayores.</p>
-        </section>
+        <TareasDisponibles usuario={usuario} onLogout={onLogout} />
       )}
 
       {vista === 'postulaciones' && (
-        <section className={`${styles.panel} ${styles.vacio}`} aria-labelledby="uni-postulaciones">
-          <span className={styles.vacioIcono} aria-hidden="true">📋</span>
-          <h2 id="uni-postulaciones">Mis postulaciones</h2>
-          <p>Las postulaciones y sus estados se podrán consultar aquí una vez implementados los endpoints y permisos correspondientes.</p>
-          <p className={styles.aviso}>No se está leyendo ni guardando información de postulaciones en SQL Server.</p>
-        </section>
+        <MisPostulaciones onLogout={onLogout} />
       )}
 
       {vista === 'perfil' && (
