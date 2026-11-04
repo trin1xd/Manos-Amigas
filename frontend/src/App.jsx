@@ -15,6 +15,7 @@ import RegistrationForm from './pages/Register/RegistrationForm';
 import AdultoMayorOperativo from './pages/AdultoMayor/AdultoMayorOperativo';
 import UniversitarioDashboard from './pages/Universitario/UniversitarioDashboard';
 import FamiliarDashboardOperativo from './pages/Familiar/FamiliarDashboardOperativo';
+import AdminVerificaciones from './pages/Admin/AdminVerificaciones';
 
 import {
   getMe,
@@ -122,6 +123,10 @@ function App() {
     return (
       <FamiliarDashboardOperativo usuario={usuario} onLogout={handleLogout} />
     );
+  }
+
+  if (usuario?.rol === 'ADMIN') {
+    return <AdminVerificaciones usuario={usuario} onLogout={handleLogout} />;
   }
 
   if (usuario) {
