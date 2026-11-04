@@ -23,7 +23,9 @@ const SECCIONES = [
   { clave: 'perfil', etiqueta: 'Mi perfil' },
 ];
 
-export default function AdultoMayorDashboard() {
+export default function AdultoMayorDashboard({ usuario, onLogout }) {
+  const nombre =
+    usuario?.nombre?.trim().split(/\s+/)[0] || 'Rosa';
   const [vista, setVista] = useState('inicio');
   const [servicioElegido, setServicioElegido] = useState(null);
   const [solicitudesDemo, setSolicitudesDemo] = useState([]);
@@ -54,14 +56,26 @@ export default function AdultoMayorDashboard() {
             <span className={styles.marcaIcono} aria-hidden="true">♥</span>
             <span>Manos Amigas</span>
           </div>
-          <span className={styles.demoEtiqueta}>Vista de demostración</span>
+          {usuario ? (
+            <button
+              type="button"
+              className={styles.cerrarSesion}
+              onClick={onLogout}
+            >
+              Cerrar sesión
+            </button>
+          ) : (
+            <span className={styles.demoEtiqueta}>
+              Vista de demostración
+            </span>
+          )}
         </div>
       </header>
 
       <div className={styles.contenedor}>
         <div className={styles.presentacion}>
           <p className={styles.sobretitulo}>Espacio de adulto mayor</p>
-          <h1>Hola, Rosa <span aria-hidden="true">👋</span></h1>
+          <h1>Hola, {nombre} <span aria-hidden="true">👋</span></h1>
           <p>¿En qué podemos ayudarte hoy?</p>
         </div>
 
@@ -183,9 +197,17 @@ export default function AdultoMayorDashboard() {
           {vista === 'perfil' && (
             <section className={styles.panelPerfil} aria-labelledby="titulo-perfil">
               <h2 id="titulo-perfil">Mi perfil</h2>
-              <p className={styles.textoAyuda}>Información ficticia solo para comprobar el diseño.</p>
+              <p className={styles.textoAyuda}>
+                {usuario
+                  ? 'Información básica de tu cuenta.'
+                  : 'Información ficticia solo para comprobar el diseño.'}
+              </p>
+
               <dl className={styles.listaPerfil}>
-                <div><dt>Nombre</dt><dd>Rosa (ejemplo)</dd></div>
+                <div>
+                  <dt>Nombre</dt>
+                  <dd>{usuario?.nombre || 'Rosa (ejemplo)'}</dd>
+                </div>
                 <div><dt>Tipo de cuenta</dt><dd>Adulto mayor</dd></div>
                 <div><dt>Contacto de confianza</dt><dd>Se administra durante el registro</dd></div>
               </dl>

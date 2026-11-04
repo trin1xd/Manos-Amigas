@@ -1,102 +1,738 @@
-.pagina { min-height: 100vh; background: #f3f9f9; color: #24333d; font-family: inherit; }
-.cabecera { background: #1f8a8a; color: #fff; }
-.cabeceraInterior { max-width: 1160px; padding: 17px 24px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.marca { display: flex; align-items: center; gap: 10px; font-size: 1.35rem; font-weight: 800; }
-.marcaIcono { display: grid; place-items: center; width: 37px; height: 37px; border-radius: 12px; background: #fff; color: #e98126; font-size: 25px; }
-.demoEtiqueta { background: rgba(255, 255, 255, .18); border-radius: 20px; padding: 7px 14px; font-size: .85rem; font-weight: 600; }
-.contenedor { max-width: 1160px; padding: 28px 24px 40px; margin: 0 auto; }
-.presentacion { padding: 12px 0 20px; }
-.presentacion h1 { color: #24333d; font-size: clamp(2rem, 4vw, 2.6rem); line-height: 1.15; margin: 8px 0 12px; }
-.presentacion p:not(.sobretitulo) { color: #536a73; font-size: 1.1rem; }
-.sobretitulo { color: #187c7d; font-size: .9rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
-.sobretituloClaro { font-size: .85rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #e5faf7; }
-.navegacion { display: flex; gap: 8px; padding: 6px; background: #fff; border: 1px solid #d7e6e6; border-radius: 17px; overflow-x: auto; margin: 6px 0 23px; }
-.pestana { flex: 1; min-width: 125px; background: transparent; color: #355b60; padding: 12px 16px; border-radius: 12px; font-size: 1rem; font-weight: 700; min-height: 48px; }
-.pestana:hover, .pestana:focus-visible { background: #ecf7f5; }
-.pestanaActiva, .pestanaActiva:hover, .pestanaActiva:focus-visible { color: #fff; background: #176f70; }
-.contenido { min-height: 400px; }
-.tarjetaDestacada { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: #1f8a8a; color: #fff; padding: clamp(24px, 5vw, 42px); border-radius: 26px; margin-bottom: 32px; overflow: hidden; }
-.tarjetaDestacada h2 { font-size: clamp(1.5rem, 3.2vw, 2.3rem); line-height: 1.25; margin: 9px 0 12px; max-width: 550px; }
-.tarjetaDestacada p:not(.sobretituloClaro) { color: #effbf9; font-size: 1.08rem; max-width: 550px; margin-bottom: 22px; }
-.corazonGrande { opacity: .24; font-size: 12rem; line-height: 1; font-weight: 300; }
-.botonNaranja, .botonPrimario, .botonSecundario { min-height: 48px; border-radius: 12px; padding: 12px 20px; font-size: 1rem; font-weight: 800; transition: transform .15s ease; }
-.botonNaranja { background: #f28c38; color: #1e2933; }
-.botonPrimario { background: #1f8a8a; color: #fff; }
-.botonSecundario { background: #edf7f6; color: #14696a; border: 1px solid #b2d8d5; width: 100%; margin-top: auto; }
-.botonNaranja:hover, .botonPrimario:hover, .botonSecundario:hover { transform: translateY(-1px); }
-.botonNaranja:focus-visible, .botonPrimario:focus-visible, .botonSecundario:focus-visible, .pestana:focus-visible, .acceso:focus-visible { outline: 3px solid #1d5ea4; outline-offset: 3px; }
-.tituloSeccion { font-size: clamp(1.4rem, 2.8vw, 1.7rem); margin: 6px 0 18px; }
-.grillaAccesos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.acceso { display: flex; flex-direction: column; text-align: left; align-items: flex-start; gap: 12px; border-radius: 18px; border: 1px solid #d7e6e6; background: #fff; color: #24333d; padding: 24px; min-height: 185px; box-shadow: 0 6px 20px rgba(13,90,90,.04); }
-.acceso:hover { border-color: #1f8a8a; background: #faffff; }
-.acceso strong { font-size: 1.18rem; }
-.acceso span:last-child { color: #596c75; font-size: 1rem; }
-.accesoIcono { font-size: 2rem; }
-.textoAyuda { color: #536a73; font-size: 1.05rem; margin-bottom: 20px; }
-.grillaServicios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
-.servicio { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; background: #fff; border: 1px solid #d7e6e6; border-radius: 18px; padding: 23px; }
-.servicioIcono { font-size: 2rem; background: #eef9f7; border-radius: 14px; padding: 8px; }
-.servicio h3 { font-size: 1.15rem; }
-.servicio p { color: #536a73; margin-bottom: 8px; }
-.aviso { background: #e3f4ee; color: #195e4e; padding: 15px 18px; margin-top: 18px; border-radius: 12px; border-left: 4px solid #208565; }
-.nota { margin-top: 22px; font-size: .95rem; color: #5b6b74; }
-.panelVacio, .panelPerfil { max-width: 750px; background: #fff; border: 1px solid #d7e6e6; border-radius: 22px; padding: clamp(24px, 4vw, 38px); }
-.panelVacio { display: flex; align-items: flex-start; flex-direction: column; gap: 14px; }
-.panelVacio h2, .panelPerfil h2 { font-size: 1.55rem; }
-.iconoVacio { font-size: 2.3rem; }
-.panelVacio > p { max-width: 500px; color: #536a73; }
-.listaPerfil { margin-top: 22px; }
-.listaPerfil > div { padding: 15px 0; border-bottom: 1px solid #e4eeee; }
-.listaPerfil dt { color: #536a73; font-size: .92rem; }
-.listaPerfil dd { margin: 4px 0 0; font-weight: 700; }
-.pie { color: #60737b; margin-top: 42px; font-size: .9rem; text-align: center; }
-@media (max-width: 760px) { .grillaAccesos, .grillaServicios { grid-template-columns: repeat(2, 1fr); } .corazonGrande { display: none; } }
-@media (max-width: 550px) { .cabeceraInterior { padding: 14px 16px; } .demoEtiqueta { font-size: .7rem; } .marca { font-size: 1rem; } .contenedor { padding: 20px 14px 32px; } .navegacion { gap: 4px; } .pestana { min-width: 115px; padding: 10px; } .grillaAccesos, .grillaServicios { grid-template-columns: 1fr; } .acceso { min-height: 130px; } .tarjetaDestacada { border-radius: 20px; } }
-@media (prefers-reduced-motion: reduce) { .botonNaranja, .botonPrimario, .botonSecundario { transition: none; } }
+.pagina {
+  min-height: 100vh;
+  background: #f3f9f9;
+  color: #24333d;
+  font-family: inherit;
+}
+
+.cabecera {
+  background: #1f8a8a;
+  color: #fff;
+}
+
+.cabeceraInterior {
+  max-width: 1160px;
+  padding: 17px 24px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.marcaIcono {
+  display: grid;
+  place-items: center;
+  width: 37px;
+  height: 37px;
+  border-radius: 12px;
+  background: #fff;
+  color: #e98126;
+  font-size: 25px;
+}
+
+.demoEtiqueta {
+  background: rgba(255, 255, 255, .18);
+  border-radius: 20px;
+  padding: 7px 14px;
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+.contenedor {
+  max-width: 1160px;
+  padding: 28px 24px 40px;
+  margin: 0 auto;
+}
+
+.presentacion {
+  padding: 12px 0 20px;
+}
+
+.presentacion h1 {
+  color: #24333d;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  margin: 8px 0 12px;
+}
+
+.presentacion p:not(.sobretitulo) {
+  color: #536a73;
+  font-size: 1.1rem;
+}
+
+.sobretitulo {
+  color: #187c7d;
+  font-size: .9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.sobretituloClaro {
+  font-size: .85rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #e5faf7;
+}
+
+.navegacion {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid #d7e6e6;
+  border-radius: 17px;
+  overflow-x: auto;
+  margin: 6px 0 23px;
+}
+
+.pestana {
+  flex: 1;
+  min-width: 125px;
+  background: transparent;
+  color: #355b60;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  min-height: 48px;
+}
+
+.pestana:hover,
+.pestana:focus-visible {
+  background: #ecf7f5;
+}
+
+.pestanaActiva,
+.pestanaActiva:hover,
+.pestanaActiva:focus-visible {
+  color: #fff;
+  background: #176f70;
+}
+
+.contenido {
+  min-height: 400px;
+}
+
+.tarjetaDestacada {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: #1f8a8a;
+  color: #fff;
+  padding: clamp(24px, 5vw, 42px);
+  border-radius: 26px;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+.tarjetaDestacada h2 {
+  font-size: clamp(1.5rem, 3.2vw, 2.3rem);
+  line-height: 1.25;
+  margin: 9px 0 12px;
+  max-width: 550px;
+}
+
+.tarjetaDestacada p:not(.sobretituloClaro) {
+  color: #effbf9;
+  font-size: 1.08rem;
+  max-width: 550px;
+  margin-bottom: 22px;
+}
+
+.corazonGrande {
+  opacity: .24;
+  font-size: 12rem;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.botonNaranja,
+.botonPrimario,
+.botonSecundario {
+  min-height: 48px;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 800;
+  transition: transform .15s ease;
+}
+
+.botonNaranja {
+  background: #f28c38;
+  color: #1e2933;
+}
+
+.botonPrimario {
+  background: #1f8a8a;
+  color: #fff;
+}
+
+.botonSecundario {
+  background: #edf7f6;
+  color: #14696a;
+  border: 1px solid #b2d8d5;
+  width: 100%;
+  margin-top: auto;
+}
+
+.botonNaranja:hover,
+.botonPrimario:hover,
+.botonSecundario:hover {
+  transform: translateY(-1px);
+}
+
+.botonNaranja:focus-visible,
+.botonPrimario:focus-visible,
+.botonSecundario:focus-visible,
+.pestana:focus-visible,
+.acceso:focus-visible {
+  outline: 3px solid #1d5ea4;
+  outline-offset: 3px;
+}
+
+.tituloSeccion {
+  font-size: clamp(1.4rem, 2.8vw, 1.7rem);
+  margin: 6px 0 18px;
+}
+
+.grillaAccesos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.acceso {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: 18px;
+  border: 1px solid #d7e6e6;
+  background: #fff;
+  color: #24333d;
+  padding: 24px;
+  min-height: 185px;
+  box-shadow: 0 6px 20px rgba(13, 90, 90, .04);
+}
+
+.acceso:hover {
+  border-color: #1f8a8a;
+  background: #faffff;
+}
+
+.acceso strong {
+  font-size: 1.18rem;
+}
+
+.acceso span:last-child {
+  color: #596c75;
+  font-size: 1rem;
+}
+
+.accesoIcono {
+  font-size: 2rem;
+}
+
+.textoAyuda {
+  color: #536a73;
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+}
+
+.grillaServicios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 17px;
+}
+
+.servicio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #d7e6e6;
+  border-radius: 18px;
+  padding: 23px;
+}
+
+.servicioIcono {
+  font-size: 2rem;
+  background: #eef9f7;
+  border-radius: 14px;
+  padding: 8px;
+}
+
+.servicio h3 {
+  font-size: 1.15rem;
+}
+
+.servicio p {
+  color: #536a73;
+  margin-bottom: 8px;
+}
+
+.aviso {
+  background: #e3f4ee;
+  color: #195e4e;
+  padding: 15px 18px;
+  margin-top: 18px;
+  border-radius: 12px;
+  border-left: 4px solid #208565;
+}
+
+.nota {
+  margin-top: 22px;
+  font-size: .95rem;
+  color: #5b6b74;
+}
+
+.panelVacio,
+.panelPerfil {
+  max-width: 750px;
+  background: #fff;
+  border: 1px solid #d7e6e6;
+  border-radius: 22px;
+  padding: clamp(24px, 4vw, 38px);
+}
+
+.panelVacio {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panelVacio h2,
+.panelPerfil h2 {
+  font-size: 1.55rem;
+}
+
+.iconoVacio {
+  font-size: 2.3rem;
+}
+
+.panelVacio>p {
+  max-width: 500px;
+  color: #536a73;
+}
+
+.listaPerfil {
+  margin-top: 22px;
+}
+
+.listaPerfil>div {
+  padding: 15px 0;
+  border-bottom: 1px solid #e4eeee;
+}
+
+.listaPerfil dt {
+  color: #536a73;
+  font-size: .92rem;
+}
+
+.listaPerfil dd {
+  margin: 4px 0 0;
+  font-weight: 700;
+}
+
+.pie {
+  color: #60737b;
+  margin-top: 42px;
+  font-size: .9rem;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+
+  .grillaAccesos,
+  .grillaServicios {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .corazonGrande {
+    display: none;
+  }
+}
+
+@media (max-width: 550px) {
+  .cabeceraInterior {
+    padding: 14px 16px;
+  }
+
+  .demoEtiqueta {
+    font-size: .7rem;
+  }
+
+  .marca {
+    font-size: 1rem;
+  }
+
+  .contenedor {
+    padding: 20px 14px 32px;
+  }
+
+  .navegacion {
+    gap: 4px;
+  }
+
+  .pestana {
+    min-width: 115px;
+    padding: 10px;
+  }
+
+  .grillaAccesos,
+  .grillaServicios {
+    grid-template-columns: 1fr;
+  }
+
+  .acceso {
+    min-height: 130px;
+  }
+
+  .tarjetaDestacada {
+    border-radius: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .botonNaranja,
+  .botonPrimario,
+  .botonSecundario {
+    transition: none;
+  }
+}
 
 /* Solicitud de tareas — demostración sin conexión al backend */
-.panelSolicitud { max-width: 850px; background: #fff; border: 1px solid #d7e6e6; border-radius: 22px; padding: clamp(20px, 4vw, 38px); }
-.volver { display: inline-flex; gap: 8px; align-items: center; min-height: 48px; padding: 8px 0; margin-bottom: 15px; background: transparent; color: #146f70; font-size: 1rem; font-weight: 700; }
-.volver:hover { text-decoration: underline; }
-.tareaElegida { display: flex; align-items: center; gap: 15px; background: #fff1e3; border: 1px solid #ffd4b0; border-radius: 16px; padding: 16px; margin: 12px 0 22px; }
-.tareaElegida strong { display: block; font-size: 1.18rem; }
-.tareaElegida p { color: #536a73; font-size: .98rem; margin-top: 2px; }
-.formularioSolicitud { display: flex; flex-direction: column; gap: 19px; }
-.filaCampos { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-.campo { display: flex; flex-direction: column; gap: 8px; font-size: 1rem; font-weight: 700; color: #24333d; }
-.campo input, .campo select, .campo textarea { width: 100%; min-height: 52px; padding: 12px 14px; color: #24333d; background: #f8fbfb; border: 1.5px solid #9fbec0; border-radius: 12px; font: inherit; font-size: 1rem; font-weight: 400; }
-.campo textarea { min-height: 128px; resize: vertical; }
-.campo small { color: #536a73; font-weight: 400; font-size: .89rem; }
-.campo input:focus-visible, .campo select:focus-visible, .campo textarea:focus-visible { outline: 3px solid #3079bb; outline-offset: 2px; }
-.resumenPrecio { display: flex; justify-content: space-between; align-items: center; gap: 18px; background: #e1f4f1; border-radius: 16px; padding: 20px; }
-.resumenPrecio div { display: flex; flex-direction: column; gap: 3px; }
-.resumenPrecio div span { color: #446b6b; font-size: .93rem; }
-.montoPrecio { color: #0d6264; font-size: clamp(1.4rem, 4vw, 1.85rem); white-space: nowrap; }
-.alertaDemo { background: #fff6e7; color: #67491e; border-left: 4px solid #e8a245; padding: 14px 16px; border-radius: 9px; line-height: 1.5; font-size: .96rem; margin-bottom: 16px; }
-.errorSolicitud { padding: 10px 13px; color: #98232d; background: #ffeded; border-radius: 10px; font-weight: 600; }
-.accionesFormulario { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-top: 7px; }
-.botonNeutro { background: #edf3f4; color: #285158; min-height: 48px; border-radius: 12px; padding: 12px 20px; font-weight: 700; font-size: 1rem; }
-.botonNeutro:hover { background: #dceced; }
-.botonNeutro:focus-visible, .volver:focus-visible { outline: 3px solid #1d5ea4; outline-offset: 3px; }
-.revision { display: flex; flex-direction: column; gap: 16px; }
-.resumenDatos { border: 1px solid #d7e6e6; border-radius: 15px; padding: 8px 18px; }
-.resumenDatos div { display: grid; grid-template-columns: 180px 1fr; gap: 15px; padding: 13px 0; border-bottom: 1px solid #e4eeee; }
-.resumenDatos div:last-child { border-bottom: 0; }
-.resumenDatos dt { color: #536a73; }
-.resumenDatos dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
-.confirmacion { display: flex; align-items: flex-start; flex-direction: column; gap: 17px; }
-.confirmacion h2 { font-size: clamp(1.55rem, 3vw, 2rem); }
-.confirmacionIcono { display: grid; place-items: center; width: 65px; height: 65px; border-radius: 50%; background: #e3f6ed; color: #16785b; font-size: 2.4rem; font-weight: 800; }
-.confirmacion p { line-height: 1.55; }
-.listaSolicitudes { display: flex; flex-direction: column; gap: 17px; }
-.tarjetaSolicitud { border-radius: 18px; border: 1px solid #d7e6e6; background: #fff; padding: 22px; }
-.tarjetaSolicitud p { margin-top: 10px; color: #435c65; overflow-wrap: anywhere; }
-.encabezadoSolicitud { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
-.encabezadoSolicitud h3 { font-size: 1.18rem; }
-.estadoDemo { display: inline-block; padding: 6px 12px; border-radius: 20px; background: #fff1dd; color: #79511f; font-size: .84rem; font-weight: 800; }
+.panelSolicitud {
+  max-width: 850px;
+  background: #fff;
+  border: 1px solid #d7e6e6;
+  border-radius: 22px;
+  padding: clamp(20px, 4vw, 38px);
+}
+
+.volver {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 48px;
+  padding: 8px 0;
+  margin-bottom: 15px;
+  background: transparent;
+  color: #146f70;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.volver:hover {
+  text-decoration: underline;
+}
+
+.tareaElegida {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #fff1e3;
+  border: 1px solid #ffd4b0;
+  border-radius: 16px;
+  padding: 16px;
+  margin: 12px 0 22px;
+}
+
+.tareaElegida strong {
+  display: block;
+  font-size: 1.18rem;
+}
+
+.tareaElegida p {
+  color: #536a73;
+  font-size: .98rem;
+  margin-top: 2px;
+}
+
+.formularioSolicitud {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+
+.filaCampos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #24333d;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 14px;
+  color: #24333d;
+  background: #f8fbfb;
+  border: 1.5px solid #9fbec0;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.campo textarea {
+  min-height: 128px;
+  resize: vertical;
+}
+
+.campo small {
+  color: #536a73;
+  font-weight: 400;
+  font-size: .89rem;
+}
+
+.campo input:focus-visible,
+.campo select:focus-visible,
+.campo textarea:focus-visible {
+  outline: 3px solid #3079bb;
+  outline-offset: 2px;
+}
+
+.resumenPrecio {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  background: #e1f4f1;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.resumenPrecio div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.resumenPrecio div span {
+  color: #446b6b;
+  font-size: .93rem;
+}
+
+.montoPrecio {
+  color: #0d6264;
+  font-size: clamp(1.4rem, 4vw, 1.85rem);
+  white-space: nowrap;
+}
+
+.alertaDemo {
+  background: #fff6e7;
+  color: #67491e;
+  border-left: 4px solid #e8a245;
+  padding: 14px 16px;
+  border-radius: 9px;
+  line-height: 1.5;
+  font-size: .96rem;
+  margin-bottom: 16px;
+}
+
+.errorSolicitud {
+  padding: 10px 13px;
+  color: #98232d;
+  background: #ffeded;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.accionesFormulario {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 7px;
+}
+
+.botonNeutro {
+  background: #edf3f4;
+  color: #285158;
+  min-height: 48px;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.botonNeutro:hover {
+  background: #dceced;
+}
+
+.botonNeutro:focus-visible,
+.volver:focus-visible {
+  outline: 3px solid #1d5ea4;
+  outline-offset: 3px;
+}
+
+.revision {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resumenDatos {
+  border: 1px solid #d7e6e6;
+  border-radius: 15px;
+  padding: 8px 18px;
+}
+
+.resumenDatos div {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 15px;
+  padding: 13px 0;
+  border-bottom: 1px solid #e4eeee;
+}
+
+.resumenDatos div:last-child {
+  border-bottom: 0;
+}
+
+.resumenDatos dt {
+  color: #536a73;
+}
+
+.resumenDatos dd {
+  margin: 0;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.confirmacion {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.confirmacion h2 {
+  font-size: clamp(1.55rem, 3vw, 2rem);
+}
+
+.confirmacionIcono {
+  display: grid;
+  place-items: center;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: #e3f6ed;
+  color: #16785b;
+  font-size: 2.4rem;
+  font-weight: 800;
+}
+
+.confirmacion p {
+  line-height: 1.55;
+}
+
+.listaSolicitudes {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.tarjetaSolicitud {
+  border-radius: 18px;
+  border: 1px solid #d7e6e6;
+  background: #fff;
+  padding: 22px;
+}
+
+.tarjetaSolicitud p {
+  margin-top: 10px;
+  color: #435c65;
+  overflow-wrap: anywhere;
+}
+
+.encabezadoSolicitud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.encabezadoSolicitud h3 {
+  font-size: 1.18rem;
+}
+
+.estadoDemo {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #fff1dd;
+  color: #79511f;
+  font-size: .84rem;
+  font-weight: 800;
+}
+
 @media (max-width: 560px) {
-  .filaCampos { grid-template-columns: 1fr; }
-  .resumenPrecio { align-items: flex-start; flex-direction: column; }
-  .resumenDatos div { grid-template-columns: 1fr; gap: 2px; }
-  .accionesFormulario > button { width: 100%; }
+  .filaCampos {
+    grid-template-columns: 1fr;
+  }
+
+  .resumenPrecio {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .resumenDatos div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .accionesFormulario>button {
+    width: 100%;
+  }
+}
+
+.cerrarSesion {
+  background: #ffffff;
+  color: #14696a;
+  border: none;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cerrarSesion:hover {
+  background: #e5f5f3;
+}
+
+.cerrarSesion:focus-visible {
+  outline: 3px solid #f28c38;
+  outline-offset: 3px;
 }
