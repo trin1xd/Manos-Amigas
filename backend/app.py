@@ -5,6 +5,7 @@ from werkzeug.exceptions import HTTPException
 
 from config import Config
 from routes.auth_routes import auth_bp
+from routes.operations_routes import ops_bp
 
 
 def create_app():
@@ -36,6 +37,7 @@ def create_app():
         }), 401
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(ops_bp, url_prefix='/api')
 
     @app.errorhandler(Exception)
     def unexpected_error(error):
