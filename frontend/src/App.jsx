@@ -14,7 +14,7 @@ import RegistrationForm from './pages/Register/RegistrationForm';
 
 import AdultoMayorOperativo from './pages/AdultoMayor/AdultoMayorOperativo';
 import UniversitarioDashboard from './pages/Universitario/UniversitarioDashboard';
-import FamiliarDashboard from './pages/Familiar/FamiliarDashboard';
+import FamiliarDashboardOperativo from './pages/Familiar/FamiliarDashboardOperativo';
 
 import {
   getMe,
@@ -120,7 +120,7 @@ function App() {
 
   if (usuario?.rol === 'FAMILIAR') {
     return (
-      <FamiliarDashboard usuario={usuario} onLogout={handleLogout} />
+      <FamiliarDashboardOperativo usuario={usuario} onLogout={handleLogout} />
     );
   }
 

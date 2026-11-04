@@ -1,0 +1,33 @@
+.encabezado { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.encabezado h2, .encabezado h3 { margin: 0; }
+.botonPrincipal, .botonSecundario, .botonPeligro { border-radius: 12px; padding: 10px 18px; min-height: 46px; font-weight: 750; font-size: .96rem; cursor: pointer; }
+.botonPrincipal { color: #1b3439; background: #f6a04c; border: 1px solid #ef9035; }
+.botonPrincipal:hover { background: #f8b46e; }
+.botonSecundario { color: #146d70; background: #fff; border: 1px solid #77adaa; }
+.botonSecundario:hover { background: #edf8f6; }
+.botonPeligro { color: #922e2c; background: #fff2f0; border: 1px solid #e7b4ae; }
+.botonPeligro:hover { background: #ffe2dc; }
+.lista { list-style: none; margin: 15px 0 0; padding: 0; display: grid; gap: 14px; }
+.item { background: #fff; border: 1px solid #d5e6e3; padding: clamp(16px, 3vw, 24px); border-radius: 15px; }
+.item strong { font-size: 1.05rem; }
+.item h3 { color: #224047; font-size: 1.2rem; }
+.item p { margin: 8px 0; line-height: 1.55; }
+.estado { display: inline-flex; border-radius: 22px; background: #def2ed; color: #155e60; font-size: .87rem; padding: 7px 12px; font-weight: 800; }
+.acciones { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+.subpanel { padding: 18px; background: #edf8f6; border-radius: 12px; margin-top: 15px; }
+.subpanel h4 { margin: 0 0 12px; }
+.filaPostulante { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid #cbded9; }
+.filaPostulante:last-child { border: 0; }
+.error { background: #ffebea; border-left: 4px solid #ce4846; color: #8a2422; padding: 13px 15px; border-radius: 10px; margin: 14px 0; }
+.exito { background: #e1f5e8; border-left: 4px solid #2f8b5d; color: #205b3b; padding: 13px 15px; border-radius: 10px; margin: 14px 0; }
+.aviso { background: #fff6e8; border-left: 4px solid #ee9b42; color: #5a4328; padding: 14px; border-radius: 11px; margin: 14px 0; }
+.formulario { display: flex; flex-direction: column; gap: 18px; margin-top: 22px; max-width: 720px; }
+.formulario label { display: flex; flex-direction: column; gap: 8px; color: #24474e; font-weight: 750; }
+.formulario input, .formulario select, .formulario textarea { font: inherit; border: 1px solid #a7c8c5; border-radius: 10px; background: #fff; color: #223a40; padding: 12px; min-height: 47px; width: 100%; }
+.formulario textarea { resize: vertical; }
+.formulario input:focus-visible, .formulario select:focus-visible, .formulario textarea:focus-visible { outline: 3px solid #f3aa66; outline-offset: 1px; }
+.formulario small { color: #536f73; font-weight: normal; }
+.dosColumnas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+.botonPrincipal:focus-visible, .botonSecundario:focus-visible, .botonPeligro:focus-visible { outline: 3px solid #f2a75e; outline-offset: 3px; }
+.botonPrincipal:disabled, .botonSecundario:disabled, .botonPeligro:disabled { opacity: .65; cursor: not-allowed; }
+@media (max-width: 600px) { .dosColumnas { grid-template-columns: 1fr; } .acciones > button, .filaPostulante > button { width: 100%; } }
