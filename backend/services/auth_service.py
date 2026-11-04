@@ -218,3 +218,33 @@ def login(email, password):
         user["estado_verificacion"] = found["estado_verificacion"]
     return user
 
+
+
+def get_user_by_id(user_id):
+    """Obtiene los datos del usuario por ID y valida que su cuenta esté ACTIVA."""
+    try:
+        user_id = int(user_id)
+    except (ValueError, TypeError):
+        raise ServiceError("Identificador de usuario inválido.", 401)
+
+    conn = get_connection()
+    try:
+        found = repo.find_user_by_id(conn.cursor(), user_id)
+    finally:
+        conn.close()
+
+    if found is None:
+        raise ServiceError("Usuario no encontrado.", 401)
+
+    if found["estado"] != "ACTIVO":
+        raise ServiceError("La cuenta no está activa.", 403)
+
+    user = {
+        "id": found["id_usuario"],
+        "nombre": found["nombre_completo"],
+        "rol": found["rol"],
+        "estado": found["estado"],
+    }
+    if found["rol"] == UNIVERSITARIO:
+        user["estado_verificacion"] = found["estado_verificacion"]
+    return user

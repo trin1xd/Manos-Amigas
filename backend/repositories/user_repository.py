@@ -113,3 +113,33 @@ def find_user_by_email(cursor, email):
         "estado_verificacion": row.estado_verificacion,
     }
 
+
+
+def find_user_by_id(cursor, user_id):
+    """Devuelve un dict con los datos del usuario por ID o None.
+
+    Usa los mismos JOINs que find_user_by_email para obtener rol y perfil.
+    """
+    cursor.execute(
+        """
+        SELECT u.id_usuario, u.nombre_completo, u.email, u.password_hash, u.estado,
+               r.nombre AS rol, pu.estado_verificacion
+        FROM Usuarios u
+        JOIN Roles r ON r.id_rol = u.id_rol
+        LEFT JOIN PerfilUniversitario pu ON pu.id_usuario = u.id_usuario
+        WHERE u.id_usuario = ?
+        """,
+        (user_id,),
+    )
+    row = cursor.fetchone()
+    if row is None:
+        return None
+    return {
+        "id_usuario": row.id_usuario,
+        "nombre_completo": row.nombre_completo,
+        "email": row.email,
+        "password_hash": row.password_hash,
+        "estado": row.estado,
+        "rol": row.rol,
+        "estado_verificacion": row.estado_verificacion,
+    }
