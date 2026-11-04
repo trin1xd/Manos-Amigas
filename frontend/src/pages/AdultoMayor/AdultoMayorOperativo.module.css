@@ -1,0 +1,49 @@
+.tituloFila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 12px;
+}
+.tituloFila > button { width: auto; margin: 0; }
+.tituloFila > h2 { margin-bottom: 0; }
+.aviso {
+  padding: 15px;
+  border-radius: 11px;
+  background: #fff4e4;
+  color: #5c431e;
+  border-left: 4px solid #e99b43;
+}
+.ok { padding: 13px; border-radius: 11px; background: #dff7ef; color: #1b654d; }
+.etiquetaEstado {
+  font-weight: 800;
+  font-size: .86rem;
+  border-radius: 20px;
+  background: #e5f4f2;
+  color: #1b6465;
+  padding: 7px 13px;
+  white-space: nowrap;
+}
+.acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; align-items: center; }
+.acciones > button { width: auto; margin: 0; }
+.botonPeligro {
+  min-height: 48px;
+  border-radius: 12px;
+  background: #fff0ee;
+  color: #912d26;
+  border: 1px solid #e7b3ab;
+  padding: 10px 17px;
+  font-size: 1rem;
+  font-weight: 750;
+}
+.botonPeligro:hover { background: #ffdfd9; }
+.postulantes { margin-top: 17px; padding: 18px; border-radius: 14px; background: #eff8f7; }
+.postulantes h4 { font-size: 1.08rem; margin: 0 0 14px; }
+.postulanteFila { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #c7e3e0; }
+.postulanteFila:last-child { border-bottom: 0; }
+.bloqueVincular { margin-top: 20px; }
+.bloqueVincular > h2 { margin-bottom: 12px; }
+@media (max-width: 560px) {
+  .acciones > button, .tituloFila > button, .postulanteFila > button { width: 100%; }
+}

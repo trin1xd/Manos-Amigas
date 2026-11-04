@@ -12,7 +12,7 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import RegistrationForm from './pages/Register/RegistrationForm';
 
-import AdultoMayorDashboard from './pages/AdultoMayor/AdultoMayorDashboard';
+import AdultoMayorOperativo from './pages/AdultoMayor/AdultoMayorOperativo';
 import UniversitarioDashboard from './pages/Universitario/UniversitarioDashboard';
 import FamiliarDashboard from './pages/Familiar/FamiliarDashboard';
 
@@ -102,7 +102,7 @@ function App() {
   // Dashboard del adulto mayor autenticado
   if (usuario?.rol === 'ADULTO_MAYOR') {
     return (
-      <AdultoMayorDashboard
+      <AdultoMayorOperativo
         usuario={usuario}
         onLogout={handleLogout}
       />
