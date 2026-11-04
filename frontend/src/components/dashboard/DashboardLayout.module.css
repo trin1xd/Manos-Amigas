@@ -1,0 +1,71 @@
+.pagina { min-height: 100vh; background: #f2f8f7; color: #24333d; }
+.saltar { position: absolute; top: -100px; left: 12px; z-index: 20; padding: 10px 16px; background: #fff; color: #14696a; border-radius: 10px; }
+.saltar:focus { top: 12px; }
+.barra { background: #1f8a8a; color: #fff; }
+.barraInterior { max-width: 1160px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.marca { display: flex; align-items: center; gap: 12px; line-height: 1.25; }
+.marca strong { display: block; font-size: 1.24rem; }
+.marca small { display: block; font-size: .72rem; opacity: .88; margin-top: 4px; }
+.logo { display: grid; place-items: center; height: 40px; width: 40px; background: #fff; color: #f28c38; font-size: 1.6rem; font-weight: 800; border-radius: 13px; }
+.salir { background: #fff; color: #13696c; border: 1px solid #fff; border-radius: 12px; min-height: 44px; padding: 9px 17px; font-size: .93rem; font-weight: 800; }
+.salir:hover { background: #e9f7f5; }
+.contenedor { max-width: 1160px; margin: 0 auto; padding: 30px 24px 48px; }
+.bienvenida { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 5px 0 25px; }
+.sobretitulo { text-transform: uppercase; color: #177d7d; letter-spacing: .05em; font-weight: 800; font-size: .8rem; }
+.bienvenida h1 { font-size: clamp(1.9rem, 4.2vw, 2.65rem); line-height: 1.15; margin: 9px 0 12px; }
+.subtitulo { color: #536a73; font-size: 1.05rem; }
+.etiquetaRol { flex-shrink: 0; border-radius: 30px; padding: 9px 16px; color: #116765; background: #dff3ee; border: 1px solid #b7ddd5; font-size: .86rem; font-weight: 800; }
+.navegacion { display: flex; gap: 6px; padding: 7px; margin-bottom: 24px; border: 1px solid #d6e6e4; background: #fff; border-radius: 18px; overflow-x: auto; }
+.pestana { flex: 1; min-width: 146px; padding: 12px 14px; min-height: 50px; background: transparent; color: #365d63; border-radius: 12px; font-size: .95rem; font-weight: 750; white-space: nowrap; }
+.pestana:hover { background: #eaf7f3; }
+.pestana.activa { background: #176f70; color: #fff; }
+.contenido { min-height: 360px; }
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 25px; align-items: center; padding: clamp(22px, 4vw, 38px); margin-bottom: 22px; background: #1f8a8a; color: #fff; border-radius: 25px; }
+.heroEyebrow { color: #ddfbf5; text-transform: uppercase; font-size: .76rem; font-weight: 800; letter-spacing: .05em; }
+.hero h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); margin: 8px 0 12px; line-height: 1.25; }
+.hero p { max-width: 620px; color: #f0faf9; line-height: 1.65; }
+.heroIcono { display: grid; place-items: center; width: 95px; height: 95px; border-radius: 25px; background: rgba(255,255,255,.15); font-size: 3.2rem; }
+.rejilla { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
+.tarjeta, .panel { background: #fff; border: 1px solid #d7e6e4; border-radius: 20px; padding: clamp(20px, 3vw, 28px); box-shadow: 0 6px 23px rgba(18,79,77,.035); }
+.tarjeta { display: flex; flex-direction: column; gap: 11px; align-items: flex-start; }
+.tarjetaIcono { display: grid; place-items: center; width: 51px; height: 51px; border-radius: 14px; background: #e8f6f3; font-size: 1.7rem; }
+.tarjeta h3, .panel h2 { color: #213b43; font-size: 1.3rem; line-height: 1.32; }
+.tarjeta p, .panel p { color: #526a72; line-height: 1.65; }
+.tarjetaBoton { margin-top: auto; display: inline-flex; align-items: center; gap: 10px; background: #f28c38; color: #20323a; border-radius: 12px; min-height: 46px; padding: 10px 16px; font-weight: 800; }
+.tarjetaBoton:hover { background: #ffa052; }
+.separacion { margin-top: 22px; }
+.tituloSeccion { color: #24333d; font-size: 1.5rem; margin: 0 0 16px; }
+.estado { display: inline-flex; align-items: center; gap: 8px; border-radius: 30px; padding: 8px 14px; font-size: .87rem; font-weight: 800; background: #fff2db; color: #79521d; }
+.estadoOk { background: #def5e8; color: #166546; }
+.estadoAlerta { background: #fee7e7; color: #913e3e; }
+.estadoTexto { margin: 14px 0 0; }
+.aviso { padding: 16px 20px; margin-top: 18px; background: #fff7e8; border-left: 4px solid #f28c38; border-radius: 13px; color: #614d32; font-size: .97rem; line-height: 1.55; }
+.pasos { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; margin-top: 17px; }
+.paso { padding: 18px; background: #fff; border: 1px solid #d7e6e4; border-radius: 16px; }
+.pasoNumero { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #dcefeb; color: #11686a; font-weight: 800; }
+.paso strong { display: block; margin: 9px 0 4px; }
+.paso p { color: #5b7076; font-size: .91rem; }
+.vacio { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; max-width: 860px; min-height: 270px; justify-content: center; }
+.vacioIcono { display: inline-grid; place-items: center; width: 62px; height: 62px; background: #e9f6f4; border-radius: 17px; font-size: 2rem; }
+.datos { display: grid; gap: 0; margin-top: 12px; }
+.datos div { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 16px; padding: 15px 0; border-bottom: 1px solid #e5eeee; }
+.datos dt { color: #64757b; }
+.datos dd { color: #233c43; font-weight: 750; margin: 0; overflow-wrap: anywhere; }
+.pie { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 22px; color: #6a7c80; font-size: .82rem; margin-top: 42px; }
+.salir:focus-visible, .pestana:focus-visible, .tarjetaBoton:focus-visible { outline: 3px solid #e79337; outline-offset: 3px; }
+@media (max-width: 680px) {
+  .barraInterior { padding: 13px 15px; }
+  .marca small { display: none; }
+  .marca strong { font-size: 1.06rem; }
+  .salir { padding: 9px 11px; font-size: .86rem; }
+  .contenedor { padding: 24px 15px 35px; }
+  .bienvenida { align-items: flex-start; }
+  .etiquetaRol { font-size: .73rem; padding: 7px 10px; }
+  .hero { grid-template-columns: 1fr; }
+  .heroIcono { display: none; }
+  .rejilla, .pasos { grid-template-columns: 1fr; }
+  .navegacion { padding: 5px; }
+  .pestana { min-width: 142px; }
+  .datos div { grid-template-columns: 1fr; gap: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto; } }
