@@ -13,6 +13,8 @@ import Register from './pages/Register/Register';
 import RegistrationForm from './pages/Register/RegistrationForm';
 
 import AdultoMayorDashboard from './pages/AdultoMayor/AdultoMayorDashboard';
+import UniversitarioDashboard from './pages/Universitario/UniversitarioDashboard';
+import FamiliarDashboard from './pages/Familiar/FamiliarDashboard';
 
 import {
   getMe,
@@ -108,6 +110,20 @@ function App() {
   }
 
   // Las otras interfaces se desarrollarán después
+
+  // Paneles por rol: la sesión fue validada mediante /api/auth/me.
+  if (usuario?.rol === 'UNIVERSITARIO') {
+    return (
+      <UniversitarioDashboard usuario={usuario} onLogout={handleLogout} />
+    );
+  }
+
+  if (usuario?.rol === 'FAMILIAR') {
+    return (
+      <FamiliarDashboard usuario={usuario} onLogout={handleLogout} />
+    );
+  }
+
   if (usuario) {
     return (
       <main className="container" style={{ padding: '3rem' }}>
