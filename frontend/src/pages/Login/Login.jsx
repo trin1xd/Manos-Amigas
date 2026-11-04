@@ -1,20 +1,23 @@
 import { useState } from 'react';
 import { LogoIcon } from '../../components/layout/Header';
+import { loginUser } from '../../services/sessionService';
 import styles from './Login.module.css';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-export default function Login({ onNavigateHome }) {
+export default function Login({ onNavigateHome, onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [infoMessage, setInfoMessage] = useState('');
+  const [serverError, setServerError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
     email: '',
     password: '',
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {
@@ -36,13 +39,25 @@ export default function Login({ onNavigateHome }) {
 
     if (newErrors.email || newErrors.password) {
       setInfoMessage('');
+      setServerError('');
       return;
     }
 
-    // Prototipo visual: no se realiza autenticación real ni conexión a backend
-    setInfoMessage(
-      'Demostración de interfaz: la autenticación estará habilitada próximamente.'
-    );
+    setServerError('');
+    setInfoMessage('');
+    setIsLoading(true);
+
+    try {
+      const data = await loginUser(email.trim(), password);
+      setInfoMessage(`¡Bienvenido/a, ${data.user.nombre}! Inicio de sesión correcto.`);
+      if (typeof onLoginSuccess === 'function') {
+        onLoginSuccess(data.user, data.access_token);
+      }
+    } catch (err) {
+      setServerError(err.message || 'Error al iniciar sesión.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleForgotPassword = () => {
@@ -110,7 +125,29 @@ export default function Login({ onNavigateHome }) {
               </p>
             </div>
 
-            {/* Visual prototype notice */}
+            {/* Server Error Banner */}
+            {serverError && (
+              <div
+                className={styles.infoBanner}
+                style={{ borderColor: '#fca5a5', background: '#fef2f2', color: '#991b1b' }}
+                role="alert"
+                aria-live="assertive"
+              >
+                <span className={styles.infoIcon} aria-hidden="true">⚠️</span>
+                <p className={styles.infoText}>{serverError}</p>
+                <button
+                  type="button"
+                  className={styles.closeBannerBtn}
+                  style={{ color: '#991b1b' }}
+                  onClick={() => setServerError('')}
+                  aria-label="Cerrar error"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
+            {/* Info / Success message */}
             {infoMessage && (
               <div className={styles.infoBanner} role="status" aria-live="polite">
                 <span className={styles.infoIcon} aria-hidden="true">ℹ️</span>
@@ -168,6 +205,7 @@ export default function Login({ onNavigateHome }) {
                       if (errors.email) {
                         setErrors((prev) => ({ ...prev, email: '' }));
                       }
+                      if (serverError) setServerError('');
                     }}
                     className={styles.input}
                     required
@@ -234,6 +272,7 @@ export default function Login({ onNavigateHome }) {
                       if (errors.password) {
                         setErrors((prev) => ({ ...prev, password: '' }));
                       }
+                      if (serverError) setServerError('');
                     }}
                     className={styles.input}
                     required
@@ -283,8 +322,9 @@ export default function Login({ onNavigateHome }) {
                 type="submit"
                 className={styles.submitBtn}
                 aria-label="Iniciar sesión con mi cuenta"
+                disabled={isLoading}
               >
-                <span>Iniciar sesión</span>
+                <span>{isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}</span>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M5 12h14M12 5l7 7-7 7"

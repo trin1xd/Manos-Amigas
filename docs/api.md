@@ -8,7 +8,17 @@ Base local: `http://localhost:5000/api` · Todas las respuestas son JSON.
 | POST | `/auth/register/adulto-mayor` | Registrar adulto mayor |
 | POST | `/auth/register/universitario` | Registrar universitario |
 | POST | `/auth/register/familiar` | Registrar familiar |
-| POST | `/auth/login` | Iniciar sesión |
+| POST | `/auth/login` | Iniciar sesión (devuelve access_token) |
+| GET | `/auth/me` | Obtener datos del usuario autenticado (requiere JWT) |
+| GET | `/auth/prueba-universitario` | Demostración de autorización por rol (requiere rol `UNIVERSITARIO`) |
+
+## Cabecera de autenticación
+
+Para acceder a endpoints protegidos, se debe enviar el token de acceso en la cabecera HTTP:
+
+```http
+Authorization: Bearer <access_token>
+```
 
 ## Formato de respuestas
 
@@ -18,10 +28,10 @@ Error: `{"success": false, "message": "...", "errors": {"campo": "detalle"}}` (`
 | Código | Cuándo |
 |---|---|
 | 201 | Registro exitoso |
-| 200 | Login exitoso |
+| 200 | Login exitoso o consulta autorizada |
 | 400 | JSON inválido, campos faltantes o inválidos |
-| 401 | Credenciales incorrectas |
-| 403 | Cuenta no activa (`BLOQUEADO` / `DESACTIVADO`) |
+| 401 | Credenciales incorrectas, token ausente, inválido o expirado |
+| 403 | Cuenta no activa (`BLOQUEADO` / `DESACTIVADO`) o rol no autorizado |
 | 409 | RUT, email o correo institucional ya registrados |
 | 500 | Error interno (p. ej. SQL Server inaccesible) |
 
@@ -122,11 +132,82 @@ Respuesta `200`:
 ```json
 {"success": true, "message": "Inicio de sesión correcto",
  "user": {"id": 16, "nombre": "Camila Rojas", "rol": "UNIVERSITARIO",
-          "estado": "ACTIVO", "estado_verificacion": "PENDIENTE_VERIFICACION"}}
+          "estado": "ACTIVO", "estado_verificacion": "PENDIENTE_VERIFICACION"},
+ "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}
 ```
 - `rol` indica qué dashboard mostrar: `ADULTO_MAYOR`, `UNIVERSITARIO` o `FAMILIAR`.
 - `estado` es el estado de la cuenta; `estado_verificacion` solo aparece para universitarios (no se mezclan rol y estado).
+- `access_token`: token JWT para autenticar las peticiones a endpoints protegidos.
 - Credenciales incorrectas: `401` con el mismo mensaje para correo inexistente o contraseña errada.
+
+## GET `/auth/me`
+
+Consulta los datos del usuario autenticado actual. Requiere la cabecera `Authorization: Bearer <access_token>`. Consulta la base de datos en tiempo real mediante el ID del token para comprobar que la cuenta siga activa.
+
+Respuesta `200`:
+```json
+{
+  "success": true,
+  "user": {
+    "id": 16,
+    "nombre": "Camila Rojas",
+    "rol": "UNIVERSITARIO",
+    "estado": "ACTIVO",
+    "estado_verificacion": "PENDIENTE_VERIFICACION"
+  }
+}
+```
+*(Para `ADULTO_MAYOR` y `FAMILIAR`, `estado_verificacion` se omite).*
+
+- `401`: Token no proporcionado, token inválido o expirado (`{"success": false, "message": "..."}`).
+- `403`: Si la cuenta no está activa (`BLOQUEADO` o `DESACTIVADO`) (`{"success": false, "message": "La cuenta no está activa."}`).
+
+## GET `/auth/prueba-universitario`
+
+Endpoint de demostración protegido con `@require_role("UNIVERSITARIO")`. Requiere la cabecera `Authorization: Bearer <access_token>`. Consulta el rol real en la base de datos.
+
+Respuesta `200` (rol correcto):
+```json
+{
+  "success": true,
+  "message": "Acceso permitido a universitario.",
+  "user": {
+    "id": 16,
+    "nombre": "Camila Rojas",
+    "rol": "UNIVERSITARIO",
+    "estado": "ACTIVO",
+    "estado_verificacion": "PENDIENTE_VERIFICACION"
+  }
+}
+```
+
+- `401`: Token ausente o inválido.
+- `403`: Si el rol real en BD no es `UNIVERSITARIO` (`{"success": false, "message": "No tiene permisos para acceder a este recurso."}`) o si la cuenta no está activa.
+
+## Autenticación y Sesiones (JWT)
+
+El sistema utiliza **Flask-JWT-Extended** para autenticación persistente y sin estado mediante JWT.
+
+1. **Configuración y Seguridad**:
+   - `JWT_SECRET_KEY`: Se lee desde `.env`. Si no está configurada, el backend falla inmediatamente al iniciar para evitar el uso de claves por defecto inseguras (fail-secure).
+   - `JWT_ACCESS_TOKEN_EXPIRES_MINUTES`: Configurable en `.env` (60 minutos por defecto).
+2. **Generación del token**: Al iniciar sesión con credenciales válidas en `POST /auth/login`, se emite un `access_token` firmado criptográficamente (HMAC-SHA256) con identidad `str(id_usuario)` y claim `rol`.
+3. **Control de acceso y revocación inmediata**:
+   - Las rutas protegidas validan el token con `@jwt_required()` o `@require_role(*roles)`.
+   - Para evitar confiar ciegamente en claims desactualizados, se consulta la base de datos con `find_user_by_id`. Si una cuenta es `BLOQUEADO` o `DESACTIVADO`, o su rol cambia, el acceso se revoca de inmediato (403).
+4. **Manejo de errores estándar**: Tokens ausentes, inválidos o expirados responden con HTTP 401 y formato uniforme `{"success": false, "message": "..."}` en español.
+5. **Frontend**: El token se almacena en `localStorage` mediante `sessionService.js` y se inyecta de forma transparente en `api.js` en la cabecera `Authorization: Bearer <token>`.
+
+## Pruebas
+
+`backend/tests/test_auth.py` y `backend/tests/test_auth_jwt.py` usan una base en memoria y no necesitan SQL Server. Suman 27 pruebas automáticas:
+
+```powershell
+cd backend
+python -m pytest
+```
+
+Una prueba de integración real requiere la base `ManosAmigas` con los 5 scripts ejecutados y un `.env` válido; se hace manualmente con los ejemplos anteriores.
 
 ## Probar con PowerShell (RUT de ejemplo válidos)
 
@@ -138,7 +219,11 @@ $body = @{
 Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/auth/register/familiar -ContentType "application/json; charset=utf-8" -Body $body
 
 $login = @{ email="pedro@example.com"; password="clave-segura-3" } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/auth/login -ContentType "application/json" -Body $login
+$res = Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/auth/login -ContentType "application/json" -Body $login
+$token = $res.access_token
+
+# Consultar /me con el token obtenido
+Invoke-RestMethod -Method Get -Uri http://localhost:5000/api/auth/me -Headers @{ Authorization = "Bearer $token" }
 ```
 
 Con `curl`: `curl -X POST http://localhost:5000/api/auth/login -H "Content-Type: application/json" -d "{\"email\":\"pedro@example.com\",\"password\":\"clave-segura-3\"}"`
@@ -146,16 +231,3 @@ Con `curl`: `curl -X POST http://localhost:5000/api/auth/login -H "Content-Type:
 RUT válidos de prueba: `12.345.678-5`, `7.654.321-6` (se pueden validar con `utils.rut.is_valid_rut`). Para otros, calcula el DV con `utils.rut.calculate_dv`.
 
 Verificar en SSMS: ejecutar `database/05_verificar_instalacion.sql`.
-
-## Autenticación futura (JWT)
-
-Hoy el login **no emite token**: el frontend recibe `user` y debe tratarlo como no confiable para endpoints protegidos. Para agregar JWT más adelante:
-
-1. Instalar `Flask-JWT-Extended` y agregar `JWT_SECRET_KEY` a `.env`/`config.py`.
-2. En `auth_service.login` (o en la ruta) llamar a `create_access_token(identity=str(user["id"]), additional_claims={"rol": user["rol"]})` y devolver `access_token` junto a `user`.
-3. Proteger rutas con `@jwt_required()` y restringir por rol leyendo el claim `rol`.
-4. En React, guardar el token y enviarlo en `Authorization: Bearer <token>` desde `services/api.js`.
-
-## Pruebas
-
-`backend/tests/test_auth.py` usa una base en memoria y no necesita SQL Server. Una prueba de integración real requiere la base `ManosAmigas` con los 5 scripts ejecutados y un `.env` válido; se hace manualmente con los ejemplos anteriores.
