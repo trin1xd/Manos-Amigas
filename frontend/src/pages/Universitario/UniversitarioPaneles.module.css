@@ -1,0 +1,36 @@
+.encabezado { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 18px; margin-bottom: 8px; }
+.encabezado h2 { margin: 0; }
+.descripcion { margin: 0 0 18px; }
+
+.lista { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.item { display: flex; flex-direction: column; gap: 10px; padding: 20px; background: #fff; border: 1px solid #d7e6e4; border-radius: 18px; box-shadow: 0 6px 23px rgba(18, 79, 77, .035); }
+.itemTitulo { margin: 0; color: #213b43; font-size: 1.18rem; line-height: 1.3; }
+.meta { display: grid; gap: 4px; margin: 0; color: #526a72; font-size: .95rem; }
+.meta div { display: flex; flex-wrap: wrap; gap: 6px; }
+.meta dt { color: #64757b; }
+.meta dd { margin: 0; color: #233c43; font-weight: 700; }
+.acciones { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 6px; }
+
+.confirmacion { display: grid; gap: 10px; width: 100%; padding: 14px; background: #fff7e8; border-left: 4px solid #f28c38; border-radius: 12px; }
+.confirmacion p { margin: 0; color: #614d32; font-size: .95rem; }
+
+.botonPrincipal, .botonSecundario { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 10px 16px; border-radius: 12px; font-weight: 800; font-size: .95rem; cursor: pointer; }
+.botonPrincipal { background: #f28c38; color: #20323a; border: 1px solid #f28c38; }
+.botonPrincipal:hover:not(:disabled) { background: #ffa052; }
+.botonSecundario { background: #fff; color: #13696c; border: 1px solid #9fcfc9; }
+.botonSecundario:hover:not(:disabled) { background: #e9f7f5; }
+.botonPrincipal:disabled, .botonSecundario:disabled { opacity: .6; cursor: not-allowed; }
+.botonPrincipal:focus-visible, .botonSecundario:focus-visible { outline: 3px solid #e79337; outline-offset: 3px; }
+
+.mensajeError, .mensajeOk, .mensajeInfo { margin: 14px 0 0; padding: 14px 18px; border-radius: 13px; font-size: .97rem; line-height: 1.5; }
+.mensajeError { background: #fee7e7; color: #913e3e; border-left: 4px solid #c25757; }
+.mensajeOk { background: #def5e8; color: #166546; border-left: 4px solid #2f9a6b; }
+.mensajeInfo { background: #e8f6f3; color: #1d5558; border-left: 4px solid #1f8a8a; }
+
+.estadosFila { display: flex; flex-wrap: wrap; gap: 8px; }
+.nota { margin: 0; color: #5b7076; font-size: .92rem; line-height: 1.5; }
+
+@media (max-width: 680px) {
+  .lista { grid-template-columns: 1fr; }
+  .acciones > button { flex: 1 1 100%; }
+}
