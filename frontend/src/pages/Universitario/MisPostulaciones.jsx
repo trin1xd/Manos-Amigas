@@ -30,8 +30,7 @@ export default function MisPostulaciones({ onLogout }) {
       setError('');
     } catch (err) {
       if (esErrorDeSesion(err)) {
-        onLogout?.();
-        return;
+        return; // El evento global ya redirige a iniciar sesión.
       }
       setError(err.message || 'No pudimos cargar tus postulaciones.');
     } finally {

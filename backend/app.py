@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -57,4 +59,10 @@ def create_app():
 
 
 if __name__ == "__main__":
-    create_app().run(host="0.0.0.0", port=5000, debug=True)
+    host = os.getenv('FLASK_HOST', '127.0.0.1')
+    puerto = int(os.getenv('FLASK_PORT', '5000'))
+    debug = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
+    if debug and host not in ('127.0.0.1', 'localhost', '::1'):
+        raise SystemExit('No se permite FLASK_DEBUG=true fuera de localhost.')
+    # Servidor de desarrollo. Para producción usar WSGI y HTTPS, nunca app.py.
+    create_app().run(host=host, port=puerto, debug=debug)

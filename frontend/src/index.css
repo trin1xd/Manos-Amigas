@@ -61,6 +61,11 @@
   --transition-slow: 400ms ease;
 }
 
+/* Preferencia accesible desde el inicio; se mantiene al navegar. */
+html.texto-grande {
+  font-size: 20px;
+}
+
 /* --- Reset & Base --- */
 *,
 *::before,

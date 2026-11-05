@@ -25,17 +25,7 @@ export async function getMisPostulaciones() {
   return data?.postulaciones ?? [];
 }
 
-// apiRequest solo expone el mensaje del error (no el código HTTP). Estos son los
-// mensajes del backend para una sesión ausente, inválida, vencida o de un usuario
-// que ya no existe (respuestas 401). Sirven para cerrar la sesión local.
-const MENSAJES_DE_SESION = [
-  'Token de autenticación no proporcionado.',
-  'Token de autenticación inválido.',
-  'El token de autenticación ha expirado.',
-  'Identificador de usuario inválido.',
-  'Usuario no encontrado.',
-];
-
+// apiRequest conserva el código HTTP, independiente del texto del mensaje.
 export function esErrorDeSesion(error) {
-  return MENSAJES_DE_SESION.includes(error?.message);
+  return error?.status === 401;
 }

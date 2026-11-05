@@ -38,14 +38,10 @@ En SSMS 22, conectarse a tu instancia y ejecutar **en este orden** (abrir cada a
 3. `database/03_restricciones.sql` — UNIQUE, FOREIGN KEY, CHECK
 4. `database/04_datos_iniciales.sql` — roles (`ADULTO_MAYOR`, `UNIVERSITARIO`, `FAMILIAR`) y datos base
 5. `database/05_verificar_instalacion.sql` — comprobación
+6. `database/06_operacion_solicitudes.sql` — solicitudes, postulaciones y vínculos
+7. `database/07_verificacion_admin_demo.sql` — rol ADMIN y auditoría de pruebas
 
-Los scripts se pueden re-ejecutar sin errores. Si ya habías creado el esquema inicial anterior (con `Usuarios.nombre/apellido`), borra la base primero:
-
-```sql
-USE master;
-ALTER DATABASE ManosAmigas SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-DROP DATABASE ManosAmigas;
-```
+**Importante:** en una base que ya contiene datos, NO borres ni recrees la base. Haz una copia de seguridad antes de cualquier migración. Las migraciones 06 y 07 son aditivas. Para revisar la base actual ejecuta `database/utilidades/diagnostico_mvp_solo_lectura.sql` (solo consultas SELECT).
 
 > Requiere además tener instalado el **ODBC Driver 18 for SQL Server** en el equipo donde corre Flask.
 
@@ -63,6 +59,9 @@ Editar `backend/.env` con tus datos (nunca se sube al repositorio):
 
 ```env
 SECRET_KEY=una-clave-larga-y-aleatoria
+JWT_SECRET_KEY=otra-clave-larga-y-aleatoria
+FLASK_HOST=127.0.0.1
+FLASK_DEBUG=false
 DB_SERVER=localhost            # o localhost\SQLEXPRESS
 DB_NAME=ManosAmigas
 DB_USER=sa
@@ -104,6 +103,7 @@ Vite usa `http://localhost:5173`.
 | `ADULTO_MAYOR` | `PerfilAdultoMayor` |
 | `UNIVERSITARIO` | `PerfilUniversitario` |
 | `FAMILIAR` | `PerfilFamiliar` |
+| `ADMIN` | Administración local de pruebas; sin registro público |
 
 - Estado de cuenta (`Usuarios.estado`): `ACTIVO`, `BLOQUEADO`, `DESACTIVADO`.
 - Estado del universitario (`PerfilUniversitario.estado_verificacion`): `PENDIENTE_VERIFICACION` (al registrarse), `VERIFICADO`, `RECHAZADO`, `SUSPENDIDO`.
@@ -112,9 +112,11 @@ El rol es único por cuenta y no se puede cambiar desde la API.
 
 ## Estado actual
 
-- Implementado: registro por perfil, login básico, persistencia en SQL Server, rol en la respuesta del login, JWT, GET /auth/me y protección por rol.
-- El frontend aún no está conectado a estos endpoints (el diseño visual no se modificó).
-- Pendiente a propósito: subida de documentos, verificación de universitarios y de correo institucional, asociación familiar ↔ adulto mayor, servicios, solicitudes, pagos, chat, SOS, notificaciones.
+- **Operativo en el MVP:** registro por perfil, login y JWT, solicitudes del adulto mayor/familiar, postulaciones de universitarios habilitados, aceptación/cancelación y relación familiar autorizada. El frontend React consume la API Flask con datos de SQL Server.
+- **ADMIN solo para pruebas:** permite aprobar o rechazar cuentas ficticias y registrar auditoría. NO verifica identidad, documentos, antecedentes ni correo institucional real.
+- **Aún pendiente:** llegada/inicio/finalización de servicios, historial, notificaciones, pagos, chat, SOS, calificaciones, recuperación de contraseña y verificación real.
+- **Estabilización:** ver `docs/estabilizacion_mvp.md`; revisar SQL sin modificar datos con `database/utilidades/diagnostico_mvp_solo_lectura.sql`.
+- **Flask:** `python app.py` escucha solo en localhost y usa debug desactivado por defecto. Para probar el panel ADMIN localmente, activar temporalmente `FLASK_DEBUG=true` y `ADMIN_VERIFICACION_PRUEBAS=true` solo en `.env` privado y reiniciar Flask. Nunca exponer debug a la red.
 
 ## Documentación
 

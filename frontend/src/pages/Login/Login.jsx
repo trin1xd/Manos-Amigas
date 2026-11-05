@@ -5,7 +5,7 @@ import styles from './Login.module.css';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-export default function Login({ onNavigateHome, onLoginSuccess }) {
+export default function Login({ onNavigateHome, onNavigateRegister, onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -65,7 +65,7 @@ export default function Login({ onNavigateHome, onLoginSuccess }) {
   };
 
   const handleRegisterNotice = () => {
-    setInfoMessage('El registro de nuevos usuarios estará disponible próximamente.');
+    onNavigateRegister?.();
   };
 
   return (
@@ -346,7 +346,6 @@ export default function Login({ onNavigateHome, onLoginSuccess }) {
                   id="login-register-link-btn"
                   className={styles.registerBtn}
                   onClick={handleRegisterNotice}
-                  title="Próximamente — registro de familias y estudiantes en desarrollo"
                 >
                   Regístrate aquí
                 </button>
