@@ -1,0 +1,9 @@
+.flotante { position: fixed; bottom: max(12px, env(safe-area-inset-bottom)); left: max(12px, env(safe-area-inset-left)); z-index: 1500; display: flex; flex-direction: column-reverse; gap: 8px; max-width: min(300px, calc(100vw - 24px)); font-size: .92rem; }
+.activador { min-height: 46px; padding: 10px 15px; border-radius: 24px; background: #123d46; color: #fff; font-weight: 800; box-shadow: 0 4px 20px #0003; border: 2px solid #fff; align-self: flex-start; }
+.activador span { font-size: 1.1em; }
+.panel { display: grid; gap: 9px; background: #fff; padding: 16px; color: #162f38; border: 2px solid #366b6c; border-radius: 13px; box-shadow: 0 4px 25px #0003; }
+.panel strong { font-size: 1.05rem; }
+.panel button { background: #e4f5f4; border: 1px solid #9fc5c5; border-radius: 9px; min-height: 44px; padding: 8px 12px; text-align: left; color: #184f54; font-weight: 750; }
+.panel button[aria-pressed="true"] { background: #144f58; color: #fff; }
+.panel p { color: #435e62; font-size: .78rem; line-height: 1.4; }
+.flotante button:focus-visible { outline: 3px solid #ef8a1f; outline-offset: 3px; }

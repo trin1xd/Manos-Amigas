@@ -16,6 +16,12 @@ export default function Hero({
   const [mostrarAyuda, setMostrarAyuda] = useState(false);
 
   useEffect(() => {
+    const sincronizarTexto = (evento) => setTextoGrande(Boolean(evento.detail));
+    window.addEventListener('manos-amigas:texto-grande', sincronizarTexto);
+    return () => window.removeEventListener('manos-amigas:texto-grande', sincronizarTexto);
+  }, []);
+
+  useEffect(() => {
     document.documentElement.classList.toggle('texto-grande', textoGrande);
     try {
       localStorage.setItem('manos_amigas_texto_grande', String(textoGrande));
@@ -76,7 +82,11 @@ export default function Hero({
             type="button"
             className={styles.accessibilityButton}
             aria-pressed={textoGrande}
-            onClick={() => setTextoGrande(valor => !valor)}
+            onClick={() => {
+              const nuevo = !textoGrande;
+              setTextoGrande(nuevo);
+              window.dispatchEvent(new CustomEvent('manos-amigas:texto-grande', { detail: nuevo }));
+            }}
           >
             <span className={styles.aa}>Aa</span>
             Texto grande

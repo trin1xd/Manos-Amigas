@@ -10,6 +10,7 @@ from routes.auth_routes import auth_bp
 from routes.operations_routes import ops_bp
 from routes.verificacion_routes import verificacion_bp
 from routes.seguimiento_routes import seguimiento_bp
+from routes.calificaciones_routes import calificaciones_bp
 
 
 def create_app():
@@ -44,6 +45,7 @@ def create_app():
     app.register_blueprint(ops_bp, url_prefix='/api')
     app.register_blueprint(verificacion_bp, url_prefix='/api/admin')
     app.register_blueprint(seguimiento_bp, url_prefix='/api')
+    app.register_blueprint(calificaciones_bp, url_prefix='/api')
 
     @app.errorhandler(Exception)
     def unexpected_error(error):
