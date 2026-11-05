@@ -201,3 +201,9 @@ button {
 .animate-fade {
   animation: fadeIn 0.4s ease both;
 }
+/* Megaparche accesibilidad: preferencias también en los dashboards */
+html.alto-contraste { --color-bg: #fff; --color-surface: #fff; --color-text: #152529; --color-text-muted: #344c55; --color-primary: #0b5258; --color-primary-dark: #063c40; }
+html.alto-contraste body { color: var(--color-text); background: #fff; }
+html.alto-contraste :is(button, input, select, textarea, a):focus-visible { outline: 4px solid #ea6c06 !important; outline-offset: 3px; }
+html.reducir-movimiento *, html.reducir-movimiento *::before, html.reducir-movimiento *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }

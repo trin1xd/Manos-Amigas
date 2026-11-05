@@ -4,12 +4,14 @@ import styles from '../../components/dashboard/DashboardLayout.module.css';
 import TareasDisponibles from './TareasDisponibles';
 import MisPostulaciones from './MisPostulaciones';
 import SeguimientoServicios from '../Seguimiento/SeguimientoServicios';
+import CalificacionesServicios from '../Calificaciones/CalificacionesServicios';
 
 const NAVEGACION = [
   { id: 'inicio', nombre: 'Inicio', icono: '🏠' },
   { id: 'oportunidades', nombre: 'Tareas', icono: '🧹' },
   { id: 'postulaciones', nombre: 'Mis postulaciones', icono: '📋' },
   { id: 'seguimiento', nombre: 'Seguimiento', icono: '🕒' },
+  { id: 'calificaciones', nombre: 'Calificaciones', icono: '⭐' },
   { id: 'perfil', nombre: 'Mi perfil', icono: '👤' },
 ];
 
@@ -117,6 +119,9 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
 
       {vista === 'seguimiento' && (
         <SeguimientoServicios usuario={usuario} />
+      )}
+      {vista === 'calificaciones' && (
+        <CalificacionesServicios usuario={usuario} />
       )}
       {vista === 'perfil' && (
         <section className={styles.panel} aria-labelledby="uni-perfil">
