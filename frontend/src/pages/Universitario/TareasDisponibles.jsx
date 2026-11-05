@@ -39,8 +39,7 @@ export default function TareasDisponibles({ usuario, onLogout }) {
       setError('');
     } catch (err) {
       if (esErrorDeSesion(err)) {
-        onLogout?.();
-        return;
+        return; // El evento global ya redirige a iniciar sesión.
       }
       setError(err.message || 'No pudimos cargar las tareas.');
     } finally {
@@ -63,8 +62,7 @@ export default function TareasDisponibles({ usuario, onLogout }) {
       setAviso('Tu postulación fue enviada. Puedes seguirla en "Mis postulaciones".');
     } catch (err) {
       if (esErrorDeSesion(err)) {
-        onLogout?.();
-        return;
+        return; // El evento global ya redirige a iniciar sesión.
       }
       setError(err.message || 'No pudimos enviar tu postulación.');
     } finally {

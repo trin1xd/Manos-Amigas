@@ -29,6 +29,17 @@ function App() {
   const [verificandoSesion, setVerificandoSesion] = useState(true);
   const [errorSesion, setErrorSesion] = useState('');
 
+  // Escucha la expiración desde cualquier dashboard (excepto el login público).
+  useEffect(() => {
+    const sesionExpirada = () => {
+      setUsuario(null);
+      setCurrentView('login');
+      setErrorSesion('Tu sesión expiró. Inicia sesión nuevamente.');
+    };
+    window.addEventListener('manos-amigas:sesion-expirada', sesionExpirada);
+    return () => window.removeEventListener('manos-amigas:sesion-expirada', sesionExpirada);
+  }, []);
+
   // Recuperar sesión al recargar la página
   useEffect(() => {
     let activo = true;
@@ -110,8 +121,6 @@ function App() {
     );
   }
 
-  // Las otras interfaces se desarrollarán después
-
   // Paneles por rol: la sesión fue validada mediante /api/auth/me.
   if (usuario?.rol === 'UNIVERSITARIO') {
     return (
@@ -150,6 +159,7 @@ function App() {
       <>
         <Login
           onNavigateHome={() => setCurrentView('inicio')}
+          onNavigateRegister={() => setCurrentView('crear-cuenta')}
           onLoginSuccess={handleLoginSuccess}
         />
         {errorSesion && (

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import styles from './Hero.module.css';
 import { LogoIcon } from '../layout/Header';
 
@@ -5,6 +6,24 @@ export default function Hero({
   onLoginClick,
   onCreateAccountClick,
 }) {
+  const [textoGrande, setTextoGrande] = useState(() => {
+    try {
+      return typeof window !== 'undefined' && localStorage.getItem('manos_amigas_texto_grande') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [mostrarAyuda, setMostrarAyuda] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('texto-grande', textoGrande);
+    try {
+      localStorage.setItem('manos_amigas_texto_grande', String(textoGrande));
+    } catch {
+      // Preferencia solo durante la sesión si el navegador bloquea el almacenamiento.
+    }
+  }, [textoGrande]);
+
   return (
     <section
       className={styles.hero}
@@ -56,6 +75,8 @@ export default function Hero({
           <button
             type="button"
             className={styles.accessibilityButton}
+            aria-pressed={textoGrande}
+            onClick={() => setTextoGrande(valor => !valor)}
           >
             <span className={styles.aa}>Aa</span>
             Texto grande
@@ -66,11 +87,23 @@ export default function Hero({
           <button
             type="button"
             className={styles.accessibilityButton}
+            aria-expanded={mostrarAyuda}
+            aria-controls="ayuda-inicio"
+            onClick={() => setMostrarAyuda(valor => !valor)}
           >
             <span className={styles.helpIcon}>?</span>
             Ayuda
           </button>
         </div>
+
+        {mostrarAyuda && (
+          <div id="ayuda-inicio" className={styles.panelAyuda} role="region" aria-label="Ayuda para comenzar">
+            <strong>¿Cómo comenzar?</strong>
+            <p>Selecciona «Crear cuenta» y elige tu perfil: adulto mayor, universitario o familiar.</p>
+            <p>Si ya tienes una cuenta, presiona «Iniciar sesión» con tu correo y contraseña.</p>
+            <p>Manos Amigas es un prototipo de apoyo cotidiano; no ofrece atención médica ni servicios de emergencia.</p>
+          </div>
+        )}
 
       </div>
     </section>

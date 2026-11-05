@@ -61,7 +61,7 @@ export default function DashboardLayout({
         <main id="contenido-panel" className={styles.contenido}>{children}</main>
         <footer className={styles.pie}>
           <span>Manos Amigas · Panel {tituloRol.toLowerCase()}</span>
-          <span>Los servicios y las solicitudes reales se conectarán en una próxima etapa.</span>
+          <span>Las solicitudes y postulaciones se consultan en la API de Manos Amigas.</span>
         </footer>
       </div>
     </div>
