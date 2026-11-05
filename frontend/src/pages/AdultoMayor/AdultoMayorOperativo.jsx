@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './AdultoMayorDashboard.module.css';
 import ui from './AdultoMayorOperativo.module.css';
+import SeguimientoServicios from '../Seguimiento/SeguimientoServicios';
 import {
   obtenerCatalogoServicios,
   obtenerMisSolicitudes,
@@ -17,6 +18,7 @@ const SECCIONES = [
   { clave: 'inicio', etiqueta: 'Inicio' },
   { clave: 'catalogo', etiqueta: 'Pedir ayuda' },
   { clave: 'solicitudes', etiqueta: 'Mis solicitudes' },
+  { clave: 'seguimiento', etiqueta: 'Seguimiento' },
   { clave: 'perfil', etiqueta: 'Mi perfil' },
 ];
 
@@ -532,6 +534,9 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
                 </div>
               )}
             </section>
+          )}
+          {vista === 'seguimiento' && (
+            <SeguimientoServicios usuario={usuario} />
           )}
           {vista === 'perfil' && (
             <>

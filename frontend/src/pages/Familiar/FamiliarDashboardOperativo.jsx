@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
+import SeguimientoServicios from '../Seguimiento/SeguimientoServicios';
 import dash from '../../components/dashboard/DashboardLayout.module.css';
 import styles from './FamiliarDashboardOperativo.module.css';
 import {
@@ -17,6 +18,7 @@ const NAVEGACION = [
   { id: 'adultos', nombre: 'Personas a cargo', icono: '💛' },
   { id: 'solicitudes', nombre: 'Solicitudes', icono: '📋' },
   { id: 'nueva', nombre: 'Pedir ayuda', icono: '🤝' },
+  { id: 'seguimiento', nombre: 'Seguimiento', icono: '🕒' },
   { id: 'perfil', nombre: 'Mi perfil', icono: '👤' },
 ];
 
@@ -374,6 +376,9 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
         </section>
       )}
 
+      {vista === 'seguimiento' && (
+        <SeguimientoServicios usuario={usuario} />
+      )}
       {vista === 'perfil' && (
         <section className={dash.panel} aria-labelledby="fam-perfil">
           <h2 id="fam-perfil">Mi perfil familiar</h2>

@@ -1,0 +1,24 @@
+.contenedor { display: grid; gap: 17px; color: #24333d; }
+.encabezado { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.encabezado h2 { font-size: 1.55rem; }
+.encabezado p { color: #516a71; margin-top: 5px; }
+.encabezado button { background: #eef8f6; border: 1px solid #9dcac8; border-radius: 11px; color: #116a6a; min-height: 44px; padding: 10px 15px; font-weight: 800; }
+.lista { display: grid; gap: 16px; }
+.tarjeta { background: #fff; border: 1px solid #d2e5e2; border-radius: 17px; padding: clamp(16px,4vw,24px); min-width: 0; }
+.tituloFila { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: start; gap: 10px; margin-bottom: 12px; }
+.tituloFila h3 { font-size: 1.18rem; overflow-wrap: anywhere; }
+.estado { background: #e0f2f0; border-radius: 22px; padding: 7px 12px; color: #176464; font-weight: 800; font-size: .86rem; }
+.tarjeta p { margin: 8px 0; color: #48636a; }
+.fechas { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin: 16px 0; }
+.fechas div { background: #f4f9f8; border-radius: 10px; padding: 10px; min-width: 0; }
+.fechas dt { color: #526a71; font-size: .85rem; }
+.fechas dd { margin: 4px 0 0; font-weight: 700; overflow-wrap: anywhere; }
+.accion { display: block; width: 100%; background: #168080; color: #fff; border-radius: 11px; min-height: 48px; padding: 12px 15px; font-size: 1rem; font-weight: 800; }
+.accion:hover { background: #116667; }
+.accion:disabled, .encabezado button:disabled { opacity: .6; cursor: wait; }
+.accion:focus-visible, .encabezado button:focus-visible { outline: 3px solid #f28c38; outline-offset: 3px; }
+.error { color: #8f2924; background: #ffedec; border-radius: 10px; padding: 13px; }
+.exito { color: #146342; background: #e0f7e9; border-radius: 10px; padding: 13px; }
+.aviso { color: #624a29; background: #fff7e8; border-left: 3px solid #f28c38; border-radius: 9px; padding: 12px; }
+.vacio { background: #fff; padding: 20px; border: 1px solid #d2e5e2; border-radius: 14px; }
+@media(max-width: 540px) { .fechas { grid-template-columns: 1fr; } .encabezado button { width: 100%; } }
