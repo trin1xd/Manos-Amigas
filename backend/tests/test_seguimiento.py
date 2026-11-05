@@ -22,7 +22,7 @@ USUARIOS = {
 
 @pytest.fixture
 def app(monkeypatch):
-    monkeypatch.setattr(auth_service, 'get_user_by_id', lambda uid: USERS[int(uid)].copy())
+    monkeypatch.setattr(auth_service, 'get_user_by_id', lambda uid: USUARIOS[int(uid)].copy())
     instance = create_app()
     instance.config['TESTING'] = True
     return instance
