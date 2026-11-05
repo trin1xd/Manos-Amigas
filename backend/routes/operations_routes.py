@@ -113,6 +113,12 @@ def desvincular(id_familiar):
     return result if isinstance(result, tuple) else _ok(result, field='vinculo')
 
 
+@ops_bp.get('/familiares/mios')
+@require_role(ADULTO_MAYOR)
+def familiares_del_adulto():
+    return _ok(ops.mis_familiares(g.current_user), field='familiares')
+
+
 @ops_bp.get('/familiares/adultos')
 @require_role(FAMILIAR)
 def adultos_vinculados():

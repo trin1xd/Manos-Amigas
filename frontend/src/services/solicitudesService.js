@@ -39,6 +39,20 @@ export async function cancelarSolicitud(idSolicitud) {
   return respuesta.solicitud;
 }
 
+/** Lista solo los familiares autorizados por el adulto mayor autenticado. */
+export async function obtenerFamiliaresAutorizados() {
+  const respuesta = await apiRequest('/familiares/mios');
+  return respuesta.familiares ?? [];
+}
+
+/** Revoca únicamente un vínculo que pertenece al adulto mayor autenticado. */
+export async function revocarAutorizacionFamiliar(idFamiliar) {
+  const respuesta = await apiRequest(`/familiares/${encodeURIComponent(idFamiliar)}/vinculo`, {
+    method: 'DELETE',
+  });
+  return respuesta.vinculo;
+}
+
 export async function autorizarFamiliar(datos) {
   const respuesta = await apiRequest('/familiares/vincular', {
     method: 'POST',

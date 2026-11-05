@@ -80,6 +80,21 @@ def desactivar_vinculo(cursor, id_relacion):
     cursor.execute('UPDATE dbo.FamiliarAdultoMayor SET activo = 0 WHERE id_relacion = ?', (id_relacion,))
 
 
+def familiares_vinculados(cursor, id_adulto):
+    """Lista de familiares autorizados; no expone teléfonos ni datos de terceros."""
+    cursor.execute('''
+        SELECT u.id_usuario AS id, u.nombre_completo AS nombre,
+               u.email, v.parentesco
+        FROM dbo.FamiliarAdultoMayor AS v
+        INNER JOIN dbo.Usuarios AS u ON u.id_usuario = v.id_familiar
+        INNER JOIN dbo.Roles AS r ON r.id_rol = u.id_rol
+        WHERE v.id_adulto_mayor = ? AND v.activo = 1
+          AND u.estado = 'ACTIVO' AND r.nombre = 'FAMILIAR'
+        ORDER BY u.nombre_completo, u.id_usuario
+    ''', (id_adulto,))
+    return _all(cursor)
+
+
 def adultos_vinculados(cursor, id_familiar):
     cursor.execute('''
         SELECT u.id_usuario AS id, u.nombre_completo AS nombre, v.parentesco

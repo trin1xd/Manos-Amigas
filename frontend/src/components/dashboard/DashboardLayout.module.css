@@ -69,3 +69,58 @@
   .datos div { grid-template-columns: 1fr; gap: 4px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto; } }
+
+/* MANOS AMIGAS: NAVEGACION RESPONSIVE V1 - paneles Universitario y Familiar
+   En movil se muestran todas las pestañas sin scroll horizontal. */
+@media (max-width: 760px) {
+  .navegacion {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: visible;
+    padding: 8px;
+  }
+
+  .navegacion > .pestana {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0;
+    width: 100%;
+    min-height: 58px;
+    padding: 10px 7px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+    line-height: 1.25;
+  }
+
+  /* El Familiar tiene 5 opciones; la quinta ocupa la ultima fila. */
+  .navegacion > .pestana:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .bienvenida {
+    flex-wrap: wrap;
+  }
+
+  .bienvenida > * {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 340px) {
+  .navegacion {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .navegacion > .pestana:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+}
+

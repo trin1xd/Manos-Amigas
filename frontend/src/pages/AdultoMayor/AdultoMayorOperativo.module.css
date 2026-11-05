@@ -47,3 +47,48 @@
 @media (max-width: 560px) {
   .acciones > button, .tituloFila > button, .postulanteFila > button { width: 100%; }
 }
+
+/* Familiares autorizados en el perfil del adulto mayor */
+.encabezadoFamiliares {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0 12px;
+}
+.encabezadoFamiliares h3 { margin: 0; font-size: 1.1rem; }
+.botonActualizar {
+  border-radius: 11px;
+  padding: 10px 14px;
+  color: #14696a;
+  border: 1px solid #b2d8d5;
+  background: #edf7f6;
+  font-weight: 700;
+}
+.listaFamiliares { padding: 0; margin: 12px 0 0; list-style: none; }
+.familiarFila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 15px 0;
+  border-bottom: 1px solid #dce5e5;
+}
+.familiarInfo { min-width: 0; overflow-wrap: anywhere; }
+.familiarInfo strong { display: block; }
+.familiarInfo p { color: #536a73; margin: 3px 0 0; }
+.botonRevocar {
+  flex-shrink: 0;
+  border-radius: 11px;
+  padding: 11px 14px;
+  border: 1px solid #cfa8a4;
+  background: #fff0ee;
+  color: #822c27;
+  font-weight: 700;
+}
+.errorVinculos { color: #a42222; margin: 12px 0; }
+@media (max-width: 560px) {
+  .familiarFila { align-items: stretch; flex-direction: column; }
+  .botonRevocar { width: 100%; min-height: 46px; }
+}
