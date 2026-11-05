@@ -32,3 +32,39 @@
 .ok { background: #e1f8ed; color: #176846; padding: 14px; border-radius: 10px; margin: 12px 0; }
 .vacio { background: #fff; padding: 22px; border: 1px solid #d7e6e4; border-radius: 14px; }
 @media (max-width: 620px) { .detalles div { grid-template-columns: 1fr; gap: 1px; } .barra { padding: 14px 18px; } }
+
+/* MANOS AMIGAS: RESPONSIVE V1 - panel Administrador
+   El administrador no usa pestanas; se ajustan cabecera y controles. */
+@media (max-width: 760px) {
+  .barra {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .barra strong {
+    overflow-wrap: anywhere;
+  }
+
+  .salir {
+    align-self: flex-start;
+  }
+
+  .barraAcciones {
+    align-items: stretch;
+  }
+
+  .barraAcciones label,
+  .barraAcciones select,
+  .barraAcciones button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .estudiante,
+  .alerta {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+

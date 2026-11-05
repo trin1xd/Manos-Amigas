@@ -9,6 +9,8 @@ import {
   aceptarPostulacion,
   cancelarSolicitud,
   autorizarFamiliar,
+  obtenerFamiliaresAutorizados,
+  revocarAutorizacionFamiliar,
 } from '../../services/solicitudesService';
 
 const SECCIONES = [
@@ -195,6 +197,22 @@ function VincularFamiliar() {
   const [enviando, setEnviando] = useState(false);
   const [mensaje, setMensaje] = useState('');
   const [error, setError] = useState('');
+  const [familiares, setFamiliares] = useState([]);
+  const [cargandoFamiliares, setCargandoFamiliares] = useState(true);
+  const [errorFamiliares, setErrorFamiliares] = useState('');
+  const [revisionFamiliares, setRevisionFamiliares] = useState(0);
+  const [revocandoId, setRevocandoId] = useState(null);
+
+  useEffect(() => {
+    let activo = true;
+    setCargandoFamiliares(true);
+    setErrorFamiliares('');
+    obtenerFamiliaresAutorizados()
+      .then(lista => { if (activo) setFamiliares(lista); })
+      .catch(err => { if (activo) setErrorFamiliares(err.message || 'No se pudieron cargar los familiares.'); })
+      .finally(() => { if (activo) setCargandoFamiliares(false); });
+    return () => { activo = false; };
+  }, [revisionFamiliares]);
 
   async function enviar(e) {
     e.preventDefault();
@@ -207,10 +225,28 @@ function VincularFamiliar() {
       setMensaje('Familiar autorizado correctamente. Ya puede ver tus solicitudes desde su perfil.');
       setEmail('');
       setParentesco('');
+      setRevisionFamiliares(n => n + 1);
     } catch (err) {
       setError(err.message || 'No fue posible autorizar al familiar.');
     } finally {
       setEnviando(false);
+    }
+  }
+
+  async function revocar(id, nombre) {
+    if (revocandoId !== null || enviando) return;
+    if (!window.confirm(`¿Revocar el acceso de ${nombre} a tus solicitudes?`)) return;
+    setRevocandoId(id);
+    setError('');
+    setMensaje('');
+    try {
+      await revocarAutorizacionFamiliar(id);
+      setMensaje(`Acceso de ${nombre} revocado correctamente.`);
+      setRevisionFamiliares(n => n + 1);
+    } catch (err) {
+      setError(err.message || 'No fue posible revocar el acceso.');
+    } finally {
+      setRevocandoId(null);
     }
   }
 
@@ -220,16 +256,41 @@ function VincularFamiliar() {
       <p className={styles.textoAyuda}>Debe tener una cuenta con rol Familiar. Solo autorizarás a esa cuenta a gestionar tus solicitudes; no se compartirán direcciones ni teléfonos.</p>
       <form className={styles.formularioSolicitud} onSubmit={enviar}>
         <label className={styles.campo} htmlFor="email-familiar">Correo electrónico del familiar
-          <input type="email" id="email-familiar" required value={email} onChange={e=>setEmail(e.target.value)} />
+          <input type="email" id="email-familiar" required value={email} onChange={e => setEmail(e.target.value)} />
         </label>
         <label className={styles.campo} htmlFor="parentesco">Parentesco
-          <input type="text" id="parentesco" minLength={2} maxLength={100} required value={parentesco} onChange={e=>setParentesco(e.target.value)} placeholder="Hija, hijo, nieta..." />
+          <input type="text" id="parentesco" minLength={2} maxLength={100} required value={parentesco} onChange={e => setParentesco(e.target.value)} placeholder="Hija, hijo, nieta..." />
         </label>
         {mensaje && <p className={ui.ok} role="status">{mensaje}</p>}
         {error && <p className={styles.errorSolicitud} role="alert">{error}</p>}
-        <button className={styles.botonPrimario} type="submit" disabled={enviando}>{enviando ? 'Autorizando...' : 'Autorizar familiar'}</button>
+        <button className={styles.botonPrimario} type="submit" disabled={enviando || revocandoId !== null}>{enviando ? 'Autorizando...' : 'Autorizar familiar'}</button>
       </form>
-      <p className={styles.nota}>La invitación con aceptación del familiar y un listado para revocar vínculos se implementarán en otra etapa.</p>
+
+      <div className={ui.encabezadoFamiliares}>
+        <h3>Familiares autorizados ({familiares.length})</h3>
+        <button className={ui.botonActualizar} type="button" onClick={() => setRevisionFamiliares(n => n + 1)} disabled={cargandoFamiliares || revocandoId !== null}>Actualizar lista</button>
+      </div>
+      {cargandoFamiliares && <p role="status">Consultando familiares autorizados...</p>}
+      {errorFamiliares && <p className={ui.errorVinculos} role="alert">{errorFamiliares}</p>}
+      {!cargandoFamiliares && !errorFamiliares && familiares.length === 0 && (
+        <p className={styles.nota}>Todavía no tienes familiares autorizados. Registrar una cuenta Familiar no la vincula automáticamente: debes autorizarla usando su correo aquí.</p>
+      )}
+      {!cargandoFamiliares && familiares.length > 0 && (
+        <ul className={ui.listaFamiliares}>
+          {familiares.map(familiar => (
+            <li key={familiar.id} className={ui.familiarFila}>
+              <div className={ui.familiarInfo}>
+                <strong>{familiar.nombre}</strong>
+                <p>{familiar.parentesco} · {familiar.email}</p>
+              </div>
+              <button className={ui.botonRevocar} type="button" onClick={() => revocar(familiar.id, familiar.nombre)} disabled={revocandoId !== null || enviando}>
+                {revocandoId === familiar.id ? 'Revocando...' : 'Revocar acceso'}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className={styles.nota}>La autorización entra en vigor al guardarse. La aceptación explícita del familiar se evaluará en una etapa futura.</p>
     </section>
   );
 }

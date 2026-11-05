@@ -736,3 +736,61 @@
   outline: 3px solid #f28c38;
   outline-offset: 3px;
 }
+
+/* Corrección móvil: cuatro pestañas visibles en una cuadrícula de dos filas. */
+@media (max-width: 550px) {
+  .navegacion {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow-x: visible;
+    gap: 6px;
+  }
+  .pestana {
+    min-width: 0;
+    width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+    line-height: 1.25;
+    min-height: 54px;
+  }
+}
+
+/* MANOS AMIGAS: NAVEGACION RESPONSIVE V1 - panel Adulto Mayor
+   Evita ocultar Mi perfil en pantallas estrechas. */
+@media (max-width: 760px) {
+  .navegacion {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: visible;
+    padding: 8px;
+  }
+
+  .navegacion > .pestana {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    width: 100%;
+    min-height: 58px;
+    padding: 10px 7px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+    line-height: 1.25;
+  }
+
+  .cabeceraInterior {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 340px) {
+  .navegacion {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+

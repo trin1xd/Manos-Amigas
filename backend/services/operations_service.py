@@ -202,6 +202,12 @@ def desvincular_familiar(user, id_familiar):
         return {'id_familiar': id_familiar, 'activo': False}
 
 
+def mis_familiares(user):
+    """Devuelve solo familiares activos autorizados por este adulto mayor."""
+    with _db() as cursor:
+        return repo.familiares_vinculados(cursor, user['id'])
+
+
 def mis_adultos(user):
     with _db() as cursor:
         return repo.adultos_vinculados(cursor, user['id'])
