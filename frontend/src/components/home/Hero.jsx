@@ -1,6 +1,8 @@
+/* MANOS AMIGAS UI V6 - ACCESIBILIDAD INTEGRADA */
 import { useEffect, useState } from 'react';
 import styles from './Hero.module.css';
 import { LogoIcon } from '../layout/Header';
+import AccessibilityToolbar from '../accessibility/AccessibilityToolbar';
 
 export default function Hero({
   onLoginClick,
@@ -78,22 +80,9 @@ export default function Hero({
         </div>
 
         <div className={styles.accessibility}>
-          <button
-            type="button"
-            className={styles.accessibilityButton}
-            aria-pressed={textoGrande}
-            onClick={() => {
-              const nuevo = !textoGrande;
-              setTextoGrande(nuevo);
-              window.dispatchEvent(new CustomEvent('manos-amigas:texto-grande', { detail: nuevo }));
-            }}
-          >
-            <span className={styles.aa}>Aa</span>
-            Texto grande
-          </button>
-
-          <span className={styles.divider} />
-
+          <div id="manos-accesibilidad-home" className={styles.accesibilidadIntegrada}>
+            <AccessibilityToolbar integrada />
+          </div>
           <button
             type="button"
             className={styles.accessibilityButton}

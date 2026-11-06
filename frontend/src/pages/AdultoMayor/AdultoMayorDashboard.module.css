@@ -794,3 +794,125 @@
   }
 }
 
+/* Manos Amigas · Rediseño ordenado V2 · Adulto mayor */
+.pagina {background:radial-gradient(circle at 100% 0%,#e4f5f1,transparent 34%),#f5f9f8}
+.cabecera {background:linear-gradient(105deg,#146f73,#1f8a8a);box-shadow:0 4px 18px rgba(17,85,85,.12)}
+.cabeceraInterior{max-width:1350px;padding:16px clamp(16px,3vw,35px)}
+.marcaIcono{width:45px;height:45px;background:#fff5e9;color:#d97826}
+.contenedor{max-width:1350px;padding:clamp(24px,3vw,40px) clamp(16px,3vw,35px) 55px}
+.presentacion{padding:0 0 24px}
+.presentacion h1{letter-spacing:-.035em}
+.layout{display:grid;grid-template-columns:245px minmax(0,1fr);align-items:start;gap:clamp(18px,2.5vw,30px)}
+.barraLateral{position:sticky;top:22px;min-width:0;padding:17px 12px;background:#fff;border:1px solid #d8e8e5;border-radius:21px;box-shadow:0 8px 30px rgba(23,79,77,.055)}
+.encabezadoLateral{display:flex;flex-direction:column;gap:5px;padding:8px 13px 16px;border-bottom:1px solid #e7efed}
+.encabezadoLateral strong{color:#264047;font-size:1.1rem}
+.encabezadoLateral span{color:#617980;font-size:.8rem}
+.layout .navegacion{display:flex;flex-direction:column;gap:3px;overflow:visible;margin:0;padding:15px 0 0;border:0;border-radius:0;background:transparent}
+.layout .pestana{display:flex;align-items:center;justify-content:flex-start;width:100%;min-width:0;min-height:48px;flex:none;white-space:normal;text-align:left;padding:11px 13px;color:#355961;font-size:.96rem;line-height:1.25}
+.layout .pestana:hover{background:#eaf7f2;color:#145e63}
+.layout .pestanaActiva{background:#ddf2eb;color:#145e63;box-shadow:inset 3px 0 #1f8a8a}
+.panelPrincipal{min-width:0}
+.tarjetaDestacada{background:linear-gradient(115deg,#176f73,#259692);box-shadow:0 9px 25px rgba(20,91,91,.13);border-radius:22px}
+.acceso,.servicio{border-color:#dbe8e5;box-shadow:0 7px 24px rgba(20,83,80,.055)}
+.menuMovil{display:none}
+.pie{padding-top:18px;border-top:1px solid #e0eae8}
+.layout .pestana:focus-visible,.menuMovil:focus-visible{outline:3px solid #e18b39;outline-offset:3px}
+@media(max-width:1050px) and (min-width:901px){.layout{grid-template-columns:215px minmax(0,1fr);gap:18px}}
+@media(max-width:900px){
+ .layout{grid-template-columns:minmax(0,1fr);gap:14px}
+ .menuMovil{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:53px;padding:12px 16px;border-radius:13px;background:#fff;color:#13696d;border:1px solid #cde3dc;font-size:1rem;font-weight:850}
+ .barraLateral{display:none;position:static;padding:12px}
+ .barraLateralAbierta{display:block}
+ .layout .navegacion{display:flex;flex-direction:column}
+ .layout .pestana{min-height:52px}
+}
+@media(max-width:680px){.contenedor{padding:22px 15px 38px}.cabeceraInterior{padding:14px 15px}.tarjetaDestacada{border-radius:18px}}
+
+
+/* Manos Amigas · PULIDO VISUAL V3 · Adulto mayor */
+.cabeceraInterior, .contenedor { max-width: 1680px; }
+.contenedor { width: calc(100% - clamp(30px, 5vw, 90px)); padding-left: 0; padding-right: 0; }
+.cabeceraInterior { width: calc(100% - clamp(30px, 5vw, 90px)); padding-left: 0; padding-right: 0; }
+.layout { grid-template-columns: 258px minmax(0, 1fr); gap: clamp(22px, 2.8vw, 40px); }
+.presentacion { position: relative; padding-right: 270px; min-height: 115px; }
+.accesibilidadSlot { width: 238px; position: absolute; top: 8px; right: 0; }
+.layout .pestana { display: flex; align-items: center; gap: 11px; }
+.layout .pestana svg { color: #187c7d; }
+.layout .pestanaActiva svg { color: #126968; }
+.servicioIcono { display: inline-flex; align-items: center; justify-content: center; color: #147d80; }
+.accesoIcono { display: inline-flex; align-items: center; justify-content: center; color: #147d80; }
+@media (max-width: 1050px) and (min-width: 901px) {
+  .layout { grid-template-columns: 220px minmax(0, 1fr); gap: 20px; }
+}
+@media (max-width: 900px) {
+  .contenedor, .cabeceraInterior { width: auto; max-width: 100%; padding-inline: clamp(15px, 3vw, 26px); }
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .presentacion { padding-right: 0; min-height: 0; }
+  .accesibilidadSlot { position: static; width: 100%; margin-top: 17px; }
+}
+:global(html.modo-oscuro) .pagina { background: radial-gradient(circle at 95% 0%, #1d343c, transparent 35%), #111e27; color: #e6f3f4; }
+:global(html.modo-oscuro) .cabecera { background: linear-gradient(100deg, #164d56, #236d6f); }
+:global(html.modo-oscuro) .presentacion h1,
+:global(html.modo-oscuro) .tituloSeccion,
+:global(html.modo-oscuro) .acceso strong,
+:global(html.modo-oscuro) .servicio h3 { color: #f0f8f8; }
+:global(html.modo-oscuro) .presentacion p:not(.sobretitulo),
+:global(html.modo-oscuro) .acceso span:last-child,
+:global(html.modo-oscuro) .servicio p,
+:global(html.modo-oscuro) .textoAyuda,
+:global(html.modo-oscuro) .pie { color: #c1d5d9; }
+:global(html.modo-oscuro) .barraLateral,
+:global(html.modo-oscuro) .acceso,
+:global(html.modo-oscuro) .servicio,
+:global(html.modo-oscuro) .panelPerfil,
+:global(html.modo-oscuro) .panelVacio,
+:global(html.modo-oscuro) .panelSolicitud { background: #1c303a; border-color: #3c555d; color: #e8f4f5; box-shadow: none; }
+:global(html.modo-oscuro) .encabezadoLateral { border-color: #40535a; }
+:global(html.modo-oscuro) .encabezadoLateral strong { color: #f0f8f8; }
+:global(html.modo-oscuro) .encabezadoLateral span { color: #c1d5d9; }
+:global(html.modo-oscuro) .layout .pestana { color: #d0e6e8; }
+:global(html.modo-oscuro) .layout .pestana:hover { background: #28454d; color: #fff; }
+:global(html.modo-oscuro) .layout .pestanaActiva { background: #265358; color: #fff; box-shadow: inset 3px 0 #54b7b1; }
+:global(html.modo-oscuro) .layout .pestana svg { color: #71c8c5; }
+:global(html.modo-oscuro) .menuMovil { background: #1c303a; color: #e2f2f4; border-color: #45616a; }
+:global(html.modo-oscuro) .tarjetaDestacada { background: linear-gradient(110deg, #155b64, #22747a); }
+:global(html.modo-oscuro) .accesoIcono,
+:global(html.modo-oscuro) .servicioIcono { color: #9cded6; }
+
+/* MANOS AMIGAS UI V4 · NARANJO Y PORTADA
+   Acciones destacadas en naranjo para mejorar jerarquía visual. */
+.layout .pestanaActiva,
+.layout .pestanaActiva:hover {
+  background: #fff0dd;
+  color: #70400f;
+  box-shadow: inset 4px 0 #e88428;
+}
+.layout .pestanaActiva svg { color: #c86516; }
+.layout .pestana:hover:not(.pestanaActiva) { background: #fff7ec; color: #6d461e; }
+.tarjetaDestacada { border-left: 5px solid #f7a254; }
+.accesoIcono { color: #c56b1c; }
+.servicioIcono { color: #bb651a; background: #fff0df; }
+.botonPrimario { background: #f28c38; color: #29251d; }
+.botonPrimario:hover { background: #ffab62; }
+.acceso:hover, .servicio:hover { border-color: #e9b17e; }
+@media (max-width: 680px) { .tarjetaDestacada { border-left-width: 4px; } }
+:global(html.modo-oscuro) .layout .pestanaActiva,
+:global(html.modo-oscuro) .layout .pestanaActiva:hover {
+  background: #513a2c;
+  color: #ffe3c0;
+  box-shadow: inset 4px 0 #ffad66;
+}
+:global(html.modo-oscuro) .layout .pestanaActiva svg { color: #ffb76f; }
+:global(html.modo-oscuro) .layout .pestana:hover:not(.pestanaActiva) { background: #443a30; color: #fff0da; }
+:global(html.modo-oscuro) .tarjetaDestacada { border-left-color: #f2a357; }
+:global(html.modo-oscuro) .accesoIcono,
+:global(html.modo-oscuro) .servicioIcono { color: #ffbe79; }
+:global(html.modo-oscuro) .botonPrimario { background: #ffa95e; color: #242018; }
+
+/* MANOS AMIGAS UI V5 | PORTADA Y ACENTOS
+   Mantener hero y símbolos en turquesa; naranja para botones y activo. */
+.tarjetaDestacada { border-left: 0; }
+.accesoIcono { color: #17777a; }
+.servicioIcono { background: #e8f6f3; color: #146d70; }
+:global(html.modo-oscuro) .accesoIcono,
+:global(html.modo-oscuro) .servicioIcono { color: #a2e3e0; }

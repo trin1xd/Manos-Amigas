@@ -1,9 +1,70 @@
-.flotante { position: fixed; bottom: max(12px, env(safe-area-inset-bottom)); left: max(12px, env(safe-area-inset-left)); z-index: 1500; display: flex; flex-direction: column-reverse; gap: 8px; max-width: min(300px, calc(100vw - 24px)); font-size: .92rem; }
-.activador { min-height: 46px; padding: 10px 15px; border-radius: 24px; background: #123d46; color: #fff; font-weight: 800; box-shadow: 0 4px 20px #0003; border: 2px solid #fff; align-self: flex-start; }
-.activador span { font-size: 1.1em; }
-.panel { display: grid; gap: 9px; background: #fff; padding: 16px; color: #162f38; border: 2px solid #366b6c; border-radius: 13px; box-shadow: 0 4px 25px #0003; }
-.panel strong { font-size: 1.05rem; }
-.panel button { background: #e4f5f4; border: 1px solid #9fc5c5; border-radius: 9px; min-height: 44px; padding: 8px 12px; text-align: left; color: #184f54; font-weight: 750; }
-.panel button[aria-pressed="true"] { background: #144f58; color: #fff; }
-.panel p { color: #435e62; font-size: .78rem; line-height: 1.4; }
-.flotante button:focus-visible { outline: 3px solid #ef8a1f; outline-offset: 3px; }
+.contenedor { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 7px; font-size: .9rem; width: 100%; }
+.activador { min-height: 45px; display: flex; gap: 8px; justify-content: center; align-items: center; background: #fff; border: 1px solid #b8d7d3; color: #155f64; padding: 9px 13px; border-radius: 12px; font-weight: 800; white-space: nowrap; box-shadow: 0 3px 12px #123c430d; }
+.activador:hover { background: #e6f4ef; }
+.activador svg:last-child { margin-left: auto; }
+.panel { position: absolute; right: 0; top: calc(100% + 8px); width: min(328px, calc(100vw - 32px)); z-index: 150; display: flex; flex-direction: column; gap: 9px; padding: 17px; border: 1px solid #b8d7d3; border-radius: 15px; color: #233b44; background: #fff; box-shadow: 0 16px 36px #102d3830; }
+.panel strong { font-size: 1rem; margin: 0 0 4px; }
+.panel button { display: flex; align-items: center; gap: 10px; min-height: 46px; width: 100%; padding: 10px 12px; border-radius: 10px; background: #f0f7f5; color: #194a50; border: 1px solid #cddfdc; text-align: left; font-weight: 750; }
+.panel button:hover { background: #dcedea; }
+.panel button[aria-pressed='true'] { background: #176b6d; color: #fff; border-color: #176b6d; }
+.panel p { font-size: .79rem; color: #5d737a; line-height: 1.45; margin: 5px 0 0; }
+.simbolo { display: inline-block; width: 19px; text-align: center; font-size: 1.05rem; font-weight: 900; flex-shrink: 0; }
+.contenedor button:focus-visible { outline: 3px solid #e68d40; outline-offset: 2px; }
+@media (max-width: 900px) {
+  .contenedor { width: 100%; }
+  .activador { width: 100%; justify-content: flex-start; white-space: normal; }
+  /* En celular, la configuración ocupa espacio normal y NO cubre botones. */
+  .panel { position: static; width: 100%; z-index: auto; box-shadow: none; border-radius: 12px; }
+}
+:global(html.modo-oscuro) .activador { background: #223b43; border-color: #42616a; color: #e0f4f4; }
+:global(html.modo-oscuro) .panel { background: #1d333d; border-color: #42616a; color: #eaf4f5; }
+:global(html.modo-oscuro) .panel button { background: #263e47; border-color: #3a5861; color: #eaf4f5; }
+:global(html.modo-oscuro) .panel button[aria-pressed='true'] { background: #217f83; color: #fff; }
+:global(html.modo-oscuro) .panel p { color: #c2d7d9; }
+
+/* MANOS AMIGAS UI V5 | PORTADA Y ACENTOS
+   Selector de accesibilidad compacto dentro del hero (no barra superior).
+   El menú abre HACIA ARRIBA para que no se corte bajo la pantalla en PC.
+   La lista puede desplazarse en pantallas de poca altura. */
+.portada { width: 100%; position: relative; }
+.portada .activador {
+  width: 100%;
+  min-height: 45px;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 10px;
+  font-size: .81rem;
+}
+.portada .activador svg:last-child { margin-left: 3px; }
+.portada .panel {
+  position: absolute;
+  top: auto;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: min(326px, calc(100vw - 32px));
+  max-height: min(372px, calc(100dvh - 110px));
+  overflow-y: auto;
+  z-index: 180;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(13, 48, 55, .27);
+}
+@media (max-width: 600px) {
+  .portada .activador {
+    min-height: 45px;
+    white-space: nowrap;
+    padding: 8px 8px;
+    font-size: .78rem;
+    gap: 5px;
+  }
+  .portada .activador svg:first-child { width: 17px; height: 17px; }
+  .portada .activador svg:last-child { width: 15px; height: 15px; margin-left: 0; }
+  .portada .panel { max-height: min(340px, calc(100dvh - 105px)); }
+}
+
+/* MANOS AMIGAS UI V6 - ACCESIBILIDAD INTEGRADA */
+@media (max-width: 600px) {
+  .portada .activador { width: 100%; min-height: 45px; }
+  .portada .panel { position: absolute; bottom: calc(100% + 10px); top: auto; }
+}

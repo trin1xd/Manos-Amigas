@@ -1,4 +1,5 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
+import UiIcon from '../../components/ui/UiIcon';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import styles from '../../components/dashboard/DashboardLayout.module.css';
 import TareasDisponibles from './TareasDisponibles';
@@ -74,7 +75,7 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
               <h2 id="titulo-universitario">Conecta tu tiempo con una buena causa</h2>
               <p>Consulta tu estado de verificación y prepárate para ayudar en tareas cotidianas no médicas.</p>
             </div>
-            <span className={styles.heroIcono} aria-hidden="true">🎓</span>
+            <span className={styles.heroIcono} aria-hidden="true"><UiIcon name="graduation-cap" size={36} /></span>
           </section>
 
           <section className={styles.panel} aria-labelledby="titulo-verificacion">
@@ -89,7 +90,7 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
             <h2 id="titulo-acciones-universitario" className={styles.tituloSeccion}>¿Qué quieres revisar?</h2>
             <div className={styles.rejilla}>
               <article className={styles.tarjeta}>
-                <span className={styles.tarjetaIcono} aria-hidden="true">🧹</span>
+                <span className={styles.tarjetaIcono} aria-hidden="true"><UiIcon name="catalogo" size={26} /></span>
                 <h3>Explorar tareas</h3>
                 <p>Revisa las solicitudes abiertas de adultos mayores y postula cuando tu perfil esté verificado.</p>
                 <button type="button" className={styles.tarjetaBoton} onClick={() => setVista('oportunidades')}>
@@ -97,7 +98,7 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
                 </button>
               </article>
               <article className={styles.tarjeta}>
-                <span className={styles.tarjetaIcono} aria-hidden="true">📋</span>
+                <span className={styles.tarjetaIcono} aria-hidden="true"><UiIcon name="postulaciones" size={26} /></span>
                 <h3>Mis postulaciones</h3>
                 <p>Sigue el estado de tus postulaciones: pendientes, aceptadas o rechazadas.</p>
                 <button type="button" className={styles.tarjetaBoton} onClick={() => setVista('postulaciones')}>
@@ -164,3 +165,4 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
     </DashboardLayout>
   );
 }
+

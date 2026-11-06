@@ -270,3 +270,74 @@
     height: 84px;
   }
 }
+
+/* MANOS AMIGAS UI V4 · NARANJO Y PORTADA
+   El control accesible vive junto a Ayuda, no en una barra encima del hero. */
+.accessibility {
+  width: 100%;
+  max-width: 390px;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 26px;
+}
+.accesibilidadIntegrada {
+  width: 220px;
+  max-width: 100%;
+  min-width: 0;
+  text-align: left;
+}
+.accessibilityButton { min-height: 44px; padding: 10px 9px; }
+.accessibilityButton:hover { color: #fff1dc; }
+@media (max-width: 600px) {
+  .accessibility { gap: 9px; max-width: 350px; }
+  .accesibilidadIntegrada { width: 100%; }
+}
+
+/* MANOS AMIGAS UI V5 | PORTADA Y ACENTOS
+   En móvil, Accesibilidad y Ayuda siempre se mantienen lado a lado.
+   Evitar que el desplegable se recorte por el overflow del hero. */
+.hero { overflow: visible; }
+.accessibility {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 370px);
+  max-width: 370px;
+  gap: 12px;
+  margin: 26px auto 0;
+}
+.accesibilidadIntegrada {
+  flex: 0 1 190px;
+  width: auto;
+  min-width: 0;
+  max-width: 190px;
+  text-align: left;
+}
+.accessibility > .accessibilityButton {
+  flex: 0 0 auto;
+  min-height: 45px;
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .accessibility {
+    flex-wrap: nowrap;
+    flex-direction: row;
+    width: 100%;
+    max-width: 340px;
+    gap: 9px;
+    align-items: center;
+    justify-content: center;
+  }
+  .accesibilidadIntegrada {
+    flex: 0 1 180px;
+    max-width: 180px;
+    min-width: 0;
+    width: auto;
+  }
+  .accessibility > .accessibilityButton { padding: 8px 5px; }
+}
