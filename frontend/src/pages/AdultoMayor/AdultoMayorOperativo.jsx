@@ -6,6 +6,7 @@ import CalificacionesServicios from '../Calificaciones/CalificacionesServicios';
 import ChatServicios from '../Chat/ChatServicios';
 import Notificaciones from '../Notificaciones/Notificaciones';
 import AgendaServicios from '../Agenda/AgendaServicios';
+import { precioReferencialPara } from '../../utils/precioReferencial';
 import {
   obtenerCatalogoServicios,
   obtenerMisSolicitudes,
@@ -71,6 +72,7 @@ function FormularioSolicitud({ servicio, onVolver, onCreada }) {
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState('');
   const [creada, setCreada] = useState(null);
+  const precio = precioReferencialPara(campos.duracion_horas);
 
   function actualizar(evento) {
     const { name, value } = evento.target;
@@ -170,7 +172,14 @@ function FormularioSolicitud({ servicio, onVolver, onCreada }) {
                 <small>De 10 a 500 caracteres. No incluyas datos médicos ni información privada.</small>
               </label>
               {error && <p className={styles.errorSolicitud} role="alert">{error}</p>}
-              <p className={ui.aviso}>Por ahora no hay una tarifa oficial ni un sistema de pagos. La solicitud no cobra dinero.</p>
+              <div className={styles.resumenPrecio}>
+                <div>
+                  <strong>Precio de referencia</strong>
+                  <span>{precio.detalle}</span>
+                </div>
+                <strong className={styles.montoPrecio}>{precio.monto}</strong>
+              </div>
+              <p className={ui.aviso}>Este precio es una propuesta que se está validando. Por ahora la solicitud no cobra dinero y no hay un sistema de pagos.</p>
               <div className={styles.accionesFormulario}>
                 <button type="button" className={styles.botonNeutro} onClick={onVolver}>Cancelar</button>
                 <button type="submit" className={styles.botonNaranja}>Revisar datos</button>
@@ -184,6 +193,7 @@ function FormularioSolicitud({ servicio, onVolver, onCreada }) {
                 <div><dt>Hora</dt><dd>{campos.hora}</dd></div>
                 <div><dt>Duración</dt><dd>{campos.duracion_horas} hora(s)</dd></div>
                 <div><dt>Descripción</dt><dd>{campos.descripcion.trim()}</dd></div>
+                <div><dt>Precio de referencia</dt><dd>{precio.monto}</dd></div>
               </dl>
               {error && <p className={styles.errorSolicitud} role="alert">{error}</p>}
               <p className={ui.aviso}>Al confirmar se guardará una solicitud real en SQL Server. No se realizará un pago.</p>
