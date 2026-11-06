@@ -2,7 +2,9 @@
 
 No constituye validación real de identidad, antecedentes o documentos.
 """
+import os
 from database.connection import get_connection
+from repositories import verificacion_institucional_repository as inst_repo
 from repositories import verificacion_repository as repo
 from services.auth_service import ServiceError
 
@@ -39,6 +41,9 @@ def decidir(admin, id_universitario, datos):
             raise ServiceError('Universitario no encontrado o cuenta inactiva.', 404)
         if actual['estado'] != 'PENDIENTE_VERIFICACION':
             raise ServiceError('Solo se pueden revisar cuentas pendientes. Ya existe una decisión.', 409)
+        if accion == 'APROBAR' and os.getenv('VERIFICACION_CORREO_OBLIGATORIA', 'true').lower() != 'false':
+            if not inst_repo.correo_confirmado(cursor, id_universitario):
+                raise ServiceError('Primero debes confirmar el correo institucional del universitario.', 409)
         if not repo.aplicar_decision(cursor, id_universitario, admin['id'], actual['estado'], nuevo, observacion):
             raise ServiceError('La cuenta cambió de estado; actualiza la lista.', 409)
         conn.commit()

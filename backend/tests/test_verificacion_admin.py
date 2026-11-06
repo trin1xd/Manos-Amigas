@@ -100,6 +100,8 @@ class FakeConn:
 
 
 def test_pendiente_se_actualiza_y_audita(monkeypatch):
+    # Flujo histórico demo: aislarlo del nuevo requisito de correo.
+    monkeypatch.setenv('VERIFICACION_CORREO_OBLIGATORIA', 'false')
     c = FakeConn()
     capturado = {}
     monkeypatch.setattr(svc, 'get_connection', lambda: c)

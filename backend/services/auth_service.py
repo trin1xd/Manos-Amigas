@@ -7,6 +7,14 @@ from repositories import user_repository as repo
 from utils import validators as v
 from utils.rut import normalize_rut
 
+DOMINIO_CORREO_UNIVERSITARIO = 'correo.uss.cl'
+
+def correo_institucional_aceptado(correo):
+    if not isinstance(correo, str):
+        return False
+    partes = correo.strip().lower().split('@')
+    return len(partes) == 2 and bool(partes[0]) and partes[1] == DOMINIO_CORREO_UNIVERSITARIO
+
 ADULTO_MAYOR = "ADULTO_MAYOR"
 UNIVERSITARIO = "UNIVERSITARIO"
 FAMILIAR = "FAMILIAR"
@@ -100,6 +108,10 @@ def _validate(data, role):
     if (role == UNIVERSITARIO and "correo_institucional" in clean
             and clean["correo_institucional"] == clean.get("email")):
         errors["correo_institucional"] = "Debe ser distinto del correo personal."
+
+    if role == UNIVERSITARIO and "correo_institucional" in clean:
+        if not correo_institucional_aceptado(clean["correo_institucional"]):
+            errors["correo_institucional"] = "Usa tu correo universitario terminado en @correo.uss.cl."
 
     if errors:
         raise ServiceError("Hay errores en los datos enviados.", 400, errors)
