@@ -1,0 +1,15 @@
+.panel { background: var(--color-surface, #fff); border: 1px solid #cbd5e1; border-radius: 16px; padding: clamp(1rem, 3vw, 1.5rem); max-width: 860px; }
+.cabecera { display: flex; gap: 1rem; justify-content: space-between; align-items: start; flex-wrap: wrap; }
+.cabecera h2 { margin: 0 0 .35rem; }
+.cabecera p { margin-top: 0; }
+.datos { background: #f8fafc; color: #16233b; border-radius: 10px; padding: .8rem 1rem; overflow-wrap: anywhere; }
+.bloque { border-top: 1px solid #cbd5e1; padding-top: 1rem; margin-top: 1rem; }
+.bloque form { display: grid; gap: .6rem; max-width: 480px; margin-top: .7rem; }
+.bloque input { padding: .7rem; border: 1px solid #64748b; border-radius: 7px; width: 100%; max-width: 100%; font: inherit; }
+.panel button { padding: .65rem 1rem; border-radius: 8px; background: #164e63; color: #fff; font: inherit; font-weight: 600; border: 0; cursor: pointer; }
+.panel button:disabled { opacity: .55; cursor: not-allowed; }
+.panel button:focus-visible, .panel input:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+.aviso { border-left: 4px solid #a16207; background: #fffbeb; color: #713f12; padding: .8rem; }
+.error { color: #991b1b; font-weight: 600; }
+.exito { color: #166534; font-weight: 600; }
+@media (prefers-color-scheme: dark) { .datos { background: #dbeafe; } }

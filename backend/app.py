@@ -13,6 +13,7 @@ from routes.seguimiento_routes import seguimiento_bp
 from routes.notificaciones_routes import notificaciones_bp
 from routes.disponibilidad_routes import disponibilidad_bp
 from routes.agenda_routes import agenda_bp
+from routes.verificacion_institucional_routes import institucional_bp
 from routes.calificaciones_routes import calificaciones_bp
 from routes.chat_routes import chat_bp
 from routes.recuperacion_routes import recuperacion_bp
@@ -53,6 +54,7 @@ def create_app():
     app.register_blueprint(notificaciones_bp, url_prefix='/api')
     app.register_blueprint(disponibilidad_bp, url_prefix='/api')
     app.register_blueprint(agenda_bp, url_prefix='/api')
+    app.register_blueprint(institucional_bp, url_prefix='/api')
     app.register_blueprint(calificaciones_bp, url_prefix='/api')
     app.register_blueprint(chat_bp, url_prefix='/api')
     app.register_blueprint(recuperacion_bp, url_prefix='/api')
