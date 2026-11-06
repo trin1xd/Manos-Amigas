@@ -75,6 +75,7 @@ def escenario(monkeypatch, estado='ASIGNADA', estudiante=2, seguimiento=None, vi
         'id': 7, 'id_adulto_mayor': 1, 'estado': estado, 'id_estudiante': estudiante})
     monkeypatch.setattr(svc.repo, 'estado_seguimiento', lambda *_: seguimiento)
     monkeypatch.setattr(svc.repo, 'registrar_accion', lambda _, id_, autor, accion: eventos.append((id_, autor, accion)))
+    monkeypatch.setattr(svc.notif_repo, 'avisar_seguimiento', lambda *_: None)
     monkeypatch.setattr(svc.ops_repo, 'estudiante_verificado', lambda *_: {'id': estudiante})
     monkeypatch.setattr(svc.ops_repo, 'vinculo', lambda *_args, **_kwargs: {'activo': True} if vinculo else None)
     monkeypatch.setattr(svc.ops_repo, 'adulto_activo', lambda *_: {'id': 1})

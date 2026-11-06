@@ -4,6 +4,7 @@ import ui from './AdultoMayorOperativo.module.css';
 import SeguimientoServicios from '../Seguimiento/SeguimientoServicios';
 import CalificacionesServicios from '../Calificaciones/CalificacionesServicios';
 import ChatServicios from '../Chat/ChatServicios';
+import Notificaciones from '../Notificaciones/Notificaciones';
 import {
   obtenerCatalogoServicios,
   obtenerMisSolicitudes,
@@ -23,6 +24,7 @@ const SECCIONES = [
   { clave: 'seguimiento', etiqueta: 'Seguimiento' },
   { clave: 'calificaciones', etiqueta: 'Calificaciones' },
   { clave: 'chat', etiqueta: 'Chat' },
+  { clave: 'avisos', etiqueta: 'Avisos' },
   { clave: 'perfil', etiqueta: 'Mi perfil' },
 ];
 
@@ -547,6 +549,9 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
           )}
           {vista === 'chat' && (
             <ChatServicios usuario={usuario} />
+          )}
+          {vista === 'avisos' && (
+            <Notificaciones />
           )}
           {vista === 'perfil' && (
             <>

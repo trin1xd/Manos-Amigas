@@ -9,6 +9,7 @@ import re
 
 from database.connection import get_connection
 from repositories import operations_repository as repo
+from repositories import notificaciones_repository as notif_repo
 from services.auth_service import ServiceError
 
 
@@ -128,6 +129,7 @@ def postular(user, solicitud_id):
         if repo.postulacion_existente(cursor, solicitud_id, user['id']):
             raise ServiceError('Ya postulaste a esta solicitud.', 409)
         created = repo.crear_postulacion(cursor, solicitud_id, user['id'])
+        notif_repo.avisar_adulto_y_familia(cursor, solicitud_id, 'POSTULACION', user['id'])
         return {'id': created['id'], 'id_solicitud': solicitud_id, 'estado': 'PENDIENTE'}
 
 
@@ -161,6 +163,9 @@ def aceptar(user, solicitud_id, postulacion_id):
             raise ServiceError('La postulación no está disponible o el estudiante ya no está verificado.', 409)
         if not repo.aceptar_postulacion(cursor, solicitud_id, postulacion_id):
             raise ServiceError('La postulación ya cambió de estado.', 409)
+        notif_repo.avisar_adulto_y_familia(cursor, solicitud_id, 'ASIGNACION', user['id'])
+        notif_repo.avisar_postulante(cursor, solicitud_id, postulacion_id, 'ASIGNACION', user['id'])
+        notif_repo.avisar_postulantes_no_seleccionados(cursor, solicitud_id, postulacion_id, user['id'])
         return {'id': solicitud_id, 'estado': 'ASIGNADA', 'id_postulacion_aceptada': postulacion_id}
 
 
@@ -170,6 +175,8 @@ def cancelar(user, solicitud_id):
         if sol['estado'] not in ('PENDIENTE', 'ASIGNADA'):
             raise ServiceError('No se puede cancelar una solicitud en este estado.', 409)
         repo.cancelar_solicitud(cursor, solicitud_id)
+        notif_repo.avisar_adulto_y_familia(cursor, solicitud_id, 'CANCELACION', user['id'])
+        notif_repo.avisar_cancelacion(cursor, solicitud_id, user['id'])
         return {'id': solicitud_id, 'estado': 'CANCELADA'}
 
 

@@ -3,6 +3,7 @@ import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import SeguimientoServicios from '../Seguimiento/SeguimientoServicios';
 import CalificacionesServicios from '../Calificaciones/CalificacionesServicios';
 import ChatServicios from '../Chat/ChatServicios';
+import Notificaciones from '../Notificaciones/Notificaciones';
 import dash from '../../components/dashboard/DashboardLayout.module.css';
 import styles from './FamiliarDashboardOperativo.module.css';
 import {
@@ -23,6 +24,7 @@ const NAVEGACION = [
   { id: 'seguimiento', nombre: 'Seguimiento', icono: '🕒' },
   { id: 'calificaciones', nombre: 'Calificaciones', icono: '⭐' },
   { id: 'chat', nombre: 'Chat', icono: '💬' },
+  { id: 'avisos', nombre: 'Avisos', icono: '🔔' },
   { id: 'perfil', nombre: 'Mi perfil', icono: '👤' },
 ];
 
@@ -388,6 +390,9 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
       )}
       {vista === 'chat' && (
         <ChatServicios usuario={usuario} />
+      )}
+      {vista === 'avisos' && (
+        <Notificaciones />
       )}
       {vista === 'perfil' && (
         <section className={dash.panel} aria-labelledby="fam-perfil">
