@@ -10,6 +10,7 @@ import re
 from database.connection import get_connection
 from repositories import operations_repository as repo
 from repositories import notificaciones_repository as notif_repo
+from repositories import agenda_repository as agenda_repo
 from services.auth_service import ServiceError
 
 
@@ -161,6 +162,10 @@ def aceptar(user, solicitud_id, postulacion_id):
         post = repo.postulacion_aceptable(cursor, solicitud_id, postulacion_id)
         if not post or post['estado'] != 'PENDIENTE':
             raise ServiceError('La postulación no está disponible o el estudiante ya no está verificado.', 409)
+        # El bloqueo de estudiante y la comprobación ocurren bajo esta MISMA transacción.
+        # Si hay cruce de horas, no se modifica ni la solicitud ni los avisos.
+        if agenda_repo.conflicto_de_aceptacion(cursor, solicitud_id, postulacion_id):
+            raise ServiceError('Este universitario ya tiene otro servicio asignado en ese horario.', 409)
         if not repo.aceptar_postulacion(cursor, solicitud_id, postulacion_id):
             raise ServiceError('La postulación ya cambió de estado.', 409)
         notif_repo.avisar_adulto_y_familia(cursor, solicitud_id, 'ASIGNACION', user['id'])
