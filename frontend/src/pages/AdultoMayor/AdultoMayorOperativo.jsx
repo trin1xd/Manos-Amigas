@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import UiIcon from '../../components/ui/UiIcon';
 import styles from './AdultoMayorDashboard.module.css';
 import ui from './AdultoMayorOperativo.module.css';
 import SeguimientoServicios from '../Seguimiento/SeguimientoServicios';
@@ -33,23 +34,24 @@ const SECCIONES = [
 ];
 
 const ICONOS = {
-  'cortar leña': '🪵',
-  'aseo y orden': '🧹',
-  'tareas del hogar': '🧹',
-  'cocina y comida': '🥣',
-  'trámites': '📄',
-  'compras': '🛍️',
-  'jardín y huerto': '🌿',
-  'arreglos menores': '🛠️',
-  'compañía': '💛',
-  'acompañamiento': '💛',
-  'mascotas': '🐾',
-  'ayuda con tecnología': '📱',
-  'apoyo digital': '📱',
+  'cortar leña': 'wrench',
+  'aseo y orden': 'catalogo',
+  'tareas del hogar': 'catalogo',
+  'cocina y comida': 'utensils',
+  'trámites': 'file-text',
+  'compras': 'shopping-bag',
+  'jardín y huerto': 'leaf',
+  'arreglos menores': 'wrench',
+  'compañía': 'hand-heart',
+  'acompañamiento': 'hand-heart',
+  'mascotas': 'paw-print',
+  'ayuda con tecnología': 'smartphone',
+  'apoyo digital': 'smartphone',
 };
 
 function iconoServicio(nombre) {
-  return ICONOS[nombre?.toLocaleLowerCase('es-CL')] || '🤝';
+  const icono = ICONOS[nombre?.toLocaleLowerCase('es-CL')] || 'hand-heart';
+  return <UiIcon name={icono} size={24} />;
 }
 
 function fechaBonita(fechaISO) {
@@ -318,6 +320,7 @@ function VincularFamiliar() {
 
 export default function AdultoMayorOperativo({ usuario, onLogout }) {
   const [vista, setVista] = useState('inicio');
+  const [menuAbierto, setMenuAbierto] = useState(false);
   const [servicios, setServicios] = useState([]);
   const [solicitudes, setSolicitudes] = useState([]);
   const [seleccionado, setSeleccionado] = useState(null);
@@ -348,6 +351,7 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
   }, [vista, revision]);
 
   function navegar(destino) {
+    setMenuAbierto(false);
     setVista(destino);
     setSeleccionado(null);
     setIdPostulantes(null);
@@ -410,29 +414,44 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
   const nombre = usuario?.nombre?.trim().split(/\s+/)[0] || 'Bienvenido/a';
 
   return (
-    <div className={styles.pagina}>
+    <div className={styles.pagina} data-manos-panel="true">
       <header className={styles.cabecera}>
         <div className={styles.cabeceraInterior}>
-          <div className={styles.marca}><span className={styles.marcaIcono} aria-hidden="true">♥</span><span>Manos Amigas</span></div>
+          <div className={styles.marca}><span className={styles.marcaIcono} aria-hidden="true"><UiIcon name="heart" size={23} /></span><span>Manos Amigas</span></div>
           <button type="button" className={styles.cerrarSesion} onClick={onLogout}>Cerrar sesión</button>
         </div>
       </header>
       <div className={styles.contenedor}>
         <div className={styles.presentacion}>
           <p className={styles.sobretitulo}>Espacio de adulto mayor</p>
-          <h1>Hola, {nombre} <span aria-hidden="true">👋</span></h1>
+          <h1>Hola, {nombre}</h1>
           <p>¿En qué podemos ayudarte hoy?</p>
+          <div id="manos-accesibilidad-slot" className={styles.accesibilidadSlot} />
         </div>
-        <nav className={styles.navegacion} aria-label="Secciones del panel de adulto mayor">
+        <div className={styles.layout}>
+          <button type="button" className={styles.menuMovil} aria-expanded={menuAbierto}
+            aria-controls="navegacion-adulto" onClick={() => setMenuAbierto(abierto => !abierto)}>
+            <span aria-hidden="true">☰</span>
+            {menuAbierto ? 'Ocultar secciones' : 'Ver secciones del panel'}
+            <span aria-hidden="true">{menuAbierto ? '−' : '+'}</span>
+          </button>
+          <aside id="navegacion-adulto" className={`${styles.barraLateral} ${menuAbierto ? styles.barraLateralAbierta : ''}`}>
+            <div className={styles.encabezadoLateral}>
+              <strong>Mi panel</strong>
+              <span>Tu ayuda, en un solo lugar</span>
+            </div>
+            <nav className={styles.navegacion} aria-label="Secciones del panel de adulto mayor">
           {SECCIONES.map(item => (
             <button key={item.clave} type="button" onClick={() => navegar(item.clave)}
               className={`${styles.pestana} ${vista === item.clave || (vista === 'nueva' && item.clave === 'catalogo') ? styles.pestanaActiva : ''}`}
               aria-current={vista === item.clave ? 'page' : undefined}>
-              {item.etiqueta}
+              <UiIcon name={item.clave} size={20} /> <span>{item.etiqueta}</span>
             </button>
           ))}
-        </nav>
-        <main id="contenido-dashboard" className={styles.contenido}>
+            </nav>
+          </aside>
+          <div className={styles.panelPrincipal}>
+            <main id="contenido-dashboard" className={styles.contenido}>
           {vista === 'inicio' && (
             <>
               <section className={styles.tarjetaDestacada} aria-labelledby="titulo-ayuda">
@@ -442,19 +461,19 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
                   <p>Elige una tarea y envía una solicitud real a Manos Amigas.</p>
                   <button type="button" className={styles.botonNaranja} onClick={() => navegar('catalogo')}>Ver tareas disponibles</button>
                 </div>
-                <span className={styles.corazonGrande} aria-hidden="true">♡</span>
+                <span className={styles.corazonGrande} aria-hidden="true"><UiIcon name="heart" size={112} /></span>
               </section>
               <section aria-labelledby="titulo-accesos">
                 <h2 id="titulo-accesos" className={styles.tituloSeccion}>¿Qué necesitas hacer?</h2>
                 <div className={styles.grillaAccesos}>
                   <button type="button" className={styles.acceso} onClick={() => navegar('catalogo')}>
-                    <span className={styles.accesoIcono} aria-hidden="true">🧹</span><strong>Pedir ayuda</strong><span>Crear una solicitud real</span>
+                    <span className={styles.accesoIcono} aria-hidden="true"><UiIcon name="catalogo" size={26} /></span><strong>Pedir ayuda</strong><span>Crear una solicitud real</span>
                   </button>
                   <button type="button" className={styles.acceso} onClick={() => navegar('solicitudes')}>
-                    <span className={styles.accesoIcono} aria-hidden="true">📋</span><strong>Mis solicitudes</strong><span>Ver solicitudes y postulantes</span>
+                    <span className={styles.accesoIcono} aria-hidden="true"><UiIcon name="solicitudes" size={26} /></span><strong>Mis solicitudes</strong><span>Ver solicitudes y postulantes</span>
                   </button>
                   <button type="button" className={styles.acceso} onClick={() => navegar('perfil')}>
-                    <span className={styles.accesoIcono} aria-hidden="true">👤</span><strong>Mi perfil</strong><span>Consultar mi cuenta y autorizar familiares</span>
+                    <span className={styles.accesoIcono} aria-hidden="true"><UiIcon name="perfil" size={26} /></span><strong>Mi perfil</strong><span>Consultar mi cuenta y autorizar familiares</span>
                   </button>
                 </div>
               </section>
@@ -503,7 +522,7 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
               {errorCarga && <p className={styles.errorSolicitud} role="alert">{errorCarga}</p>}
               {!cargando && !errorCarga && solicitudes.length === 0 && (
                 <div className={styles.panelVacio}>
-                  <span className={styles.iconoVacio} aria-hidden="true">📋</span>
+                  <span className={styles.iconoVacio} aria-hidden="true"><UiIcon name="solicitudes" size={35} /></span>
                   <p>Todavía no tienes solicitudes registradas.</p>
                   <button type="button" className={styles.botonPrimario} onClick={() => navegar('catalogo')}>Pedir ayuda</button>
                 </div>
@@ -584,7 +603,9 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
               <VincularFamiliar />
             </>
           )}
-        </main>
+            </main>
+          </div>
+        </div>
         <footer className={styles.pie}>Manos Amigas · Solicitudes reales con acceso por rol · Sin pagos implementados</footer>
       </div>
     </div>

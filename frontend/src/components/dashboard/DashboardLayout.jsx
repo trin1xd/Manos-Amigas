@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import UiIcon from '../ui/UiIcon';
 import styles from './DashboardLayout.module.css';
 
 // Conserva los mismos identificadores de vista: cambia solo la presentación del menú.
@@ -55,13 +56,13 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className={styles.pagina}>
+    <div className={styles.pagina} data-manos-panel="true">
       <a className={styles.saltar} href="#contenido-panel">Saltar al contenido</a>
 
       <header className={styles.barra}>
         <div className={styles.barraInterior}>
           <div className={styles.marca}>
-            <span className={styles.logo} aria-hidden="true">♥</span>
+            <span className={styles.logo} aria-hidden="true"><UiIcon name="heart" size={24} /></span>
             <span>
               <strong>Manos Amigas</strong>
               <small>Ayuda entre generaciones</small>
@@ -77,10 +78,13 @@ export default function DashboardLayout({
         <div className={styles.bienvenida}>
           <div>
             <p className={styles.sobretitulo}>Tu espacio · {tituloRol}</p>
-            <h1>Hola, {primerNombre} <span aria-hidden="true">👋</span></h1>
+            <h1>Hola, {primerNombre}</h1>
             <p className={styles.subtitulo}>{subtitulo}</p>
           </div>
-          <span className={styles.etiquetaRol}>{tituloRol}</span>
+          <div className={styles.controlesBienvenida}>
+            <div id="manos-accesibilidad-slot" className={styles.accesibilidadSlot} />
+            <span className={styles.etiquetaRol}>{tituloRol}</span>
+          </div>
         </div>
 
         <div className={styles.layout}>
@@ -91,7 +95,7 @@ export default function DashboardLayout({
             aria-controls="navegacion-panel"
             onClick={() => setMenuAbierto((abierto) => !abierto)}
           >
-            <span aria-hidden="true">☰</span>
+            <UiIcon name="menu" size={20} />
             <span>{menuAbierto ? 'Ocultar secciones' : 'Ver secciones del panel'}</span>
             <span aria-hidden="true">{menuAbierto ? '−' : '+'}</span>
           </button>
@@ -116,7 +120,7 @@ export default function DashboardLayout({
                       aria-current={vista === item.id ? 'page' : undefined}
                       onClick={() => cambiarVista(item.id)}
                     >
-                      <span className={styles.iconoNavegacion} aria-hidden="true">{item.icono}</span>
+                      <span className={styles.iconoNavegacion} aria-hidden="true"><UiIcon name={item.id} size={20} /></span>
                       <span>{item.nombre}</span>
                     </button>
                   ))}

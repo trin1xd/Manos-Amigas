@@ -1,0 +1,48 @@
+/* Preferencias globales; se aplica solo tras seleccionar «Modo oscuro». */
+html.modo-oscuro { color-scheme: dark;
+  --color-primary: #34a6a7; --color-primary-dark: #1d8587; --color-primary-light: #22444a;
+  --color-secondary: #ffae60; --color-accent: #ffb773;
+  --color-bg: #111e27; --color-surface: #1c303a; --color-surface-alt: #192a33;
+  --color-text: #eaf5f5; --color-text-muted: #b9cfd2; --color-text-light: #a9c5c9;
+  --color-border: #39545a; --color-shadow: rgba(0,0,0,.25);
+}
+html.modo-oscuro body { background: #111e27; color: #eaf5f5; }
+html.modo-oscuro :is(input,select,textarea) { color-scheme: dark; }
+html.modo-oscuro :is(input,select,textarea):focus-visible { outline: 3px solid #ffae60; outline-offset: 2px; }
+/* Componentes operativos de solicitudes, chat y agenda usan CSS Modules diferentes. */
+html.modo-oscuro [data-manos-panel] :is(
+  [class*="_panelSolicitud_"], [class*="_panelPerfil_"], [class*="_panelVacio_"],
+  [class*="_tarjetaSolicitud_"], [class*="_tarjetaServicio_"],
+  [class*="_tarjeta_"], [class*="_servicio_"], [class*="_acceso_"],
+  [class*="_ficha_"], [class*="_card_"], [class*="_lista_"],
+  [class*="_formulario_"], [class*="_item_"], [class*="_postulante_"],
+  [class*="_postulantes_"], [class*="_datos_"], [class*="_vacio_"],
+  [class*="_paso_"], [class*="_fila_"], [class*="_contenido_"],
+  [class*="_tareaElegida_"]
+) { background-color: #1c303a !important; border-color: #3b555d !important; color: #eaf5f5 !important; }
+html.modo-oscuro [data-manos-panel] :is(h1,h2,h3,h4,h5,dt,dd,label) { color: #f0f7f8; }
+html.modo-oscuro [data-manos-panel] :is(p,small) { color: #c7d9db; }
+html.modo-oscuro [data-manos-panel] :is(input,select,textarea) {
+  background-color: #132631 !important; color: #f2f8f9 !important; border-color: #4c6670 !important;
+}
+html.modo-oscuro [data-manos-panel] :is(input,textarea)::placeholder { color: #a1bec4; }
+html.modo-oscuro [data-manos-panel] :is([class*="_aviso_"],[class*="_nota_"],[class*="_resumenPrecio_"]) {
+  background-color: #29382f !important; border-color: #bd894a !important; color: #f3e1c9 !important;
+}
+html.modo-oscuro [data-manos-panel] :is([class*="_estado_"],[class*="_etiquetaEstado_"]) {
+  background-color: #27494a !important; color: #d8f3ee !important;
+}
+html.modo-oscuro [data-manos-panel] button:focus-visible,
+html.modo-oscuro [data-manos-panel] a:focus-visible { outline: 3px solid #ffae60; outline-offset: 2px; }
+/* No imponemos fondos a los banners turquesa ni a los botones de acción. */
+html.modo-oscuro [data-manos-panel] :is([class*="_hero_"],[class*="_tarjetaDestacada_"]) :is(h1,h2,h3,p,small) {
+  color: #fff !important;
+}
+/* El modo oscuro y el modo de alto contraste pueden activarse juntos. */
+html.modo-oscuro.alto-contraste { --color-text: #fff; --color-text-muted: #e6f3f5; --color-border: #9ad9d8; }
+html.modo-oscuro.alto-contraste [data-manos-panel] :is(a,button):focus-visible { outline: 4px solid #ffc06d !important; }
+#manos-accesibilidad-fallback { width: 100%; display: flex; justify-content: flex-end; align-items: center; background: #eaf4f1; padding: 7px clamp(15px,3vw,38px); }
+#manos-accesibilidad-fallback:empty { display: none; }
+#manos-accesibilidad-fallback > * { width: min(245px,100%); }
+html.modo-oscuro #manos-accesibilidad-fallback { background: #1c303a; }
+@media(max-width:900px) { #manos-accesibilidad-fallback { justify-content: stretch; } #manos-accesibilidad-fallback > * { width: 100%; } }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import UiIcon from '../../components/ui/UiIcon';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import SeguimientoServicios from '../Seguimiento/SeguimientoServicios';
 import CalificacionesServicios from '../Calificaciones/CalificacionesServicios';
@@ -222,7 +223,7 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
               <h2 id="fam-titulo-inicio">Más tranquilidad para tu familia</h2>
               <p>Coordina tareas del día a día para un adulto mayor que te haya autorizado.</p>
             </div>
-            <span className={dash.heroIcono} aria-hidden="true">💛</span>
+            <span className={dash.heroIcono} aria-hidden="true"><UiIcon name="hand-heart" size={38} /></span>
           </section>
           <section className={dash.panel} aria-labelledby="fam-vinculos-resumen">
             <div className={styles.encabezado}>
@@ -241,13 +242,13 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
             <h2 className={dash.tituloSeccion}>¿Qué quieres hacer?</h2>
             <div className={dash.rejilla}>
               <article className={dash.tarjeta}>
-                <span className={dash.tarjetaIcono} aria-hidden="true">💛</span>
+                <span className={dash.tarjetaIcono} aria-hidden="true"><UiIcon name="adultos" size={27} /></span>
                 <h3>Personas a cargo</h3>
                 <p>Consulta quién te autorizó a gestionar solicitudes.</p>
                 <button type="button" className={dash.tarjetaBoton} onClick={() => cambiarVista('adultos')}>Ver personas a cargo →</button>
               </article>
               <article className={dash.tarjeta}>
-                <span className={dash.tarjetaIcono} aria-hidden="true">📋</span>
+                <span className={dash.tarjetaIcono} aria-hidden="true"><UiIcon name="solicitudes" size={27} /></span>
                 <h3>Seguimiento</h3>
                 <p>Consulta las solicitudes de tus familiares vinculados.</p>
                 <button type="button" className={dash.tarjetaBoton} onClick={() => cambiarVista('solicitudes')}>Ver solicitudes →</button>
