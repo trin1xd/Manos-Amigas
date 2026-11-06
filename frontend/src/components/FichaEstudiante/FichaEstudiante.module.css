@@ -1,0 +1,8 @@
+.ficha { display: flex; flex-direction: column; gap: 5px; min-width: 0; flex: 1 1 220px; }
+.nombre { color: #213b43; font-size: 1.05rem; }
+.estudios { margin: 0; color: #526a72; font-size: .93rem; line-height: 1.4; overflow-wrap: anywhere; }
+.etiquetas { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.etiqueta { display: inline-block; padding: 3px 10px; border-radius: 999px; background: #e9eff0; color: #34505a; font-size: .82rem; font-weight: 700; }
+.verificada { background: #def5e8; color: #166546; }
+.alerta { background: #fee7e7; color: #913e3e; }
+.nota { margin: 12px 0 0; color: #5b7076; font-size: .88rem; line-height: 1.45; }

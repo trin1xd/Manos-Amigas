@@ -7,6 +7,7 @@ import ChatServicios from '../Chat/ChatServicios';
 import Notificaciones from '../Notificaciones/Notificaciones';
 import AgendaServicios from '../Agenda/AgendaServicios';
 import { precioReferencialPara } from '../../utils/precioReferencial';
+import FichaEstudiante, { NotaFichaEstudiante } from '../../components/FichaEstudiante/FichaEstudiante';
 import {
   obtenerCatalogoServicios,
   obtenerMisSolicitudes,
@@ -538,13 +539,14 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
                           {!cargandoPostulantes && !errorPostulantes && postulaciones.length === 0 && <p>Nadie ha postulado todavía.</p>}
                           {!cargandoPostulantes && !errorPostulantes && postulaciones.map(post => (
                             <div key={post.id} className={ui.postulanteFila}>
-                              <span>{post.estudiante_nombre} · {post.estado}</span>
+                              <FichaEstudiante postulacion={post} />
                               {post.estado === 'PENDIENTE' && (
                                 <button type="button" className={styles.botonPrimario} disabled={accionEnCurso}
                                   onClick={() => aceptar(sol.id, post.id)}>Aceptar</button>
                               )}
                             </div>
                           ))}
+                          {!cargandoPostulantes && !errorPostulantes && postulaciones.length > 0 && <NotaFichaEstudiante />}
                         </div>
                       )}
                     </article>

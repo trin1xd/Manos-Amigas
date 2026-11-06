@@ -23,7 +23,7 @@ Esta entrega incorpora API real para **solicitudes, postulaciones y vínculos fa
 | GET | `/solicitudes/disponibles` | Universitario verificado | Tareas abiertas, datos mínimos |
 | POST | `/solicitudes/{id}/postular` | Universitario verificado | `postulacion` nueva |
 | GET | `/postulaciones/mias` | Universitario | `postulaciones: []` |
-| GET | `/solicitudes/{id}/postulaciones` | Adulto propietario o familiar vinculado | Lista de postulantes |
+| GET | `/solicitudes/{id}/postulaciones` | Adulto propietario o familiar vinculado | Lista de postulantes con ficha mínima: `estudiante_nombre`, `estudiante_universidad`, `estudiante_carrera`, `estudiante_anio`, `estudiante_verificacion` (sin RUT, correo ni teléfono) |
 | POST | `/solicitudes/{id}/postulaciones/{postId}/aceptar` | Adulto propietario o familiar vinculado | Solicitud pasa a `ASIGNADA` |
 | POST | `/solicitudes/{id}/cancelar` | Adulto propietario o familiar vinculado | Solicitud pasa a `CANCELADA` |
 | POST | `/familiares/vincular` | Adulto mayor | Autoriza a familiar existente por email |

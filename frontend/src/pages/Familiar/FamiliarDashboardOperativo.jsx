@@ -6,6 +6,7 @@ import ChatServicios from '../Chat/ChatServicios';
 import Notificaciones from '../Notificaciones/Notificaciones';
 import AgendaServicios from '../Agenda/AgendaServicios';
 import { precioReferencialPara } from '../../utils/precioReferencial';
+import FichaEstudiante, { NotaFichaEstudiante } from '../../components/FichaEstudiante/FichaEstudiante';
 import dash from '../../components/dashboard/DashboardLayout.module.css';
 import styles from './FamiliarDashboardOperativo.module.css';
 import {
@@ -323,12 +324,13 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
                       {!cargandoPostulantes && !errorPostulantes && postulantes.length === 0 && <p>Aún no hay postulantes.</p>}
                       {!cargandoPostulantes && !errorPostulantes && postulantes.map(post => (
                         <div key={post.id} className={styles.filaPostulante}>
-                          <span>{post.estudiante_nombre} · {post.estado}</span>
+                          <FichaEstudiante postulacion={post} />
                           {post.estado === 'PENDIENTE' && (
                             <button type="button" className={styles.botonPrincipal} onClick={() => aceptar(sol.id, post.id)} disabled={accionEnCurso}>Aceptar</button>
                           )}
                         </div>
                       ))}
+                      {!cargandoPostulantes && !errorPostulantes && postulantes.length > 0 && <NotaFichaEstudiante />}
                     </div>
                   )}
                 </li>
