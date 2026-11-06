@@ -35,7 +35,11 @@ El backend entrega `AAAA-MM-DDTHH:MM` en hora local del servidor, sin zona horar
 - `frontend/src/pages/Universitario/MisPostulaciones.jsx`
 - `frontend/src/pages/Universitario/UniversitarioPaneles.module.css`
 - `frontend/src/pages/Universitario/formatoFecha.js`
+- `frontend/src/utils/precioReferencial.js` (precio de referencia y pago estimado al estudiante)
 - `frontend/src/pages/Universitario/UniversitarioDashboard.jsx` (solo usa los dos componentes y actualiza textos)
+
+## Pago estimado para el estudiante
+Cada tarea de 1 a 2 horas muestra «Pago estimado para ti: $6.400»: el precio de referencia de $8.000 menos 20% de comisión (sección 6.1 del informe). Las tareas de más de 2 horas muestran «Por definir». Es una propuesta en validación y no representa un pago real.
 
 ## Lo que NO hace todavía
 Verificación administrativa de universitarios, subida de documentos, datos de contacto, pagos, chat, SOS, notificaciones, finalizar o valorar tareas.
