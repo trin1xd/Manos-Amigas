@@ -5,6 +5,8 @@ import CalificacionesServicios from '../Calificaciones/CalificacionesServicios';
 import ChatServicios from '../Chat/ChatServicios';
 import Notificaciones from '../Notificaciones/Notificaciones';
 import AgendaServicios from '../Agenda/AgendaServicios';
+import { precioReferencialPara } from '../../utils/precioReferencial';
+import FichaEstudiante, { NotaFichaEstudiante } from '../../components/FichaEstudiante/FichaEstudiante';
 import dash from '../../components/dashboard/DashboardLayout.module.css';
 import styles from './FamiliarDashboardOperativo.module.css';
 import {
@@ -56,6 +58,7 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
   const [mensaje, setMensaje] = useState('');
   const [version, setVersion] = useState(0);
   const [form, setForm] = useState(FORM_INICIAL);
+  const precio = precioReferencialPara(form.duracion_horas);
   const [enviando, setEnviando] = useState(false);
   const [idConPostulantes, setIdConPostulantes] = useState(null);
   const [postulantes, setPostulantes] = useState([]);
@@ -321,12 +324,13 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
                       {!cargandoPostulantes && !errorPostulantes && postulantes.length === 0 && <p>Aún no hay postulantes.</p>}
                       {!cargandoPostulantes && !errorPostulantes && postulantes.map(post => (
                         <div key={post.id} className={styles.filaPostulante}>
-                          <span>{post.estudiante_nombre} · {post.estado}</span>
+                          <FichaEstudiante postulacion={post} />
                           {post.estado === 'PENDIENTE' && (
                             <button type="button" className={styles.botonPrincipal} onClick={() => aceptar(sol.id, post.id)} disabled={accionEnCurso}>Aceptar</button>
                           )}
                         </div>
                       ))}
+                      {!cargandoPostulantes && !errorPostulantes && postulantes.length > 0 && <NotaFichaEstudiante />}
                     </div>
                   )}
                 </li>
@@ -377,7 +381,14 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
                 <textarea id="f-descripcion" name="descripcion" minLength={10} maxLength={500} rows={4} value={form.descripcion} onChange={editarFormulario} placeholder="Describe la ayuda que necesita el adulto mayor" required />
               </label>
               <small>No escribas teléfonos, direcciones ni antecedentes médicos en la descripción.</small>
-              <p className={styles.aviso}>Esta versión no cobra dinero ni asigna estudiantes automáticamente.</p>
+              <div className={styles.precioReferencial}>
+                <div>
+                  <strong>Precio de referencia</strong>
+                  <span>{precio.detalle}</span>
+                </div>
+                <strong className={styles.montoPrecio}>{precio.monto}</strong>
+              </div>
+              <p className={styles.aviso}>Este precio es una propuesta que se está validando. Esta versión no cobra dinero ni asigna estudiantes automáticamente.</p>
               <button type="submit" className={styles.botonPrincipal} disabled={enviando}>{enviando ? 'Guardando...' : 'Guardar solicitud'}</button>
             </form>
           )}

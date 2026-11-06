@@ -31,3 +31,8 @@
 .botonPrincipal:focus-visible, .botonSecundario:focus-visible, .botonPeligro:focus-visible { outline: 3px solid #f2a75e; outline-offset: 3px; }
 .botonPrincipal:disabled, .botonSecundario:disabled, .botonPeligro:disabled { opacity: .65; cursor: not-allowed; }
 @media (max-width: 600px) { .dosColumnas { grid-template-columns: 1fr; } .acciones > button, .filaPostulante > button { width: 100%; } }
+.precioReferencial { display: flex; justify-content: space-between; align-items: center; gap: 18px; background: #e1f4f1; border-radius: 16px; padding: 18px 20px; margin: 14px 0 0; }
+.precioReferencial div { display: flex; flex-direction: column; gap: 3px; }
+.precioReferencial div span { color: #446b6b; font-size: .93rem; }
+.montoPrecio { color: #0d6264; font-size: 1.4rem; white-space: nowrap; }
+@media (max-width: 600px) { .precioReferencial { flex-direction: column; align-items: flex-start; } }

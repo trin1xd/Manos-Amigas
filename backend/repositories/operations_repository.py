@@ -221,12 +221,19 @@ def mis_postulaciones(cursor, student_id):
 
 
 def postulaciones_solicitud(cursor, solicitud_id):
+    # Ficha del estudiante para quien decide: solo universidad, carrera, año de estudios
+    # y estado de verificación. No se exponen RUT, correo, teléfono ni contacto de emergencia.
     cursor.execute('''
         SELECT p.id_postulacion AS id, p.id_universitario,
                u.nombre_completo AS estudiante_nombre, p.estado,
-               p.fecha_creacion
+               p.fecha_creacion,
+               pu.universidad AS estudiante_universidad,
+               pu.carrera AS estudiante_carrera,
+               pu.anio_cursa AS estudiante_anio,
+               pu.estado_verificacion AS estudiante_verificacion
         FROM dbo.Postulaciones p
         JOIN dbo.Usuarios u ON u.id_usuario = p.id_universitario
+        LEFT JOIN dbo.PerfilUniversitario pu ON pu.id_usuario = p.id_universitario
         WHERE p.id_solicitud = ?
         ORDER BY p.fecha_creacion, p.id_postulacion
     ''', (solicitud_id,))
