@@ -8,6 +8,7 @@ import CalificacionesServicios from '../Calificaciones/CalificacionesServicios';
 import ChatServicios from '../Chat/ChatServicios';
 import Notificaciones from '../Notificaciones/Notificaciones';
 import DisponibilidadUniversitario from '../Disponibilidad/DisponibilidadUniversitario';
+import AgendaServicios from '../Agenda/AgendaServicios';
 
 const NAVEGACION = [
   { id: 'inicio', nombre: 'Inicio', icono: '🏠' },
@@ -18,6 +19,7 @@ const NAVEGACION = [
   { id: 'chat', nombre: 'Chat', icono: '💬' },
   { id: 'avisos', nombre: 'Avisos', icono: '🔔' },
   { id: 'disponibilidad', nombre: 'Disponibilidad', icono: '📅' },
+  { id: 'agenda', nombre: 'Agenda', icono: '📆' },
   { id: 'perfil', nombre: 'Mi perfil', icono: '👤' },
 ];
 
@@ -137,6 +139,9 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
       )}
       {vista === 'disponibilidad' && (
         <DisponibilidadUniversitario />
+      )}
+      {vista === 'agenda' && (
+        <AgendaServicios />
       )}
       {vista === 'perfil' && (
         <section className={styles.panel} aria-labelledby="uni-perfil">
