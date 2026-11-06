@@ -9,6 +9,7 @@ import Servicios from './components/home/Servicios';
 import Footer from './components/layout/Footer';
 
 import Login from './pages/Login/Login';
+import RecuperarContrasena from './pages/Recuperacion/RecuperarContrasena';
 import Register from './pages/Register/Register';
 import RegistrationForm from './pages/Register/RegistrationForm';
 
@@ -28,6 +29,10 @@ function App() {
   const [usuario, setUsuario] = useState(null);
   const [verificandoSesion, setVerificandoSesion] = useState(true);
   const [errorSesion, setErrorSesion] = useState('');
+  const [resetToken, setResetToken] = useState(() => {
+    const match = window.location.hash.match(/^#\/recuperar\/([A-Za-z0-9_-]{40,64})$/);
+    return match ? match[1] : '';
+  });
 
   // Escucha la expiración desde cualquier dashboard (excepto el login público).
   useEffect(() => {
@@ -111,6 +116,15 @@ function App() {
     );
   }
 
+  // La ruta de recuperación debe estar disponible incluso si hay sesión abierta.
+  if (resetToken || currentView === 'recuperar') {
+    return <RecuperarContrasena token={resetToken} onVolver={() => {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      setResetToken('');
+      setCurrentView('login');
+    }} />;
+  }
+
   // Dashboard del adulto mayor autenticado
   if (usuario?.rol === 'ADULTO_MAYOR') {
     return (
@@ -161,6 +175,7 @@ function App() {
           onNavigateHome={() => setCurrentView('inicio')}
           onNavigateRegister={() => setCurrentView('crear-cuenta')}
           onLoginSuccess={handleLoginSuccess}
+          onForgotPassword={() => setCurrentView('recuperar')}
         />
         {errorSesion && (
           <p role="alert" style={{ color: '#b91c1c', textAlign: 'center' }}>

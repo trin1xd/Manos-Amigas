@@ -1,5 +1,5 @@
 from flask import Blueprint, g, jsonify, request
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required
 
 from services import auth_service
 from services.auth_service import ADULTO_MAYOR, FAMILIAR, UNIVERSITARIO, ServiceError
@@ -54,9 +54,10 @@ def login():
         user = auth_service.login(data.get("email"), data.get("password"))
     except ServiceError as error:
         return _error(error)
+    password_version = user.pop("_password_version", 0)
     access_token = create_access_token(
         identity=str(user["id"]),
-        additional_claims={"rol": user["rol"]},
+        additional_claims={"rol": user["rol"], "pwd_ver": password_version},
     )
     return jsonify({
         "success": True,
@@ -74,6 +75,9 @@ def get_me():
         user = auth_service.get_user_by_id(user_id)
     except ServiceError as error:
         return _error(error)
+    if get_jwt().get("pwd_ver", 0) != user.get("_password_version", 0):
+        return jsonify({"success": False, "message": "Tu sesión ya no es válida. Inicia sesión nuevamente."}), 401
+    user.pop("_password_version", None)
     return jsonify({"success": True, "user": user})
 
 

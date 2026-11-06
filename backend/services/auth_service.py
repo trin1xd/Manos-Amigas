@@ -216,6 +216,7 @@ def login(email, password):
     }
     if found["rol"] == UNIVERSITARIO:
         user["estado_verificacion"] = found["estado_verificacion"]
+    user['_password_version'] = found.get('password_version', 0)
     return user
 
 
@@ -247,4 +248,5 @@ def get_user_by_id(user_id):
     }
     if found["rol"] == UNIVERSITARIO:
         user["estado_verificacion"] = found["estado_verificacion"]
+    user['_password_version'] = found.get('password_version', 0)
     return user
