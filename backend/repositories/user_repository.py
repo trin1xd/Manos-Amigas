@@ -91,7 +91,7 @@ def find_user_by_email(cursor, email):
     """
     cursor.execute(
         """
-        SELECT u.id_usuario, u.nombre_completo, u.email, u.password_hash, u.estado,
+        SELECT u.id_usuario, u.nombre_completo, u.email, u.password_hash, u.estado, u.password_version,
                r.nombre AS rol, pu.estado_verificacion
         FROM Usuarios u
         JOIN Roles r ON r.id_rol = u.id_rol
@@ -108,6 +108,7 @@ def find_user_by_email(cursor, email):
         "nombre_completo": row.nombre_completo,
         "email": row.email,
         "password_hash": row.password_hash,
+        "password_version": row.password_version,
         "estado": row.estado,
         "rol": row.rol,
         "estado_verificacion": row.estado_verificacion,
@@ -122,7 +123,7 @@ def find_user_by_id(cursor, user_id):
     """
     cursor.execute(
         """
-        SELECT u.id_usuario, u.nombre_completo, u.email, u.password_hash, u.estado,
+        SELECT u.id_usuario, u.nombre_completo, u.email, u.password_hash, u.estado, u.password_version,
                r.nombre AS rol, pu.estado_verificacion
         FROM Usuarios u
         JOIN Roles r ON r.id_rol = u.id_rol
@@ -139,6 +140,7 @@ def find_user_by_id(cursor, user_id):
         "nombre_completo": row.nombre_completo,
         "email": row.email,
         "password_hash": row.password_hash,
+        "password_version": row.password_version,
         "estado": row.estado,
         "rol": row.rol,
         "estado_verificacion": row.estado_verificacion,

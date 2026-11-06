@@ -5,6 +5,7 @@ import TareasDisponibles from './TareasDisponibles';
 import MisPostulaciones from './MisPostulaciones';
 import SeguimientoServicios from '../Seguimiento/SeguimientoServicios';
 import CalificacionesServicios from '../Calificaciones/CalificacionesServicios';
+import ChatServicios from '../Chat/ChatServicios';
 
 const NAVEGACION = [
   { id: 'inicio', nombre: 'Inicio', icono: '🏠' },
@@ -12,6 +13,7 @@ const NAVEGACION = [
   { id: 'postulaciones', nombre: 'Mis postulaciones', icono: '📋' },
   { id: 'seguimiento', nombre: 'Seguimiento', icono: '🕒' },
   { id: 'calificaciones', nombre: 'Calificaciones', icono: '⭐' },
+  { id: 'chat', nombre: 'Chat', icono: '💬' },
   { id: 'perfil', nombre: 'Mi perfil', icono: '👤' },
 ];
 
@@ -122,6 +124,9 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
       )}
       {vista === 'calificaciones' && (
         <CalificacionesServicios usuario={usuario} />
+      )}
+      {vista === 'chat' && (
+        <ChatServicios usuario={usuario} />
       )}
       {vista === 'perfil' && (
         <section className={styles.panel} aria-labelledby="uni-perfil">

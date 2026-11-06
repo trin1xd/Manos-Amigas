@@ -5,7 +5,7 @@ import styles from './Login.module.css';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-export default function Login({ onNavigateHome, onNavigateRegister, onLoginSuccess }) {
+export default function Login({ onNavigateHome, onNavigateRegister, onLoginSuccess, onForgotPassword }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -61,7 +61,7 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
   };
 
   const handleForgotPassword = () => {
-    setInfoMessage('La recuperación de contraseña estará disponible próximamente.');
+    onForgotPassword?.();
   };
 
   const handleRegisterNotice = () => {
@@ -229,7 +229,7 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
                     id="login-forgot-password-btn"
                     className={styles.forgotBtn}
                     onClick={handleForgotPassword}
-                    title="Próximamente — recuperación de contraseña en desarrollo"
+                    title="Recuperar acceso a mi cuenta"
                   >
                     ¿Olvidaste tu contraseña?
                   </button>

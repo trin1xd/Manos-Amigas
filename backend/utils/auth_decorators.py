@@ -1,7 +1,7 @@
 """Decoradores de autorización y control de acceso basado en roles."""
 from functools import wraps
 from flask import g, jsonify
-from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+from flask_jwt_extended import get_jwt, get_jwt_identity, verify_jwt_in_request
 
 from services import auth_service
 from services.auth_service import ServiceError
@@ -31,6 +31,9 @@ def require_role(*roles):
                     "message": "No tiene permisos para acceder a este recurso.",
                 }), 403
 
+            if get_jwt().get("pwd_ver", 0) != user.get("_password_version", 0):
+                return jsonify({"success": False, "message": "Tu sesión ya no es válida. Inicia sesión nuevamente."}), 401
+            user.pop("_password_version", None)
             g.current_user = user
             return fn(*args, **kwargs)
 
