@@ -8,6 +8,7 @@ import {
   postular,
 } from '../../services/postulacionesService';
 import { formatearDuracion, formatearFechaHora } from './formatoFecha';
+import { COMISION_PLATAFORMA_PORCENTAJE, PRECIO_REFERENCIAL_TAREA, formatoPesos, pagoEstudianteReferencialPara } from '../../utils/precioReferencial';
 
 const ETIQUETAS_VERIFICACION = {
   PENDIENTE_VERIFICACION: 'Pendiente de verificación',
@@ -126,6 +127,7 @@ export default function TareasDisponibles({ usuario, onLogout }) {
                 <dl className={styles.meta}>
                   <div><dt>Fecha:</dt><dd>{formatearFechaHora(tarea.fecha_solicitada)}</dd></div>
                   <div><dt>Duración:</dt><dd>{formatearDuracion(tarea.duracion_horas)}</dd></div>
+                  <div><dt>Pago estimado para ti:</dt><dd>{pagoEstudianteReferencialPara(tarea.duracion_horas).monto}</dd></div>
                 </dl>
                 <div className={styles.acciones}>
                   {yaPostulo && (
@@ -171,6 +173,9 @@ export default function TareasDisponibles({ usuario, onLogout }) {
         </ul>
       )}
 
+      <p className={styles.notaPago}>
+        El pago estimado es una propuesta que se está validando: el precio de referencia de {formatoPesos(PRECIO_REFERENCIAL_TAREA)} por tarea de 1 a 2 horas, menos {COMISION_PLATAFORMA_PORCENTAJE}% de comisión de la plataforma.
+      </p>
       <p className={dash.aviso}>Manos Amigas no presta servicios médicos ni realiza pagos desde este panel. Postular no asegura la tarea: la persona que la pidió decide.</p>
     </section>
   );

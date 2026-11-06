@@ -29,6 +29,7 @@
 
 .estadosFila { display: flex; flex-wrap: wrap; gap: 8px; }
 .nota { margin: 0; color: #5b7076; font-size: .92rem; line-height: 1.5; }
+.notaPago { margin: 18px 0 0; color: #5b7076; font-size: .92rem; line-height: 1.5; }
 
 @media (max-width: 680px) {
   .lista { grid-template-columns: 1fr; }
