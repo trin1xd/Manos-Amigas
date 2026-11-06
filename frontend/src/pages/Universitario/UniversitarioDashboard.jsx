@@ -6,6 +6,8 @@ import MisPostulaciones from './MisPostulaciones';
 import SeguimientoServicios from '../Seguimiento/SeguimientoServicios';
 import CalificacionesServicios from '../Calificaciones/CalificacionesServicios';
 import ChatServicios from '../Chat/ChatServicios';
+import Notificaciones from '../Notificaciones/Notificaciones';
+import DisponibilidadUniversitario from '../Disponibilidad/DisponibilidadUniversitario';
 
 const NAVEGACION = [
   { id: 'inicio', nombre: 'Inicio', icono: '🏠' },
@@ -14,6 +16,8 @@ const NAVEGACION = [
   { id: 'seguimiento', nombre: 'Seguimiento', icono: '🕒' },
   { id: 'calificaciones', nombre: 'Calificaciones', icono: '⭐' },
   { id: 'chat', nombre: 'Chat', icono: '💬' },
+  { id: 'avisos', nombre: 'Avisos', icono: '🔔' },
+  { id: 'disponibilidad', nombre: 'Disponibilidad', icono: '📅' },
   { id: 'perfil', nombre: 'Mi perfil', icono: '👤' },
 ];
 
@@ -127,6 +131,12 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
       )}
       {vista === 'chat' && (
         <ChatServicios usuario={usuario} />
+      )}
+      {vista === 'avisos' && (
+        <Notificaciones />
+      )}
+      {vista === 'disponibilidad' && (
+        <DisponibilidadUniversitario />
       )}
       {vista === 'perfil' && (
         <section className={styles.panel} aria-labelledby="uni-perfil">

@@ -1,6 +1,7 @@
 """Flujo de llegada, inicio, término y confirmación; permisos por recurso."""
 from database.connection import get_connection
 from repositories import seguimiento_repository as repo
+from repositories import notificaciones_repository as notif_repo
 from repositories import operations_repository as ops_repo
 from services.auth_service import ServiceError
 
@@ -81,6 +82,7 @@ def realizar(user, id_solicitud, datos):
             raise ServiceError('La acción no corresponde al estado actual de la solicitud.', 409)
 
         repo.registrar_accion(cur, id_solicitud, user['id'], accion)
+        notif_repo.avisar_seguimiento(cur, id_solicitud, accion, user['id'])
         conn.commit()
         return {'id': id_solicitud, 'accion': accion,
                 'estado': 'EN_CURSO' if accion == 'INICIO' else

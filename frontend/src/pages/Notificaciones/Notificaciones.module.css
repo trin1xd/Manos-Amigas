@@ -1,0 +1,20 @@
+.contenedor {display:grid;gap:18px;color:#263842}
+.encabezado {display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.encabezado h2 {font-size:1.45rem}
+.encabezado p {color:#506972;margin-top:5px}
+.acciones {display:flex;gap:8px;flex-wrap:wrap}
+.acciones button,.aviso button {background:#167878;color:white;border-radius:10px;min-height:44px;padding:10px 14px;font-weight:750}
+.acciones button:disabled,.aviso button:disabled {opacity:.5;cursor:not-allowed}
+.ayuda {color:#416568;background:#e8f5f2;padding:12px 15px;border-radius:10px}
+.error,.exito,.vacio {border-radius:10px;padding:12px 15px}
+.error {color:#9b2226;background:#fff0ee}
+.exito {color:#135c3a;background:#e0f6e8}
+.vacio {background:#fff;border:1px solid #d7e6e4}
+.lista {display:grid;gap:12px;list-style:none}
+.aviso {display:grid;justify-items:start;gap:8px;padding:18px;background:#fff;border:1px solid #bfdfd8;border-left:5px solid #168080;border-radius:14px}
+.aviso.leido {border-left-color:#b5c5c5;opacity:.86}
+.tituloFila {display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.aviso h3 {font-size:1.1rem}
+.aviso p {color:#485f68}
+.aviso small {color:#59727a}
+.etiqueta {font-size:.8rem;font-weight:800;color:#116360;background:#daf3eb;padding:4px 8px;border-radius:10px}

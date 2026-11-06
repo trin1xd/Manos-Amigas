@@ -1,0 +1,19 @@
+.contenedor {display:grid;gap:16px;background:#fff;border:1px solid #d6e7e3;padding:clamp(16px,4vw,26px);border-radius:18px;color:#233d42}
+.contenedor h2 {font-size:1.45rem}
+.contenedor p {color:#506871}
+.advertencia {padding:12px 14px;border-left:4px solid #ea933b;background:#fff8eb;border-radius:10px}
+.error,.exito,.vacio {padding:12px 14px;border-radius:10px}
+.error {background:#feecec;color:#a72c2c}
+.exito {background:#e3f6ec;color:#155c3b}
+.vacio {background:#f3f8f7}
+.formulario {display:grid;gap:14px}
+.franja {display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:10px;align-items:end;padding:13px;border:1px solid #cbdedb;border-radius:12px}
+.franja legend {font-weight:750;padding:0 5px}
+.franja label {display:grid;gap:5px;font-weight:700}
+.franja input,.franja select {width:100%;min-height:44px;border:1px solid #9fbdb9;border-radius:9px;padding:8px;background:white;color:#193d44}
+.botones {display:flex;flex-wrap:wrap;gap:10px}
+.botones button,.quitar {border-radius:10px;min-height:44px;padding:10px 15px;border:1px solid #a7d0ca;background:#e8f4f1;color:#155b5b;font-weight:800}
+.botones .guardar {background:#177c7b;color:#fff}
+.botones button:disabled,.quitar:disabled {opacity:.6;cursor:not-allowed}
+.formulario small {color:#536a73}
+@media(max-width:650px) {.franja {grid-template-columns:repeat(2,minmax(0,1fr))}.quitar {grid-column:1/-1}}
