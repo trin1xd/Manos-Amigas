@@ -1,6 +1,7 @@
 """Agenda de servicios autorizada por usuario autenticado."""
 from database.connection import get_connection
-from repositories import agenda_repository as repo
+from database.backend import repository
+repo = repository('agenda')
 from services.auth_service import ServiceError
 
 ROLES = ('UNIVERSITARIO', 'ADULTO_MAYOR', 'FAMILIAR')
