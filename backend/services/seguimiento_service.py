@@ -1,8 +1,9 @@
 """Flujo de llegada, inicio, término y confirmación; permisos por recurso."""
 from database.connection import get_connection
-from repositories import seguimiento_repository as repo
-from repositories import notificaciones_repository as notif_repo
-from repositories import operations_repository as ops_repo
+from database.backend import repository
+repo = repository('seguimiento')
+notif_repo = repository('notificaciones')
+ops_repo = repository('operations')
 from services.auth_service import ServiceError
 
 ACCIONES = ('LLEGADA', 'INICIO', 'TERMINO', 'CONFIRMAR')
