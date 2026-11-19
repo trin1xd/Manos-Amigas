@@ -1,8 +1,13 @@
 import pyodbc
 from config import Config
+from database.backend import engine
 
 
 def get_connection():
+    if engine() == "postgres":
+        from database.postgres_connection import get_postgres_connection
+        return get_postgres_connection()
+
     trust_cert = "yes" if Config.DB_TRUST_SERVER_CERTIFICATE else "no"
 
     if Config.DB_TRUSTED_CONNECTION:
