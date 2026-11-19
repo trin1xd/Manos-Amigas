@@ -34,7 +34,7 @@ def conversaciones(cursor, id_usuario):
 
 
 def contexto(cursor, solicitud_id, bloquear=False):
-    hint = '' if bloquear else ''
+    locking = 'FOR UPDATE OF s' if bloquear else ''
     cursor.execute(f'''
         SELECT s.id_adulto_mayor, p.id_universitario, s.estado
         FROM public."Solicitudes" s
