@@ -8,9 +8,10 @@ from datetime import datetime, timedelta
 import re
 
 from database.connection import get_connection
-from repositories import operations_repository as repo
-from repositories import notificaciones_repository as notif_repo
-from repositories import agenda_repository as agenda_repo
+from database.backend import repository
+repo = repository('operations')
+notif_repo = repository('notificaciones')
+agenda_repo = repository('agenda')
 from services.auth_service import ServiceError
 
 
