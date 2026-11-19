@@ -14,7 +14,8 @@ from email.message import EmailMessage
 
 from werkzeug.security import generate_password_hash
 from database.connection import get_connection
-from repositories import recuperacion_repository as repo
+from database.backend import repository
+repo = repository('recuperacion')
 from services.auth_service import ServiceError
 from utils import validators as v
 
