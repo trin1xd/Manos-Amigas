@@ -10,7 +10,8 @@ import smtplib
 import ssl
 
 from database.connection import get_connection
-from repositories import verificacion_institucional_repository as repo
+from database.backend import repository
+repo = repository('verificacion_institucional')
 from services.auth_service import ServiceError, correo_institucional_aceptado
 
 MIN_ENVIOS_SEGUNDOS = 90
