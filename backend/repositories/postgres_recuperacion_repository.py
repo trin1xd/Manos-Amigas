@@ -46,8 +46,8 @@ def validar_y_bloquear(cursor, token_hash):
         JOIN public."Usuarios" u ON u.id_usuario=r.id_usuario AND u.estado='ACTIVO'
         WHERE r.token_hash=%s AND r.usado_utc IS NULL
           AND r.vence_utc > (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
-        FOR UPDATE OF r
         LIMIT 1
+        FOR UPDATE OF r
     ''', (token_hash,))
     row = cursor.fetchone()
     return None if row is None else row[0]
