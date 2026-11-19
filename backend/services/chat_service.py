@@ -1,7 +1,8 @@
 """Permisos por solicitud para el chat interno, sin mensajes entre desconocidos."""
 from database.connection import get_connection
-from repositories import chat_repository as repo
-from repositories import operations_repository as ops_repo
+from database.backend import repository
+repo = repository('chat')
+ops_repo = repository('operations')
 from services.auth_service import ServiceError
 
 
