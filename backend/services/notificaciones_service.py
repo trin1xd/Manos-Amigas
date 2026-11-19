@@ -1,6 +1,7 @@
 """Bandeja de avisos: identidad y propiedad siempre proceden del JWT validado."""
 from database.connection import get_connection
-from repositories import notificaciones_repository as repo
+from database.backend import repository
+repo = repository('notificaciones')
 from services.auth_service import ServiceError
 
 
