@@ -59,8 +59,8 @@ def confirmar_correo(cur, user_id):
 def correo_confirmado(cur, user_id):
     # Un administrador revisa el perfil bloqueado dentro de la misma transaccion.
     cur.execute('''SELECT correo_institucional_verificado
-        FROM public."PerfilUniversitario" WITH (UPDLOCK, HOLDLOCK)
-        WHERE id_usuario = %s''', (user_id,))
+        FROM public."PerfilUniversitario"
+        WHERE id_usuario = %s FOR UPDATE''', (user_id,))
     fila = cur.fetchone()
     return bool(fila and fila[0])
 
