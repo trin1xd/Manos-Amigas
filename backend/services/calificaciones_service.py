@@ -1,8 +1,10 @@
 """Reglas de negocio para evaluaciones posteriores a la confirmación del servicio."""
 import pyodbc
+import psycopg
 from database.connection import get_connection
-from repositories import calificaciones_repository as repo
-from repositories import operations_repository as ops_repo
+from database.backend import repository
+repo = repository('calificaciones')
+ops_repo = repository('operations')
 from services.auth_service import ServiceError
 
 
@@ -55,7 +57,7 @@ def evaluar(usuario, id_solicitud, datos):
                                          tipo, puntaje, comentario)
         conn.commit()
         return {'id': id_calificacion, 'id_solicitud': id_solicitud, 'puntaje': puntaje}
-    except pyodbc.IntegrityError as exc:
+    except (pyodbc.IntegrityError, psycopg.IntegrityError) as exc:
         conn.rollback()
         raise ServiceError('Este servicio ya fue calificado o no pudo guardarse.', 409) from exc
     except Exception:
