@@ -1,7 +1,8 @@
 """Validación y gestión de disponibilidad semanal informativa en horario local."""
 import re
 from database.connection import get_connection
-from repositories import disponibilidad_repository as repo
+from database.backend import repository
+repo = repository('disponibilidad')
 from services.auth_service import ServiceError
 
 
