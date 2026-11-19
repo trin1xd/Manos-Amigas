@@ -71,6 +71,33 @@ def create_app():
     def health():
         return jsonify({"status": "ok", "service": "manos-amigas-api"})
 
+    # Diagnóstico temporal SOLO para el backend de prueba. No revela datos,
+    # contraseñas ni detalles de errores de conexión.
+    if os.getenv("ENABLE_DB_DIAGNOSTIC", "false").lower() == "true":
+        @app.get("/api/health/database")
+        def database_health():
+            from database.backend import engine
+            from database.connection import get_connection
+
+            if engine() != "postgres":
+                return jsonify({"status": "unavailable"}), 503
+            try:
+                conn = get_connection()
+                try:
+                    with conn.cursor() as cursor:
+                        cursor.execute('SELECT 1 FROM public."Roles" LIMIT 1')
+                        role_exists = cursor.fetchone() is not None
+                        cursor.execute('SELECT 1 FROM public."Servicios" LIMIT 1')
+                        service_exists = cursor.fetchone() is not None
+                finally:
+                    conn.close()
+                if not (role_exists and service_exists):
+                    return jsonify({"status": "unavailable"}), 503
+                return jsonify({"status": "ok", "database": "postgres"}), 200
+            except Exception:
+                app.logger.exception("Fallo del diagnóstico privado de base de datos")
+                return jsonify({"status": "unavailable"}), 503
+
     return app
 
 
