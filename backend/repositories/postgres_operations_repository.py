@@ -37,7 +37,7 @@ def servicios(cursor):
 
 
 def servicio_activo(cursor, service_id):
-    cursor.execute('SELECT id_servicio AS id FROM public."Servicios" WHERE id_servicio = %s AND activo = 1', (service_id,))
+    cursor.execute('SELECT id_servicio AS id FROM public."Servicios" WHERE id_servicio = %s AND activo = TRUE', (service_id,))
     return _one(cursor)
 
 
@@ -269,12 +269,12 @@ def aceptar_postulacion(cursor, solicitud_id, post_id):
         UPDATE public."Postulaciones" SET estado = 'RECHAZADA'
         WHERE id_solicitud = %s AND id_postulacion <> %s AND estado = 'PENDIENTE'
     ''', (solicitud_id, post_id))
-    cursor.execute("UPDATE public."Solicitudes" SET estado = 'ASIGNADA' WHERE id_solicitud = %s", (solicitud_id,))
+    cursor.execute("UPDATE public.\"Solicitudes\" SET estado = 'ASIGNADA' WHERE id_solicitud = %s", (solicitud_id,))
     return True
 
 
 def cancelar_solicitud(cursor, solicitud_id):
-    cursor.execute("UPDATE public."Solicitudes" SET estado = 'CANCELADA' WHERE id_solicitud = %s", (solicitud_id,))
+    cursor.execute("UPDATE public.\"Solicitudes\" SET estado = 'CANCELADA' WHERE id_solicitud = %s", (solicitud_id,))
     cursor.execute('''
         UPDATE public."Postulaciones" SET estado = 'RECHAZADA'
         WHERE id_solicitud = %s AND estado IN ('PENDIENTE', 'ACEPTADA')
