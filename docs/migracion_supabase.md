@@ -23,3 +23,15 @@ Arquitectura objetivo:
 `backend/database/postgres_connection.py` es una utilidad **aislada e inactiva**; no cambiar `database/connection.py` ni el despliegue de Render hasta adaptar las consultas.
 
 Para habilitarla en un entorno de prueba se requerirá la dependencia `psycopg[binary]` en ese entorno. No se configura aún en producción.
+
+## Selector implementado (rama de prueba)
+
+- `DB_ENGINE` ausente o `sqlserver`: conserva la conexión pyodbc y los repositorios originales.
+- `DB_ENGINE=postgres`: usa psycopg, `DATABASE_URL` y los repositorios `postgres_*`.
+- Al arrancar el proceso, seleccionar el motor antes de importar la aplicación; no cambiar `DB_ENGINE` con Flask ya iniciado.
+- Las consultas y los servicios todavía requieren pruebas integrales con la estructura real de Supabase; aprobar pruebas unitarias no es evidencia de integración completa.
+- Nunca poner `DATABASE_URL` en Vercel ni en código del frontend. Configurarla únicamente como secreto del servicio Flask en Render.
+- Para una primera conexión, usar un servicio de prueba separado de producción y datos sintéticos, verificar RLS, privilegios y zona horaria.
+- No migrar contraseñas sin revisar la compatibilidad de hashes existentes.
+
+Pruebas aisladas en GitHub: `.github/workflows/postgres-migration-tests.yml`.
