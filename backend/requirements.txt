@@ -4,3 +4,4 @@ pyodbc>=5.2,<6
 python-dotenv>=1.0,<2
 pytest>=8,<10
 Flask-JWT-Extended>=4.6,<5
+psycopg[binary]>=3.2,<4
