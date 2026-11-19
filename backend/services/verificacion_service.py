@@ -4,8 +4,9 @@ No constituye validación real de identidad, antecedentes o documentos.
 """
 import os
 from database.connection import get_connection
-from repositories import verificacion_institucional_repository as inst_repo
-from repositories import verificacion_repository as repo
+from database.backend import repository
+inst_repo = repository('verificacion_institucional')
+repo = repository('verificacion')
 from services.auth_service import ServiceError
 
 
