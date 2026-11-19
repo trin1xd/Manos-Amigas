@@ -1,9 +1,11 @@
 """Reglas de negocio de registro e inicio de sesión."""
 import pyodbc
+import psycopg
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database.connection import get_connection
-from repositories import user_repository as repo
+from database.backend import repository
+repo = repository('user')
 from utils import validators as v
 from utils.rut import normalize_rut
 
@@ -185,7 +187,7 @@ def register_user(role, data):
     except ServiceError:
         conn.rollback()
         raise
-    except pyodbc.IntegrityError:
+    except (pyodbc.IntegrityError, psycopg.IntegrityError):
         # Respaldo ante duplicados simultáneos (las restricciones UNIQUE de SQL Server).
         conn.rollback()
         raise ServiceError("El RUT o el correo ya están registrados.", 409)
