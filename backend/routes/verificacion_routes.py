@@ -1,8 +1,8 @@
 """API exclusiva de ADMIN. Decisiones de habilitación para pruebas locales."""
-import os
-from flask import Blueprint, current_app, g, jsonify, request
+from flask import Blueprint, g, jsonify, request
 from services import verificacion_service as svc
 from services.auth_service import ServiceError
+from utils.admin_test_gate import habilitado as aprobacion_piloto_habilitada
 from utils.auth_decorators import require_role
 
 verificacion_bp = Blueprint('verificacion_admin', __name__)
@@ -21,10 +21,8 @@ def universitarios():
 @verificacion_bp.post('/universitarios/<int:id_universitario>/decision')
 @require_role('ADMIN')
 def decision(id_universitario):
-    # Doble habilitación deliberada: variable explícita y servidor de desarrollo/pruebas.
-    habilitado = (os.getenv('ADMIN_VERIFICACION_PRUEBAS', '').lower() == 'true'
-                  and (current_app.debug or current_app.testing))
-    if not habilitado:
+    # Solo piloto PostgreSQL con dos autorizaciones explícitas. Nunca requiere DEBUG.
+    if not aprobacion_piloto_habilitada():
         return jsonify({'success': False, 'message': 'La habilitación administrativa de pruebas está desactivada.'}), 403
     datos = request.get_json(silent=True)
     try:
