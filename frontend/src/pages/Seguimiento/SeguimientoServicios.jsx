@@ -156,6 +156,9 @@ export default function SeguimientoServicios({ usuario }) {
                 onClick={() => ejecutar(servicio, accion)}>
                 {accionando === servicio.id ? 'Guardando...' : accion === 'LLEGADA' ? 'Registrar llegada manualmente' : ACCIONES[accion]}
               </button>}
+              {servicio.estado === 'FINALIZADA' && (
+                <p className={styles.exito}>Servicio finalizado y confirmado. Puedes ir a Calificaciones para evaluar la experiencia.</p>
+              )}
               {servicio.estado === 'EN_CURSO' && servicio.fecha_termino_utc && rol === 'UNIVERSITARIO' && (
                 <p className={styles.aviso}>Esperando confirmación del adulto mayor o familiar autorizado.</p>
               )}
