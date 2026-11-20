@@ -6,8 +6,16 @@
   justify-content: space-between;
   margin: 0 0 12px;
 }
-.tituloFila > button { width: auto; margin: 0; }
-.tituloFila > h2 { margin-bottom: 0; }
+
+.tituloFila>button {
+  width: auto;
+  margin: 0;
+}
+
+.tituloFila>h2 {
+  margin-bottom: 0;
+}
+
 .aviso {
   padding: 15px;
   border-radius: 11px;
@@ -15,7 +23,14 @@
   color: #5c431e;
   border-left: 4px solid #e99b43;
 }
-.ok { padding: 13px; border-radius: 11px; background: #dff7ef; color: #1b654d; }
+
+.ok {
+  padding: 13px;
+  border-radius: 11px;
+  background: #dff7ef;
+  color: #1b654d;
+}
+
 .etiquetaEstado {
   font-weight: 800;
   font-size: .86rem;
@@ -25,8 +40,20 @@
   padding: 7px 13px;
   white-space: nowrap;
 }
-.acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; align-items: center; }
-.acciones > button { width: auto; margin: 0; }
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  align-items: center;
+}
+
+.acciones>button {
+  width: auto;
+  margin: 0;
+}
+
 .botonPeligro {
   min-height: 48px;
   border-radius: 12px;
@@ -37,15 +64,52 @@
   font-size: 1rem;
   font-weight: 750;
 }
-.botonPeligro:hover { background: #ffdfd9; }
-.postulantes { margin-top: 17px; padding: 18px; border-radius: 14px; background: #eff8f7; }
-.postulantes h4 { font-size: 1.08rem; margin: 0 0 14px; }
-.postulanteFila { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #c7e3e0; }
-.postulanteFila:last-child { border-bottom: 0; }
-.bloqueVincular { margin-top: 20px; }
-.bloqueVincular > h2 { margin-bottom: 12px; }
+
+.botonPeligro:hover {
+  background: #ffdfd9;
+}
+
+.postulantes {
+  margin-top: 17px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #eff8f7;
+}
+
+.postulantes h4 {
+  font-size: 1.08rem;
+  margin: 0 0 14px;
+}
+
+.postulanteFila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #c7e3e0;
+}
+
+.postulanteFila:last-child {
+  border-bottom: 0;
+}
+
+.bloqueVincular {
+  margin-top: 20px;
+}
+
+.bloqueVincular>h2 {
+  margin-bottom: 12px;
+}
+
 @media (max-width: 560px) {
-  .acciones > button, .tituloFila > button, .postulanteFila > button { width: 100%; }
+
+  .acciones>button,
+  .tituloFila>button,
+  .postulanteFila>button {
+    width: 100%;
+  }
 }
 
 /* Familiares autorizados en el perfil del adulto mayor */
@@ -57,7 +121,12 @@
   gap: 12px;
   margin: 24px 0 12px;
 }
-.encabezadoFamiliares h3 { margin: 0; font-size: 1.1rem; }
+
+.encabezadoFamiliares h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
 .botonActualizar {
   border-radius: 11px;
   padding: 10px 14px;
@@ -66,7 +135,13 @@
   background: #edf7f6;
   font-weight: 700;
 }
-.listaFamiliares { padding: 0; margin: 12px 0 0; list-style: none; }
+
+.listaFamiliares {
+  padding: 0;
+  margin: 12px 0 0;
+  list-style: none;
+}
+
 .familiarFila {
   display: flex;
   align-items: center;
@@ -75,9 +150,21 @@
   padding: 15px 0;
   border-bottom: 1px solid #dce5e5;
 }
-.familiarInfo { min-width: 0; overflow-wrap: anywhere; }
-.familiarInfo strong { display: block; }
-.familiarInfo p { color: #536a73; margin: 3px 0 0; }
+
+.familiarInfo {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.familiarInfo strong {
+  display: block;
+}
+
+.familiarInfo p {
+  color: #536a73;
+  margin: 3px 0 0;
+}
+
 .botonRevocar {
   flex-shrink: 0;
   border-radius: 11px;
@@ -87,10 +174,22 @@
   color: #822c27;
   font-weight: 700;
 }
-.errorVinculos { color: #a42222; margin: 12px 0; }
+
+.errorVinculos {
+  color: #a42222;
+  margin: 12px 0;
+}
+
 @media (max-width: 560px) {
-  .familiarFila { align-items: stretch; flex-direction: column; }
-  .botonRevocar { width: 100%; min-height: 46px; }
+  .familiarFila {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .botonRevocar {
+    width: 100%;
+    min-height: 46px;
+  }
 }
 
 /* --- Rediseño de pedir ayuda en 2 pasos (Accesibilidad reforzada) --- */
@@ -412,19 +511,24 @@
     flex-direction: column;
     align-items: stretch;
   }
+
   .botonPaso {
     width: 100%;
   }
+
   .grillaGrupos {
     grid-template-columns: 1fr;
   }
+
   .resumenFila {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .resumenFila dd {
     text-align: left;
   }
+
   .accionesAccesibles button {
     width: 100%;
   }
@@ -552,8 +656,40 @@
   .grillaInicio {
     grid-template-columns: 1fr;
   }
+
   .tarjetaInicio {
     padding: 22px 20px;
   }
 }
 
+/* --- Ajuste móvil: tarjeta de tarea y campos del formulario (Paso 3) --- */
+.filaTarea {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.filaTareaInfo {
+  min-width: 0;
+}
+
+.filaTareaInfo>div:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.circuloIcono {
+  flex-shrink: 0;
+}
+
+.formAccesible label {
+  min-width: 0;
+}
+
+.formAccesible input,
+.formAccesible select,
+.formAccesible textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
