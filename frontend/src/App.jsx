@@ -19,16 +19,16 @@ import FamiliarDashboardOperativo from './pages/Familiar/FamiliarDashboardOperat
 import AdminVerificaciones from './pages/Admin/AdminVerificaciones';
 import ConfirmarLlegadaQR from './pages/Seguimiento/ConfirmarLlegadaQR';
 
-function tokenQrEnUrl() {
-  const match = window.location.hash.match(/^#\/llegada\/([A-Za-z0-9._-]{30,900})$/);
-  return match ? match[1] : '';
-}
-
 import {
   getMe,
   hasToken,
   logout,
 } from './services/sessionService';
+
+function tokenQrEnUrl() {
+  const match = window.location.hash.match(/^#\/llegada\/([A-Za-z0-9._-]{30,900})$/);
+  return match ? match[1] : '';
+}
 
 function App() {
   const [currentView, setCurrentView] = useState('inicio');
