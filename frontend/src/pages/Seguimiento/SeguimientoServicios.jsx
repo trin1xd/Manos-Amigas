@@ -74,7 +74,7 @@ export default function SeguimientoServicios({ usuario }) {
     setMensaje('');
     try {
       await registrarAccionSeguimiento(servicio.id, accion);
-      setMensaje('Acción guardada en SQL Server.');
+      setMensaje('Acción de seguimiento guardada correctamente.');
       await cargar();
     } catch (err) {
       setError(err.message || 'No fue posible guardar el cambio.');
