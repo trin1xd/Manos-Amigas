@@ -393,7 +393,7 @@ function FormularioSolicitud({ servicio, grupo, onVolver, onCreada }) {
                 <div className={ui.resumenFila}><dt>Precio de referencia</dt><dd>{precio.monto}</dd></div>
               </dl>
               {error && <p className={styles.errorSolicitud} role="alert">{error}</p>}
-              <p className={ui.aviso}>Al confirmar se guardará una solicitud de prueba en Manos Amigas. No se realizará un pago.</p>
+              <p className={ui.aviso}>Al confirmar se guardará una solicitud en Manos Amigas. No se realizará un pago.</p>
               <div className={ui.accionesAccesibles}>
                 <button type="button" className={ui.botonVolverPaso} onClick={() => setRevisando(false)} disabled={enviando} style={{ margin: 0 }}>
                   ← Editar datos
