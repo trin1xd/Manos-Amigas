@@ -217,7 +217,7 @@ def test_qr_adulterado_y_vencido_no_registra(app, monkeypatch):
         codigo = svc.generar_qr_llegada(USUARIOS[1], 7)
     cliente = app.test_client()
     ruta = '/api/seguimiento/llegada/qr'
-    modificado = codigo[:-1] + ('x' if codigo[-1] != 'x' else 'y')
+    modificado = ('x' if codigo[0] != 'x' else 'y') + codigo[1:]
     respuesta = cliente.post(ruta, json={'token': modificado}, headers=token(app, 2))
     assert respuesta.status_code == 400
     monkeypatch.setattr(svc, 'QR_MAX_AGE_SEGUNDOS', -1)
