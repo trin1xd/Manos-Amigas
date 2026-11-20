@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { obtenerSeguimiento, registrarAccionSeguimiento } from '../../services/seguimientoService';
+import { obtenerSeguimiento, registrarAccionSeguimiento, obtenerQrLlegada } from '../../services/seguimientoService';
 import styles from './SeguimientoServicios.module.css';
 
 const ETIQUETAS = {
@@ -41,6 +41,8 @@ export default function SeguimientoServicios({ usuario }) {
   const [accionando, setAccionando] = useState(null);
   const [error, setError] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const [qr, setQr] = useState(null);
+  const [cargandoQr, setCargandoQr] = useState(null);
   const rol = usuario?.rol;
 
   async function cargar() {
@@ -67,6 +69,19 @@ export default function SeguimientoServicios({ usuario }) {
     return () => { activo = false; };
   }, []);
 
+  async function mostrarQr(servicio) {
+    setCargandoQr(servicio.id);
+    setError('');
+    try {
+      const resultado = await obtenerQrLlegada(servicio.id);
+      setQr({ id: servicio.id, imagen: resultado.qr_svg });
+    } catch (err) {
+      setError(err.message || 'No fue posible generar el QR.');
+    } finally {
+      setCargandoQr(null);
+    }
+  }
+
   async function ejecutar(servicio, accion) {
     if (!window.confirm(`¿Confirmas "${ACCIONES[accion]}" para el servicio #${servicio.id}?`)) return;
     setAccionando(servicio.id);
@@ -74,6 +89,7 @@ export default function SeguimientoServicios({ usuario }) {
     setMensaje('');
     try {
       await registrarAccionSeguimiento(servicio.id, accion);
+      setQr(null);
       setMensaje('Acción de seguimiento guardada correctamente.');
       await cargar();
     } catch (err) {
@@ -119,9 +135,26 @@ export default function SeguimientoServicios({ usuario }) {
                 <div><dt>Término informado</dt><dd>{fechaLocal(servicio.fecha_termino_utc)}</dd></div>
                 <div><dt>Confirmación</dt><dd>{fechaLocal(servicio.fecha_confirmacion_utc)}</dd></div>
               </dl>
+              {['ADULTO_MAYOR', 'FAMILIAR'].includes(rol) && servicio.estado === 'ASIGNADA'
+                && !servicio.fecha_llegada_utc && (
+                <div className={styles.bloqueQr}>
+                  <p><strong>Confirmar llegada con QR</strong></p>
+                  <p>Muestra este código al estudiante cuando llegue. Deberá abrirlo desde su teléfono e iniciar sesión.</p>
+                  <button type="button" className={styles.botonQr} onClick={() => mostrarQr(servicio)}
+                    disabled={cargandoQr !== null}>
+                    {cargandoQr === servicio.id ? 'Generando...' : qr?.id === servicio.id ? 'Renovar QR' : 'Mostrar QR de llegada'}
+                  </button>
+                  {qr?.id === servicio.id && (
+                    <div className={styles.imagenQr}>
+                      <img src={qr.imagen} alt={`QR temporal para confirmar la llegada al servicio #${servicio.id}`} width="240" height="240" />
+                      <small>Caduca en 10 minutos. Solo sirve para este servicio y una llegada; si vence, pulsa «Renovar QR».</small>
+                    </div>
+                  )}
+                </div>
+              )}
               {accion && <button type="button" className={styles.accion} disabled={accionando !== null || cargando}
                 onClick={() => ejecutar(servicio, accion)}>
-                {accionando === servicio.id ? 'Guardando...' : ACCIONES[accion]}
+                {accionando === servicio.id ? 'Guardando...' : accion === 'LLEGADA' ? 'Registrar llegada manualmente' : ACCIONES[accion]}
               </button>}
               {servicio.estado === 'EN_CURSO' && servicio.fecha_termino_utc && rol === 'UNIVERSITARIO' && (
                 <p className={styles.aviso}>Esperando confirmación del adulto mayor o familiar autorizado.</p>
