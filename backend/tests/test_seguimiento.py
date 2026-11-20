@@ -163,3 +163,65 @@ def test_no_confirmar_antes_de_termino(monkeypatch):
         svc.realizar(USUARIOS[1], 7, {'accion': 'CONFIRMAR'})
     assert error.value.status == 409
     assert conn.rollbacks == 1
+
+
+def test_qr_llegada_requiere_origen_permitido_y_adulto(app, monkeypatch):
+    escenario(monkeypatch)
+    client = app.test_client()
+    ruta = '/api/seguimiento/solicitudes/7/qr-llegada'
+    assert client.post(ruta, headers={'Origin': 'http://localhost:5173'}).status_code == 401
+    assert client.post(ruta, headers={**token(app, 2), 'Origin': 'http://localhost:5173'}).status_code == 403
+    assert client.post(ruta, headers={**token(app, 1), 'Origin': 'https://sitio-ajeno.cl'}).status_code == 403
+    capturado = []
+
+    class QRDePrueba:
+        def svg_data_uri(self, **kwargs):
+            return 'data:image/svg+xml,svg-de-prueba'
+
+    def crear_qr(url, error):
+        capturado.append(url)
+        assert error == 'm'
+        return QRDePrueba()
+
+    monkeypatch.setattr('routes.seguimiento_routes.segno.make_qr', crear_qr)
+    respuesta = client.post(ruta, headers={**token(app, 1), 'Origin': 'http://localhost:5173'})
+    assert respuesta.status_code == 200
+    assert respuesta.get_json()['qr_svg'].startswith('data:image/svg+xml,')
+    assert respuesta.get_json()['expira_en_segundos'] == 600
+    assert capturado[0].startswith('http://localhost:5173/#/llegada/')
+
+
+def test_qr_firmado_registra_solo_estudiante_asignado(app, monkeypatch):
+    conn, eventos = escenario(monkeypatch)
+    with app.app_context():
+        codigo = svc.generar_qr_llegada(USUARIOS[1], 7)
+    assert codigo
+    with app.app_context():
+        with pytest.raises(ServiceError) as error:
+            svc.generar_qr_llegada(USUARIOS[5], 7)
+        assert error.value.status == 403
+
+    cliente = app.test_client()
+    ruta = '/api/seguimiento/llegada/qr'
+    assert cliente.post(ruta, json={'token': codigo}, headers=token(app, 1)).status_code == 403
+    respuesta = cliente.post(ruta, json={'token': codigo}, headers=token(app, 2))
+    assert respuesta.status_code == 200
+    assert respuesta.get_json()['seguimiento']['accion'] == 'LLEGADA'
+    assert eventos == [(7, 2, 'LLEGADA')]
+    assert conn.commits == 1
+
+
+def test_qr_adulterado_y_vencido_no_registra(app, monkeypatch):
+    conn, eventos = escenario(monkeypatch)
+    with app.app_context():
+        codigo = svc.generar_qr_llegada(USUARIOS[1], 7)
+    cliente = app.test_client()
+    ruta = '/api/seguimiento/llegada/qr'
+    modificado = codigo[:-1] + ('x' if codigo[-1] != 'x' else 'y')
+    respuesta = cliente.post(ruta, json={'token': modificado}, headers=token(app, 2))
+    assert respuesta.status_code == 400
+    monkeypatch.setattr(svc, 'QR_MAX_AGE_SEGUNDOS', -1)
+    respuesta = cliente.post(ruta, json={'token': codigo}, headers=token(app, 2))
+    assert respuesta.status_code == 410
+    assert eventos == []
+    assert conn.commits == 0
