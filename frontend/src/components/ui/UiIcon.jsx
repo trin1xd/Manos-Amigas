@@ -34,6 +34,17 @@ const TRAZOS = {
   menu: <path d="M4 6h16M4 12h16M4 18h16"/>,
   arrow: <path d="M5 12h14m-6-6 6 6-6 6"/>,
   circle: <circle cx="12" cy="12" r="8"/>,
+  carrito: <><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></>,
+  documento: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></>,
+  usuarios: <><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
+  casa: <><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></>,
+  hoja: <><path d="M11 20A7 7 0 0 1 4 13a7 7 0 0 1 7-7c4 0 9-3 9-3s-3 5-3 9a7 7 0 0 1-7 7z"/><path d="M2 21c0-3 3-6 9-8"/></>,
+  celular: <><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></>,
+  destellos: <><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/><path d="M5 3v3"/><path d="M19 18v3"/><path d="M3 5h3"/><path d="M18 19h3"/></>,
+  cubiertos: <><path d="M18 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Z"/><path d="M7 2v20"/><path d="M4 2v6a3 3 0 0 0 6 0V2"/></>,
+  'llave inglesa': <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>,
+  'llave-inglesa': <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>,
+  arbol: <><path d="M12 19v3"/><path d="M12 19a7 7 0 0 1-7-7c0-2.3 1.1-4.3 2.8-5.5a6 6 0 0 1 8.4 0C17.9 7.7 19 9.7 19 12a7 7 0 0 1-7 7z"/><path d="M12 19a4 4 0 0 0 4-4c0-1.5-.8-2.8-2-3.5"/></>,
 };
 
 export default function UiIcon({ name = 'circle', size = 22, className }) {
