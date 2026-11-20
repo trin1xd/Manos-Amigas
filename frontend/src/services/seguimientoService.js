@@ -12,3 +12,18 @@ export async function registrarAccionSeguimiento(idSolicitud, accion) {
   });
   return data.seguimiento;
 }
+
+export async function obtenerQrLlegada(idSolicitud) {
+  const data = await apiRequest(`/seguimiento/solicitudes/${encodeURIComponent(idSolicitud)}/qr-llegada`, {
+    method: 'POST',
+  });
+  return data;
+}
+
+export async function confirmarLlegadaPorQr(token) {
+  const data = await apiRequest('/seguimiento/llegada/qr', {
+    method: 'POST',
+    body: JSON.stringify({ token }),
+  });
+  return data.seguimiento;
+}
