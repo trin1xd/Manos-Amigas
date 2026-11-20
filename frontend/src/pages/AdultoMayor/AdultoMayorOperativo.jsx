@@ -21,6 +21,12 @@ import {
   revocarAutorizacionFamiliar,
 } from '../../services/solicitudesService';
 
+const WHATSAPP_NUMERO = '56941679024';
+
+function enlaceWhatsapp(texto) {
+  return `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(texto)}`;
+}
+
 const SECCIONES = [
   { clave: 'inicio', etiqueta: 'Inicio' },
   { clave: 'catalogo', etiqueta: 'Pedir ayuda' },
@@ -286,6 +292,16 @@ function FormularioSolicitud({ servicio, grupo, onVolver, onCreada }) {
           <button type="button" className={ui.botonPaso} style={{ backgroundColor: '#14696a' }} onClick={onCreada}>
             Ver mis solicitudes
           </button>
+          <a
+            className={ui.botonWhatsapp}
+            href={enlaceWhatsapp(
+              `Hola, acabo de pedir ayuda en Manos Amigas (solicitud #${creada.id}): ${servicio.nombre}, el ${campos.fecha} a las ${campos.hora}.`
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Avisar también por WhatsApp
+          </a>
         </div>
       ) : (
         <>
@@ -733,6 +749,27 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
                     <span className={ui.descripcionTarjetaInicio}>{textoSolicitudes}</span>
                   </div>
                 </button>
+                <a
+                  className={`${ui.tarjetaInicio} ${ui.tarjetaInicioWhatsapp}`}
+                  href={enlaceWhatsapp(
+                    `Hola, ${primerNombre ? `soy ${primerNombre}. ` : ''}Necesito ayuda con una tarea. ¿Me pueden ayudar?`
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  role="listitem"
+                >
+                  <div
+                    className={ui.circuloIconoGrande}
+                    style={{ backgroundColor: '#128c4a' }}
+                    aria-hidden="true"
+                  >
+                    <UiIcon name="chat" size={36} />
+                  </div>
+                  <div className={ui.infoInicio}>
+                    <span className={ui.tituloTarjetaInicio}>Pedir ayuda por WhatsApp</span>
+                    <span className={ui.descripcionTarjetaInicio}>Escríbenos y te respondemos</span>
+                  </div>
+                </a>
               </div>
             </section>
           )}
