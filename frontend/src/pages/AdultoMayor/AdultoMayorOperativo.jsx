@@ -280,7 +280,7 @@ function FormularioSolicitud({ servicio, grupo, onVolver, onCreada }) {
       {creada ? (
         <div className={styles.confirmacion} role="status">
           <span className={styles.confirmacionIcono} aria-hidden="true">✓</span>
-          <h2 id="titulo-solicitud">Solicitud guardada en SQL Server</h2>
+          <h2 id="titulo-solicitud">Solicitud guardada correctamente</h2>
           <p>¡Listo! Se registró la solicitud <strong>#{creada.id}</strong> con estado <strong>{creada.estado}</strong>.</p>
           <p className={styles.nota}>Ahora los universitarios verificados podrán encontrarla si la fecha sigue vigente. No se ha realizado ningún pago.</p>
           <button type="button" className={ui.botonPaso} style={{ backgroundColor: '#14696a' }} onClick={onCreada}>
@@ -393,7 +393,7 @@ function FormularioSolicitud({ servicio, grupo, onVolver, onCreada }) {
                 <div className={ui.resumenFila}><dt>Precio de referencia</dt><dd>{precio.monto}</dd></div>
               </dl>
               {error && <p className={styles.errorSolicitud} role="alert">{error}</p>}
-              <p className={ui.aviso}>Al confirmar se guardará una solicitud real en SQL Server. No se realizará un pago.</p>
+              <p className={ui.aviso}>Al confirmar se guardará una solicitud de prueba en Manos Amigas. No se realizará un pago.</p>
               <div className={ui.accionesAccesibles}>
                 <button type="button" className={ui.botonVolverPaso} onClick={() => setRevisando(false)} disabled={enviando} style={{ margin: 0 }}>
                   ← Editar datos
@@ -856,7 +856,7 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
                 <h2 id="titulo-solicitudes" className={styles.tituloSeccion}>Mis solicitudes</h2>
                 <button type="button" className={styles.botonPrimario} onClick={refrescar}>Actualizar</button>
               </div>
-              <p className={styles.textoAyuda}>Estas solicitudes se consultan desde SQL Server y están vinculadas a tu cuenta.</p>
+              <p className={styles.textoAyuda}>Estas solicitudes están guardadas en Manos Amigas y vinculadas a tu cuenta.</p>
               {cargando && <p role="status">Cargando solicitudes...</p>}
               {errorCarga && <p className={styles.errorSolicitud} role="alert">{errorCarga}</p>}
               {!cargando && !errorCarga && solicitudes.length === 0 && (
