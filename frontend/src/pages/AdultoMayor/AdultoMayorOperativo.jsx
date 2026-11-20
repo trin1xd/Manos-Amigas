@@ -532,6 +532,16 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
 
   const catalogoGrupos = procesarCatalogoEnGrupos(servicios);
 
+  const primerNombre = usuario?.nombre?.trim().split(/\s+/)[0] || '';
+  const solicitudesActivas = Array.isArray(solicitudes)
+    ? solicitudes.filter(s => ['PENDIENTE', 'ASIGNADA'].includes(s.estado)).length
+    : 0;
+  const textoSolicitudes = solicitudes.length > 0
+    ? (solicitudesActivas > 0
+        ? `Tienes ${solicitudesActivas} ${solicitudesActivas === 1 ? 'solicitud activa' : 'solicitudes activas'}`
+        : 'Revisa el estado de tus solicitudes')
+    : 'Revisa el estado de tus solicitudes y postulantes';
+
   function seleccionarGrupo(grupo) {
     setGrupoActivo(grupo);
     if (grupo.tareas.length === 1) {
@@ -677,31 +687,54 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
           <div className={styles.panelPrincipal}>
             <main id="contenido-dashboard" className={styles.contenido}>
           {vista === 'inicio' && (
-            <>
-              <section className={styles.tarjetaDestacada} aria-labelledby="titulo-ayuda">
-                <div>
-                  <p className={styles.sobretituloClaro}>Estamos para acompañarte</p>
-                  <h2 id="titulo-ayuda">Pide ayuda para tus tareas cotidianas</h2>
-                  <p>Elige una tarea y envía una solicitud real a Manos Amigas.</p>
-                  <button type="button" className={styles.botonNaranja} onClick={() => navegar('catalogo')}>Ver tareas disponibles</button>
-                </div>
-                <span className={styles.corazonGrande} aria-hidden="true"><UiIcon name="heart" size={112} /></span>
-              </section>
-              <section aria-labelledby="titulo-accesos">
-                <h2 id="titulo-accesos" className={styles.tituloSeccion}>¿Qué necesitas hacer?</h2>
-                <div className={styles.grillaAccesos}>
-                  <button type="button" className={styles.acceso} onClick={() => navegar('catalogo')}>
-                    <span className={styles.accesoIcono} aria-hidden="true"><UiIcon name="catalogo" size={26} /></span><strong>Pedir ayuda</strong><span>Crear una solicitud real</span>
-                  </button>
-                  <button type="button" className={styles.acceso} onClick={() => navegar('solicitudes')}>
-                    <span className={styles.accesoIcono} aria-hidden="true"><UiIcon name="solicitudes" size={26} /></span><strong>Mis solicitudes</strong><span>Ver solicitudes y postulantes</span>
-                  </button>
-                  <button type="button" className={styles.acceso} onClick={() => navegar('perfil')}>
-                    <span className={styles.accesoIcono} aria-hidden="true"><UiIcon name="perfil" size={26} /></span><strong>Mi perfil</strong><span>Consultar mi cuenta y autorizar familiares</span>
-                  </button>
-                </div>
-              </section>
-            </>
+            <section className={ui.seccionInicio} aria-labelledby="titulo-saludo">
+              <div className={ui.encabezadoInicio}>
+                <h2 id="titulo-saludo" className={ui.saludoInicio}>
+                  {primerNombre ? `Hola, ${primerNombre}` : '¡Hola!'}
+                </h2>
+                <p className={ui.preguntaInicio}>¿En qué podemos ayudarte hoy?</p>
+              </div>
+
+              <div className={ui.grillaInicio} role="list" aria-label="Acciones principales">
+                <button
+                  type="button"
+                  className={`${ui.tarjetaInicio} ${ui.tarjetaInicioPrincipal}`}
+                  onClick={() => navegar('catalogo')}
+                  role="listitem"
+                >
+                  <div
+                    className={ui.circuloIconoGrande}
+                    style={{ backgroundColor: '#e98126' }}
+                    aria-hidden="true"
+                  >
+                    <UiIcon name="pedir-ayuda" size={36} />
+                  </div>
+                  <div className={ui.infoInicio}>
+                    <span className={ui.tituloTarjetaInicio}>Pedir ayuda</span>
+                    <span className={ui.descripcionTarjetaInicio}>Elige qué necesitas y te ayudamos</span>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  className={`${ui.tarjetaInicio} ${ui.tarjetaInicioSecundaria}`}
+                  onClick={() => navegar('solicitudes')}
+                  role="listitem"
+                >
+                  <div
+                    className={ui.circuloIconoGrande}
+                    style={{ backgroundColor: '#14696a' }}
+                    aria-hidden="true"
+                  >
+                    <UiIcon name="solicitudes" size={36} />
+                  </div>
+                  <div className={ui.infoInicio}>
+                    <span className={ui.tituloTarjetaInicio}>Mis solicitudes</span>
+                    <span className={ui.descripcionTarjetaInicio}>{textoSolicitudes}</span>
+                  </div>
+                </button>
+              </div>
+            </section>
           )}
           {vista === 'catalogo' && (
             <section aria-labelledby="titulo-catalogo">
