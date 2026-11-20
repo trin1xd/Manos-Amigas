@@ -33,7 +33,7 @@
 - No compartir contraseñas de usuarios reales o administrador en documentos, chats o capturas.
 
 ## Sugerencias docentes y alcance realista
-- **QR de llegada**: pendiente. Debe implementarse como comprobante temporal de un solo uso, asociado al servicio asignado y validado en backend. No demuestra por sí mismo presencia física ni identidad.
+- **QR de llegada**: implementado en rama de cierre, pero **falta validación funcional de extremo a extremo**. El adulto/familiar genera un QR temporal (10 minutos) y el estudiante asignado abre el enlace, inicia sesión y confirma. El backend valida firma, rol, asignación y estado; el mismo servicio no permite duplicar la llegada. La llegada manual sigue disponible como respaldo. No equivale a identidad ni presencia física verificada.
 - **Chatbot vía WhatsApp**: pendiente; un enlace a WhatsApp con mensaje predefinido no equivale a un chatbot. Automatizar mensajes requiere un número/servicio oficial, permisos y configuración de proveedor.
 - **Pagos**: solo precios referenciales; no existe cobro ni transferencia de dinero en esta versión.
 
@@ -44,3 +44,14 @@ Entrar como adulto mayor → seleccionar categoría y tarea → mostrar una soli
 - Los cambios UX de `ux/pedir-ayuda-dos-pasos` ya se probaron parcialmente en Preview.
 - Este cierre está preparado en rama independiente para revisión antes de integrarlo a `migracion-supabase`.
 - Evitar merges directos a `main` y mantener las variables de entorno privadas.
+
+## Prueba de QR (solo cuentas ficticias)
+1. Iniciar sesión como adulto mayor con solicitud ASIGNADA y sin llegada registrada; ir a Seguimiento y pulsar «Mostrar QR de llegada».
+2. Escanear el código con otro teléfono. Si solicita login, entrar como el universitario asignado.
+3. Pulsar «Confirmar mi llegada». Verificar que cambie el seguimiento a «Iniciar servicio».
+4. Continuar con INICIO, TERMINO y CONFIRMAR desde el perfil autorizado, y luego evaluar en Calificaciones.
+5. Un código vencido debe indicar que se renueve. Una llegada ya confirmada no puede repetirse.
+
+**Limitaciones del piloto:** el QR no verifica GPS ni identidad real. La implementación requiere revisión del deploy, pruebas automatizadas y ensayo manual antes de afirmarla como plenamente funcional.
+
+**Propuestas para versiones futuras:** activar SMTP con una cuenta de proyecto, automatización de chatbot WhatsApp Business e integración de pagos reales. No anunciar estas funcionalidades como implementadas.
