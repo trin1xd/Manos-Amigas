@@ -21,7 +21,14 @@ import {
   revocarAutorizacionFamiliar,
 } from '../../services/solicitudesService';
 
+const WHATSAPP_NUMERO = '56941679024';
+
+function enlaceWhatsapp(texto) {
+  return `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(texto)}`;
+}
+
 const SECCIONES = [
+
   { clave: 'inicio', etiqueta: 'Inicio' },
   { clave: 'catalogo', etiqueta: 'Pedir ayuda' },
   { clave: 'solicitudes', etiqueta: 'Mis solicitudes' },
@@ -280,12 +287,22 @@ function FormularioSolicitud({ servicio, grupo, onVolver, onCreada }) {
       {creada ? (
         <div className={styles.confirmacion} role="status">
           <span className={styles.confirmacionIcono} aria-hidden="true">✓</span>
-          <h2 id="titulo-solicitud">Solicitud guardada en SQL Server</h2>
+          <h2 id="titulo-solicitud">Solicitud guardada</h2>
           <p>¡Listo! Se registró la solicitud <strong>#{creada.id}</strong> con estado <strong>{creada.estado}</strong>.</p>
           <p className={styles.nota}>Ahora los universitarios verificados podrán encontrarla si la fecha sigue vigente. No se ha realizado ningún pago.</p>
           <button type="button" className={ui.botonPaso} style={{ backgroundColor: '#14696a' }} onClick={onCreada}>
             Ver mis solicitudes
           </button>
+          <a
+            className={ui.botonWhatsapp}
+            href={enlaceWhatsapp(
+              `Hola, acabo de pedir ayuda en Manos Amigas (solicitud #${creada.id}): ${servicio.nombre}, el ${campos.fecha} a las ${campos.hora}.`
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Avisar también por WhatsApp
+          </a>
         </div>
       ) : (
         <>
@@ -393,7 +410,7 @@ function FormularioSolicitud({ servicio, grupo, onVolver, onCreada }) {
                 <div className={ui.resumenFila}><dt>Precio de referencia</dt><dd>{precio.monto}</dd></div>
               </dl>
               {error && <p className={styles.errorSolicitud} role="alert">{error}</p>}
-              <p className={ui.aviso}>Al confirmar se guardará una solicitud real en SQL Server. No se realizará un pago.</p>
+              <p className={ui.aviso}>Al confirmar se guardará tu solicitud en Manos Amigas. No se realizará ningún pago.</p>
               <div className={ui.accionesAccesibles}>
                 <button type="button" className={ui.botonVolverPaso} onClick={() => setRevisando(false)} disabled={enviando} style={{ margin: 0 }}>
                   ← Editar datos
@@ -538,8 +555,8 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
     : 0;
   const textoSolicitudes = solicitudes.length > 0
     ? (solicitudesActivas > 0
-        ? `Tienes ${solicitudesActivas} ${solicitudesActivas === 1 ? 'solicitud activa' : 'solicitudes activas'}`
-        : 'Revisa el estado de tus solicitudes')
+      ? `Tienes ${solicitudesActivas} ${solicitudesActivas === 1 ? 'solicitud activa' : 'solicitudes activas'}`
+      : 'Revisa el estado de tus solicitudes')
     : 'Revisa el estado de tus solicitudes y postulantes';
 
   function seleccionarGrupo(grupo) {
@@ -675,273 +692,294 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
               <span>Tu ayuda, en un solo lugar</span>
             </div>
             <nav className={styles.navegacion} aria-label="Secciones del panel de adulto mayor">
-          {SECCIONES.map(item => (
-            <button key={item.clave} type="button" onClick={() => navegar(item.clave)}
-              className={`${styles.pestana} ${vista === item.clave || (vista === 'nueva' && item.clave === 'catalogo') ? styles.pestanaActiva : ''}`}
-              aria-current={vista === item.clave ? 'page' : undefined}>
-              <UiIcon name={item.clave} size={20} /> <span>{item.etiqueta}</span>
-            </button>
-          ))}
+              {SECCIONES.map(item => (
+                <button key={item.clave} type="button" onClick={() => navegar(item.clave)}
+                  className={`${styles.pestana} ${vista === item.clave || (vista === 'nueva' && item.clave === 'catalogo') ? styles.pestanaActiva : ''}`}
+                  aria-current={vista === item.clave ? 'page' : undefined}>
+                  <UiIcon name={item.clave} size={20} /> <span>{item.etiqueta}</span>
+                </button>
+              ))}
             </nav>
           </aside>
           <div className={styles.panelPrincipal}>
             <main id="contenido-dashboard" className={styles.contenido}>
-          {vista === 'inicio' && (
-            <section className={ui.seccionInicio} aria-labelledby="titulo-saludo">
-              <div className={ui.encabezadoInicio}>
-                <h2 id="titulo-saludo" className={ui.saludoInicio}>
-                  {primerNombre ? `Hola, ${primerNombre}` : '¡Hola!'}
-                </h2>
-                <p className={ui.preguntaInicio}>¿En qué podemos ayudarte hoy?</p>
-              </div>
-
-              <div className={ui.grillaInicio} role="list" aria-label="Acciones principales">
-                <button
-                  type="button"
-                  className={`${ui.tarjetaInicio} ${ui.tarjetaInicioPrincipal}`}
-                  onClick={() => navegar('catalogo')}
-                  role="listitem"
-                >
-                  <div
-                    className={ui.circuloIconoGrande}
-                    style={{ backgroundColor: '#e98126' }}
-                    aria-hidden="true"
-                  >
-                    <UiIcon name="pedir-ayuda" size={36} />
+              {vista === 'inicio' && (
+                <section className={ui.seccionInicio} aria-labelledby="titulo-saludo">
+                  <div className={ui.encabezadoInicio}>
+                    <h2 id="titulo-saludo" className={ui.saludoInicio}>
+                      {primerNombre ? `Hola, ${primerNombre}` : '¡Hola!'}
+                    </h2>
+                    <p className={ui.preguntaInicio}>¿En qué podemos ayudarte hoy?</p>
                   </div>
-                  <div className={ui.infoInicio}>
-                    <span className={ui.tituloTarjetaInicio}>Pedir ayuda</span>
-                    <span className={ui.descripcionTarjetaInicio}>Elige qué necesitas y te ayudamos</span>
-                  </div>
-                </button>
 
-                <button
-                  type="button"
-                  className={`${ui.tarjetaInicio} ${ui.tarjetaInicioSecundaria}`}
-                  onClick={() => navegar('solicitudes')}
-                  role="listitem"
-                >
-                  <div
-                    className={ui.circuloIconoGrande}
-                    style={{ backgroundColor: '#14696a' }}
-                    aria-hidden="true"
-                  >
-                    <UiIcon name="solicitudes" size={36} />
-                  </div>
-                  <div className={ui.infoInicio}>
-                    <span className={ui.tituloTarjetaInicio}>Mis solicitudes</span>
-                    <span className={ui.descripcionTarjetaInicio}>{textoSolicitudes}</span>
-                  </div>
-                </button>
-              </div>
-            </section>
-          )}
-          {vista === 'catalogo' && (
-            <section aria-labelledby="titulo-catalogo">
-              <div className={ui.tituloFila}>
-                <h2 id="titulo-catalogo" className={styles.tituloSeccion}>Pedir ayuda</h2>
-                <button type="button" className={styles.botonSecundario} onClick={refrescar}>
-                  Actualizar
-                </button>
-              </div>
-
-              {cargando && <p role="status" style={{ fontSize: '1.25rem' }}>Cargando servicios...</p>}
-              {errorCarga && <p className={styles.errorSolicitud} role="alert">{errorCarga}</p>}
-              {!cargando && !errorCarga && catalogoGrupos.length === 0 && (
-                <p style={{ fontSize: '1.25rem' }}>No existen servicios activos por ahora.</p>
-              )}
-
-              {!cargando && !errorCarga && catalogoGrupos.length > 0 && (
-                <>
-                  {!grupoActivo ? (
-                    <div>
-                      <span className={ui.indicadorPaso}>Paso 1 de 3</span>
-                      <h3 className={ui.tituloPaso}>Elige qué tipo de ayuda necesitas</h3>
-                      <p className={ui.textoPaso}>Toca un grupo para ver las opciones disponibles.</p>
-                      <div className={ui.grillaGrupos} role="list" aria-label="Grupos de ayuda">
-                        {catalogoGrupos.map(grupo => (
-                          <button
-                            key={grupo.id}
-                            type="button"
-                            className={ui.tarjetaGrupo}
-                            onClick={() => seleccionarGrupo(grupo)}
-                            style={{ borderColor: grupo.color }}
-                            role="listitem"
-                          >
-                            <div
-                              className={ui.circuloIcono}
-                              style={{ backgroundColor: grupo.color }}
-                              aria-hidden="true"
-                            >
-                              <UiIcon name={grupo.icono} size={32} />
-                            </div>
-                            <div className={ui.infoGrupo}>
-                              <span className={ui.nombreGrupo}>{grupo.nombre}</span>
-                              <span className={ui.descripcionGrupo}>{grupo.descripcion}</span>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <button
-                        type="button"
-                        className={ui.botonVolverPaso}
-                        onClick={() => setGrupoActivo(null)}
+                  <div className={ui.grillaInicio} role="list" aria-label="Acciones principales">
+                    <button
+                      type="button"
+                      className={`${ui.tarjetaInicio} ${ui.tarjetaInicioPrincipal}`}
+                      onClick={() => navegar('catalogo')}
+                      role="listitem"
+                    >
+                      <div
+                        className={ui.circuloIconoGrande}
+                        style={{ backgroundColor: '#e98126' }}
+                        aria-hidden="true"
                       >
-                        ← Volver a categorías
-                      </button>
-                      <span className={ui.indicadorPaso}>Paso 2 de 3</span>
-                      <h3 className={ui.tituloPaso}>Elige la tarea en {grupoActivo.nombre}</h3>
-                      <p className={ui.textoPaso}>Selecciona la opción que mejor describa lo que necesitas.</p>
-
-                      <div className={ui.listaTareas} role="list" aria-label={`Tareas en ${grupoActivo.nombre}`}>
-                        {grupoActivo.tareas.map(tarea => (
-                          <article
-                            key={tarea.id}
-                            className={ui.filaTarea}
-                            style={{ borderColor: grupoActivo.color }}
-                            role="listitem"
-                          >
-                            <div className={ui.filaTareaInfo}>
-                              <div
-                                className={ui.circuloIcono}
-                                style={{ backgroundColor: grupoActivo.color }}
-                                aria-hidden="true"
-                              >
-                                <UiIcon name={iconoTarea(tarea.nombre)} size={32} />
-                              </div>
-                              <div>
-                                <h4 className={ui.nombreTarea}>{tarea.nombre}</h4>
-                                <p className={ui.descripcionTarea}>{tarea.descripcion || 'Tarea cotidiana de apoyo.'}</p>
-                              </div>
-                            </div>
-                            <button
-                              type="button"
-                              className={ui.botonPaso}
-                              style={{ backgroundColor: grupoActivo.color }}
-                              onClick={() => seleccionarTarea(tarea, grupoActivo)}
-                            >
-                              Elegir esta tarea →
-                            </button>
-                          </article>
-                        ))}
+                        <UiIcon name="pedir-ayuda" size={36} />
                       </div>
-                    </div>
+                      <div className={ui.infoInicio}>
+                        <span className={ui.tituloTarjetaInicio}>Pedir ayuda</span>
+                        <span className={ui.descripcionTarjetaInicio}>Elige qué necesitas y te ayudamos</span>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`${ui.tarjetaInicio} ${ui.tarjetaInicioSecundaria}`}
+                      onClick={() => navegar('solicitudes')}
+                      role="listitem"
+                    >
+                      <div
+                        className={ui.circuloIconoGrande}
+                        style={{ backgroundColor: '#14696a' }}
+                        aria-hidden="true"
+                      >
+                        <UiIcon name="solicitudes" size={36} />
+                      </div>
+                      <div className={ui.infoInicio}>
+                        <span className={ui.tituloTarjetaInicio}>Mis solicitudes</span>
+                        <span className={ui.descripcionTarjetaInicio}>{textoSolicitudes}</span>
+                      </div>
+                    </button>
+                    <a
+                      className={`${ui.tarjetaInicio} ${ui.tarjetaInicioWhatsapp}`}
+                      href={enlaceWhatsapp(
+                        `Hola, ${primerNombre ? `soy ${primerNombre}. ` : ''}Necesito ayuda con una tarea. ¿Me pueden ayudar?`
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      role="listitem"
+                    >
+                      <div
+                        className={ui.circuloIconoGrande}
+                        style={{ backgroundColor: '#128c4a' }}
+                        aria-hidden="true"
+                      >
+                        <UiIcon name="chat" size={36} />
+                      </div>
+                      <div className={ui.infoInicio}>
+                        <span className={ui.tituloTarjetaInicio}>Pedir ayuda por WhatsApp</span>
+                        <span className={ui.descripcionTarjetaInicio}>Escríbenos y te respondemos</span>
+                      </div>
+                    </a>
+                  </div>
+                </section>
+              )}
+              {vista === 'catalogo' && (
+                <section aria-labelledby="titulo-catalogo">
+                  <div className={ui.tituloFila}>
+                    <h2 id="titulo-catalogo" className={styles.tituloSeccion}>Pedir ayuda</h2>
+                    <button type="button" className={styles.botonSecundario} onClick={refrescar}>
+                      Actualizar
+                    </button>
+                  </div>
+
+                  {cargando && <p role="status" style={{ fontSize: '1.25rem' }}>Cargando servicios...</p>}
+                  {errorCarga && <p className={styles.errorSolicitud} role="alert">{errorCarga}</p>}
+                  {!cargando && !errorCarga && catalogoGrupos.length === 0 && (
+                    <p style={{ fontSize: '1.25rem' }}>No existen servicios activos por ahora.</p>
                   )}
-                </>
-              )}
 
-              <p className={styles.nota}>Manos Amigas no presta servicios médicos ni tratamientos de salud.</p>
-            </section>
-          )}
-          {vista === 'nueva' && seleccionado && (
-            <FormularioSolicitud
-              key={seleccionado.id}
-              servicio={seleccionado}
-              grupo={grupoActivo}
-              onVolver={volverDesdeFormulario}
-              onCreada={() => {
-                refrescar();
-                setSeleccionado(null);
-                setGrupoActivo(null);
-                navegar('solicitudes');
-              }}
-            />
-          )}
-          {vista === 'solicitudes' && (
-            <section aria-labelledby="titulo-solicitudes">
-              <div className={ui.tituloFila}>
-                <h2 id="titulo-solicitudes" className={styles.tituloSeccion}>Mis solicitudes</h2>
-                <button type="button" className={styles.botonPrimario} onClick={refrescar}>Actualizar</button>
-              </div>
-              <p className={styles.textoAyuda}>Estas solicitudes se consultan desde SQL Server y están vinculadas a tu cuenta.</p>
-              {cargando && <p role="status">Cargando solicitudes...</p>}
-              {errorCarga && <p className={styles.errorSolicitud} role="alert">{errorCarga}</p>}
-              {!cargando && !errorCarga && solicitudes.length === 0 && (
-                <div className={styles.panelVacio}>
-                  <span className={styles.iconoVacio} aria-hidden="true"><UiIcon name="solicitudes" size={35} /></span>
-                  <p>Todavía no tienes solicitudes registradas.</p>
-                  <button type="button" className={styles.botonPrimario} onClick={() => navegar('catalogo')}>Pedir ayuda</button>
-                </div>
-              )}
-              {!cargando && !errorCarga && solicitudes.length > 0 && (
-                <div className={styles.listaSolicitudes}>
-                  {solicitudes.map(sol => (
-                    <article className={styles.tarjetaSolicitud} key={sol.id}>
-                      <div className={styles.encabezadoSolicitud}>
-                        <h3>{iconoServicio(sol.servicio)} {sol.servicio} · #{sol.id}</h3>
-                        <span className={ui.etiquetaEstado}>{sol.estado}</span>
-                      </div>
-                      <p><strong>Fecha:</strong> {fechaBonita(sol.fecha_solicitada)}</p>
-                      <p><strong>Duración:</strong> {sol.duracion_horas || 'No indicada'} hora(s)</p>
-                      <p><strong>Descripción:</strong> {sol.descripcion || 'Sin descripción'}</p>
-                      <div className={ui.acciones}>
-                        {sol.estado === 'PENDIENTE' && (
-                          <button type="button" className={styles.botonSecundario} onClick={() => cargarPostulantes(sol.id)} disabled={accionEnCurso}>
-                            {idPostulantes === sol.id ? 'Ocultar postulantes' : 'Ver postulantes'}
+                  {!cargando && !errorCarga && catalogoGrupos.length > 0 && (
+                    <>
+                      {!grupoActivo ? (
+                        <div>
+                          <span className={ui.indicadorPaso}>Paso 1 de 3</span>
+                          <h3 className={ui.tituloPaso}>Elige qué tipo de ayuda necesitas</h3>
+                          <p className={ui.textoPaso}>Toca un grupo para ver las opciones disponibles.</p>
+                          <div className={ui.grillaGrupos} role="list" aria-label="Grupos de ayuda">
+                            {catalogoGrupos.map(grupo => (
+                              <button
+                                key={grupo.id}
+                                type="button"
+                                className={ui.tarjetaGrupo}
+                                onClick={() => seleccionarGrupo(grupo)}
+                                style={{ borderColor: grupo.color }}
+                                role="listitem"
+                              >
+                                <div
+                                  className={ui.circuloIcono}
+                                  style={{ backgroundColor: grupo.color }}
+                                  aria-hidden="true"
+                                >
+                                  <UiIcon name={grupo.icono} size={32} />
+                                </div>
+                                <div className={ui.infoGrupo}>
+                                  <span className={ui.nombreGrupo}>{grupo.nombre}</span>
+                                  <span className={ui.descripcionGrupo}>{grupo.descripcion}</span>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <button
+                            type="button"
+                            className={ui.botonVolverPaso}
+                            onClick={() => setGrupoActivo(null)}
+                          >
+                            ← Volver a categorías
                           </button>
-                        )}
-                        {['PENDIENTE', 'ASIGNADA'].includes(sol.estado) && (
-                          <button type="button" className={ui.botonPeligro} onClick={() => cancelar(sol.id)} disabled={accionEnCurso}>
-                            Cancelar solicitud
-                          </button>
-                        )}
-                      </div>
-                      {idPostulantes === sol.id && (
-                        <div className={ui.postulantes}>
-                          <h4>Estudiantes que postularon</h4>
-                          {cargandoPostulantes && <p>Cargando postulantes...</p>}
-                          {errorPostulantes && <p className={styles.errorSolicitud} role="alert">{errorPostulantes}</p>}
-                          {!cargandoPostulantes && !errorPostulantes && postulaciones.length === 0 && <p>Nadie ha postulado todavía.</p>}
-                          {!cargandoPostulantes && !errorPostulantes && postulaciones.map(post => (
-                            <div key={post.id} className={ui.postulanteFila}>
-                              <FichaEstudiante postulacion={post} />
-                              {post.estado === 'PENDIENTE' && (
-                                <button type="button" className={styles.botonPrimario} disabled={accionEnCurso}
-                                  onClick={() => aceptar(sol.id, post.id)}>Aceptar</button>
-                              )}
-                            </div>
-                          ))}
-                          {!cargandoPostulantes && !errorPostulantes && postulaciones.length > 0 && <NotaFichaEstudiante />}
+                          <span className={ui.indicadorPaso}>Paso 2 de 3</span>
+                          <h3 className={ui.tituloPaso}>Elige la tarea en {grupoActivo.nombre}</h3>
+                          <p className={ui.textoPaso}>Selecciona la opción que mejor describa lo que necesitas.</p>
+
+                          <div className={ui.listaTareas} role="list" aria-label={`Tareas en ${grupoActivo.nombre}`}>
+                            {grupoActivo.tareas.map(tarea => (
+                              <article
+                                key={tarea.id}
+                                className={ui.filaTarea}
+                                style={{ borderColor: grupoActivo.color }}
+                                role="listitem"
+                              >
+                                <div className={ui.filaTareaInfo}>
+                                  <div
+                                    className={ui.circuloIcono}
+                                    style={{ backgroundColor: grupoActivo.color }}
+                                    aria-hidden="true"
+                                  >
+                                    <UiIcon name={iconoTarea(tarea.nombre)} size={32} />
+                                  </div>
+                                  <div>
+                                    <h4 className={ui.nombreTarea}>{tarea.nombre}</h4>
+                                    <p className={ui.descripcionTarea}>{tarea.descripcion || 'Tarea cotidiana de apoyo.'}</p>
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  className={ui.botonPaso}
+                                  style={{ backgroundColor: grupoActivo.color }}
+                                  onClick={() => seleccionarTarea(tarea, grupoActivo)}
+                                >
+                                  Elegir esta tarea →
+                                </button>
+                              </article>
+                            ))}
+                          </div>
                         </div>
                       )}
-                    </article>
-                  ))}
-                </div>
+                    </>
+                  )}
+
+                  <p className={styles.nota}>Manos Amigas no presta servicios médicos ni tratamientos de salud.</p>
+                </section>
               )}
-            </section>
-          )}
-          {vista === 'seguimiento' && (
-            <SeguimientoServicios usuario={usuario} />
-          )}
-          {vista === 'calificaciones' && (
-            <CalificacionesServicios usuario={usuario} />
-          )}
-          {vista === 'chat' && (
-            <ChatServicios usuario={usuario} />
-          )}
-          {vista === 'avisos' && (
-            <Notificaciones />
-          )}
-          {vista === 'agenda' && (
-            <AgendaServicios />
-          )}
-          {vista === 'perfil' && (
-            <>
-              <section className={styles.panelPerfil} aria-labelledby="titulo-perfil">
-                <h2 id="titulo-perfil">Mi perfil</h2>
-                <p className={styles.textoAyuda}>Información básica de tu cuenta autenticada.</p>
-                <dl className={styles.listaPerfil}>
-                  <div><dt>Nombre</dt><dd>{usuario?.nombre || 'No disponible'}</dd></div>
-                  <div><dt>Tipo de cuenta</dt><dd>Adulto mayor</dd></div>
-                  <div><dt>Estado</dt><dd>{usuario?.estado || 'No disponible'}</dd></div>
-                </dl>
-              </section>
-              <VincularFamiliar />
-            </>
-          )}
+              {vista === 'nueva' && seleccionado && (
+                <FormularioSolicitud
+                  key={seleccionado.id}
+                  servicio={seleccionado}
+                  grupo={grupoActivo}
+                  onVolver={volverDesdeFormulario}
+                  onCreada={() => {
+                    refrescar();
+                    setSeleccionado(null);
+                    setGrupoActivo(null);
+                    navegar('solicitudes');
+                  }}
+                />
+              )}
+              {vista === 'solicitudes' && (
+                <section aria-labelledby="titulo-solicitudes">
+                  <div className={ui.tituloFila}>
+                    <h2 id="titulo-solicitudes" className={styles.tituloSeccion}>Mis solicitudes</h2>
+                    <button type="button" className={styles.botonPrimario} onClick={refrescar}>Actualizar</button>
+                  </div>
+                  <p className={styles.textoAyuda}>Estas solicitudes se consultan desde SQL Server y están vinculadas a tu cuenta.</p>
+                  {cargando && <p role="status">Cargando solicitudes...</p>}
+                  {errorCarga && <p className={styles.errorSolicitud} role="alert">{errorCarga}</p>}
+                  {!cargando && !errorCarga && solicitudes.length === 0 && (
+                    <div className={styles.panelVacio}>
+                      <span className={styles.iconoVacio} aria-hidden="true"><UiIcon name="solicitudes" size={35} /></span>
+                      <p>Todavía no tienes solicitudes registradas.</p>
+                      <button type="button" className={styles.botonPrimario} onClick={() => navegar('catalogo')}>Pedir ayuda</button>
+                    </div>
+                  )}
+                  {!cargando && !errorCarga && solicitudes.length > 0 && (
+                    <div className={styles.listaSolicitudes}>
+                      {solicitudes.map(sol => (
+                        <article className={styles.tarjetaSolicitud} key={sol.id}>
+                          <div className={styles.encabezadoSolicitud}>
+                            <h3>{iconoServicio(sol.servicio)} {sol.servicio} · #{sol.id}</h3>
+                            <span className={ui.etiquetaEstado}>{sol.estado}</span>
+                          </div>
+                          <p><strong>Fecha:</strong> {fechaBonita(sol.fecha_solicitada)}</p>
+                          <p><strong>Duración:</strong> {sol.duracion_horas || 'No indicada'} hora(s)</p>
+                          <p><strong>Descripción:</strong> {sol.descripcion || 'Sin descripción'}</p>
+                          <div className={ui.acciones}>
+                            {sol.estado === 'PENDIENTE' && (
+                              <button type="button" className={styles.botonSecundario} onClick={() => cargarPostulantes(sol.id)} disabled={accionEnCurso}>
+                                {idPostulantes === sol.id ? 'Ocultar postulantes' : 'Ver postulantes'}
+                              </button>
+                            )}
+                            {['PENDIENTE', 'ASIGNADA'].includes(sol.estado) && (
+                              <button type="button" className={ui.botonPeligro} onClick={() => cancelar(sol.id)} disabled={accionEnCurso}>
+                                Cancelar solicitud
+                              </button>
+                            )}
+                          </div>
+                          {idPostulantes === sol.id && (
+                            <div className={ui.postulantes}>
+                              <h4>Estudiantes que postularon</h4>
+                              {cargandoPostulantes && <p>Cargando postulantes...</p>}
+                              {errorPostulantes && <p className={styles.errorSolicitud} role="alert">{errorPostulantes}</p>}
+                              {!cargandoPostulantes && !errorPostulantes && postulaciones.length === 0 && <p>Nadie ha postulado todavía.</p>}
+                              {!cargandoPostulantes && !errorPostulantes && postulaciones.map(post => (
+                                <div key={post.id} className={ui.postulanteFila}>
+                                  <FichaEstudiante postulacion={post} />
+                                  {post.estado === 'PENDIENTE' && (
+                                    <button type="button" className={styles.botonPrimario} disabled={accionEnCurso}
+                                      onClick={() => aceptar(sol.id, post.id)}>Aceptar</button>
+                                  )}
+                                </div>
+                              ))}
+                              {!cargandoPostulantes && !errorPostulantes && postulaciones.length > 0 && <NotaFichaEstudiante />}
+                            </div>
+                          )}
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              )}
+              {vista === 'seguimiento' && (
+                <SeguimientoServicios usuario={usuario} />
+              )}
+              {vista === 'calificaciones' && (
+                <CalificacionesServicios usuario={usuario} />
+              )}
+              {vista === 'chat' && (
+                <ChatServicios usuario={usuario} />
+              )}
+              {vista === 'avisos' && (
+                <Notificaciones />
+              )}
+              {vista === 'agenda' && (
+                <AgendaServicios />
+              )}
+              {vista === 'perfil' && (
+                <>
+                  <section className={styles.panelPerfil} aria-labelledby="titulo-perfil">
+                    <h2 id="titulo-perfil">Mi perfil</h2>
+                    <p className={styles.textoAyuda}>Información básica de tu cuenta autenticada.</p>
+                    <dl className={styles.listaPerfil}>
+                      <div><dt>Nombre</dt><dd>{usuario?.nombre || 'No disponible'}</dd></div>
+                      <div><dt>Tipo de cuenta</dt><dd>Adulto mayor</dd></div>
+                      <div><dt>Estado</dt><dd>{usuario?.estado || 'No disponible'}</dd></div>
+                    </dl>
+                  </section>
+                  <VincularFamiliar />
+                </>
+              )}
             </main>
           </div>
         </div>
@@ -950,3 +988,4 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
     </div>
   );
 }
+
