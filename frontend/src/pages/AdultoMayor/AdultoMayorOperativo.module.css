@@ -6,8 +6,16 @@
   justify-content: space-between;
   margin: 0 0 12px;
 }
-.tituloFila > button { width: auto; margin: 0; }
-.tituloFila > h2 { margin-bottom: 0; }
+
+.tituloFila>button {
+  width: auto;
+  margin: 0;
+}
+
+.tituloFila>h2 {
+  margin-bottom: 0;
+}
+
 .aviso {
   padding: 15px;
   border-radius: 11px;
@@ -15,7 +23,14 @@
   color: #5c431e;
   border-left: 4px solid #e99b43;
 }
-.ok { padding: 13px; border-radius: 11px; background: #dff7ef; color: #1b654d; }
+
+.ok {
+  padding: 13px;
+  border-radius: 11px;
+  background: #dff7ef;
+  color: #1b654d;
+}
+
 .etiquetaEstado {
   font-weight: 800;
   font-size: .86rem;
@@ -25,8 +40,20 @@
   padding: 7px 13px;
   white-space: nowrap;
 }
-.acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; align-items: center; }
-.acciones > button { width: auto; margin: 0; }
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  align-items: center;
+}
+
+.acciones>button {
+  width: auto;
+  margin: 0;
+}
+
 .botonPeligro {
   min-height: 48px;
   border-radius: 12px;
@@ -37,15 +64,52 @@
   font-size: 1rem;
   font-weight: 750;
 }
-.botonPeligro:hover { background: #ffdfd9; }
-.postulantes { margin-top: 17px; padding: 18px; border-radius: 14px; background: #eff8f7; }
-.postulantes h4 { font-size: 1.08rem; margin: 0 0 14px; }
-.postulanteFila { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #c7e3e0; }
-.postulanteFila:last-child { border-bottom: 0; }
-.bloqueVincular { margin-top: 20px; }
-.bloqueVincular > h2 { margin-bottom: 12px; }
+
+.botonPeligro:hover {
+  background: #ffdfd9;
+}
+
+.postulantes {
+  margin-top: 17px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #eff8f7;
+}
+
+.postulantes h4 {
+  font-size: 1.08rem;
+  margin: 0 0 14px;
+}
+
+.postulanteFila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #c7e3e0;
+}
+
+.postulanteFila:last-child {
+  border-bottom: 0;
+}
+
+.bloqueVincular {
+  margin-top: 20px;
+}
+
+.bloqueVincular>h2 {
+  margin-bottom: 12px;
+}
+
 @media (max-width: 560px) {
-  .acciones > button, .tituloFila > button, .postulanteFila > button { width: 100%; }
+
+  .acciones>button,
+  .tituloFila>button,
+  .postulanteFila>button {
+    width: 100%;
+  }
 }
 
 /* Familiares autorizados en el perfil del adulto mayor */
@@ -57,7 +121,12 @@
   gap: 12px;
   margin: 24px 0 12px;
 }
-.encabezadoFamiliares h3 { margin: 0; font-size: 1.1rem; }
+
+.encabezadoFamiliares h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
 .botonActualizar {
   border-radius: 11px;
   padding: 10px 14px;
@@ -66,7 +135,13 @@
   background: #edf7f6;
   font-weight: 700;
 }
-.listaFamiliares { padding: 0; margin: 12px 0 0; list-style: none; }
+
+.listaFamiliares {
+  padding: 0;
+  margin: 12px 0 0;
+  list-style: none;
+}
+
 .familiarFila {
   display: flex;
   align-items: center;
@@ -75,9 +150,21 @@
   padding: 15px 0;
   border-bottom: 1px solid #dce5e5;
 }
-.familiarInfo { min-width: 0; overflow-wrap: anywhere; }
-.familiarInfo strong { display: block; }
-.familiarInfo p { color: #536a73; margin: 3px 0 0; }
+
+.familiarInfo {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.familiarInfo strong {
+  display: block;
+}
+
+.familiarInfo p {
+  color: #536a73;
+  margin: 3px 0 0;
+}
+
 .botonRevocar {
   flex-shrink: 0;
   border-radius: 11px;
@@ -87,8 +174,522 @@
   color: #822c27;
   font-weight: 700;
 }
-.errorVinculos { color: #a42222; margin: 12px 0; }
+
+.errorVinculos {
+  color: #a42222;
+  margin: 12px 0;
+}
+
 @media (max-width: 560px) {
-  .familiarFila { align-items: stretch; flex-direction: column; }
-  .botonRevocar { width: 100%; min-height: 46px; }
+  .familiarFila {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .botonRevocar {
+    width: 100%;
+    min-height: 46px;
+  }
+}
+
+/* --- Rediseño de pedir ayuda en 2 pasos (Accesibilidad reforzada) --- */
+.indicadorPaso {
+  display: inline-block;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #14696a;
+  background: #e6f4f2;
+  border: 1px solid #b2d8d5;
+  padding: 6px 16px;
+  border-radius: 24px;
+  margin-bottom: 12px;
+}
+
+.tituloPaso {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #1a292c;
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+.textoPaso {
+  font-size: 1.25rem;
+  color: #374151;
+  margin: 0 0 24px;
+  line-height: 1.4;
+}
+
+.grillaGrupos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 20px;
+  margin: 20px 0 28px;
+}
+
+.tarjetaGrupo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 3px solid #dce8e8;
+  box-shadow: 0 4px 14px rgba(20, 83, 80, 0.07);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  min-height: 104px;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: inherit;
+}
+
+.tarjetaGrupo:hover,
+.tarjetaGrupo:focus-visible {
+  transform: translateY(-3px);
+  border-color: #14696a;
+  box-shadow: 0 8px 24px rgba(20, 83, 80, 0.14);
+  outline: 3px solid #14696a;
+  outline-offset: 2px;
+}
+
+.circuloIcono {
+  width: 68px;
+  height: 68px;
+  min-width: 68px;
+  min-height: 68px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.infoGrupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.nombreGrupo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1a292c;
+  line-height: 1.2;
+}
+
+.descripcionGrupo {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.3;
+}
+
+.listaTareas {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 24px 0 32px;
+}
+
+.filaTarea {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 24px 26px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 3px solid #dce8e8;
+  box-shadow: 0 4px 14px rgba(20, 83, 80, 0.07);
+  width: 100%;
+}
+
+.filaTareaInfo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 260px;
+}
+
+.nombreTarea {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1a292c;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.descripcionTarea {
+  font-size: 1.25rem;
+  color: #374151;
+  margin: 6px 0 0;
+  line-height: 1.35;
+}
+
+.botonPaso {
+  min-height: 56px;
+  padding: 14px 28px;
+  border-radius: 16px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.botonPaso:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.botonPaso:focus-visible {
+  outline: 3px solid #14696a;
+  outline-offset: 2px;
+}
+
+.botonVolverPaso {
+  min-height: 56px;
+  padding: 14px 24px;
+  border-radius: 16px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  border: 2px solid #536a73;
+  background: #ffffff;
+  color: #1a292c;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-family: inherit;
+  transition: background-color 0.15s ease;
+}
+
+.botonVolverPaso:hover {
+  background: #f1f5f9;
+}
+
+.botonVolverPaso:focus-visible {
+  outline: 3px solid #14696a;
+  outline-offset: 2px;
+}
+
+/* Adaptación de formulario accesible (letra >= 20px, controles >= 56px) */
+.formAccesible {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formAccesible label {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a292c;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formAccesible input,
+.formAccesible select,
+.formAccesible textarea {
+  font-size: 1.25rem;
+  font-family: inherit;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 2px solid #b2d8d5;
+  background: #ffffff;
+  color: #1a292c;
+  min-height: 56px;
+}
+
+.formAccesible input:focus,
+.formAccesible select:focus,
+.formAccesible textarea:focus {
+  outline: 3px solid #14696a;
+  border-color: #14696a;
+}
+
+.formAccesible textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.formAccesible small {
+  font-size: 1.15rem;
+  color: #4b5563;
+  margin-top: 4px;
+}
+
+.resumenAccesible {
+  background: #ffffff;
+  border: 3px solid #b2d8d5;
+  border-radius: 20px;
+  padding: 24px;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.resumenFila {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  font-size: 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 10px;
+}
+
+.resumenFila:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.resumenFila dt {
+  font-weight: 800;
+  color: #1a292c;
+  min-width: 140px;
+}
+
+.resumenFila dd {
+  margin: 0;
+  color: #374151;
+  text-align: right;
+  font-weight: 600;
+}
+
+.precioAccesible {
+  background: #f0fdfa;
+  border: 2px solid #14b8a6;
+  border-radius: 16px;
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.35rem;
+  color: #134e4a;
+}
+
+.montoDestacado {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f766e;
+}
+
+.accionesAccesibles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.accionesAccesibles button {
+  flex: 1;
+  min-width: 220px;
+}
+
+@media (max-width: 640px) {
+  .filaTarea {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .botonPaso {
+    width: 100%;
+  }
+
+  .grillaGrupos {
+    grid-template-columns: 1fr;
+  }
+
+  .resumenFila {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .resumenFila dd {
+    text-align: left;
+  }
+
+  .accionesAccesibles button {
+    width: 100%;
+  }
+}
+
+/* --- Rediseño de Inicio simplificado (Accesibilidad y foco directo) --- */
+.seccionInicio {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.encabezadoInicio {
+  margin-bottom: 8px;
+}
+
+.saludoInicio {
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 800;
+  color: #1a292c;
+  margin: 0 0 10px;
+  line-height: 1.15;
+}
+
+.preguntaInicio {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.grillaInicio {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.tarjetaInicio {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 28px 24px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 3px solid #dce8e8;
+  box-shadow: 0 6px 18px rgba(20, 83, 80, 0.08);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  min-height: 116px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  font-family: inherit;
+}
+
+.tarjetaInicio:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(20, 83, 80, 0.14);
+}
+
+.tarjetaInicio:focus-visible {
+  outline: 4px solid #14696a;
+  outline-offset: 3px;
+}
+
+.tarjetaInicioPrincipal {
+  border-color: #e98126;
+  background: #fffdfa;
+}
+
+.tarjetaInicioPrincipal:hover {
+  border-color: #c96b1b;
+}
+
+.tarjetaInicioPrincipal:focus-visible {
+  outline-color: #e98126;
+}
+
+.tarjetaInicioSecundaria {
+  border-color: #14696a;
+  background: #fbfdfd;
+}
+
+.tarjetaInicioSecundaria:hover {
+  border-color: #0f5253;
+}
+
+.circuloIconoGrande {
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  min-height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+}
+
+.infoInicio {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.tituloTarjetaInicio {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a292c;
+  line-height: 1.2;
+}
+
+.descripcionTarjetaInicio {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.35;
+}
+
+@media (max-width: 640px) {
+  .grillaInicio {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjetaInicio {
+    padding: 22px 20px;
+  }
+}
+
+/* --- Ajuste móvil: tarjeta de tarea y campos del formulario (Paso 3) --- */
+.filaTarea {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.filaTareaInfo {
+  min-width: 0;
+}
+
+.filaTareaInfo>div:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.circuloIcono {
+  flex-shrink: 0;
+}
+
+.formAccesible label {
+  min-width: 0;
+}
+
+.formAccesible input,
+.formAccesible select,
+.formAccesible textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
 }

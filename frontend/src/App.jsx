@@ -17,6 +17,7 @@ import AdultoMayorOperativo from './pages/AdultoMayor/AdultoMayorOperativo';
 import UniversitarioDashboard from './pages/Universitario/UniversitarioDashboard';
 import FamiliarDashboardOperativo from './pages/Familiar/FamiliarDashboardOperativo';
 import AdminVerificaciones from './pages/Admin/AdminVerificaciones';
+import ConfirmarLlegadaQR from './pages/Seguimiento/ConfirmarLlegadaQR';
 
 import {
   getMe,
@@ -24,15 +25,33 @@ import {
   logout,
 } from './services/sessionService';
 
+function tokenQrEnUrl() {
+  const match = window.location.hash.match(/^#\/llegada\/([A-Za-z0-9._-]{30,900})$/);
+  return match ? match[1] : '';
+}
+
 function App() {
   const [currentView, setCurrentView] = useState('inicio');
   const [usuario, setUsuario] = useState(null);
   const [verificandoSesion, setVerificandoSesion] = useState(true);
   const [errorSesion, setErrorSesion] = useState('');
+  const [tokenQr, setTokenQr] = useState(tokenQrEnUrl);
   const [resetToken, setResetToken] = useState(() => {
     const match = window.location.hash.match(/^#\/recuperar\/([A-Za-z0-9_-]{40,64})$/);
     return match ? match[1] : '';
   });
+
+  useEffect(() => {
+    const cambiarHash = () => setTokenQr(tokenQrEnUrl());
+    window.addEventListener('hashchange', cambiarHash);
+    return () => window.removeEventListener('hashchange', cambiarHash);
+  }, []);
+
+  function cerrarQr() {
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    setTokenQr('');
+    setCurrentView('inicio');
+  }
 
   // Escucha la expiración desde cualquier dashboard (excepto el login público).
   useEffect(() => {
@@ -123,6 +142,31 @@ function App() {
       setResetToken('');
       setCurrentView('login');
     }} />;
+  }
+
+  // Un QR se abre desde la cámara: requiere iniciar sesión antes de
+  // confirmar y no ejecuta acciones al cargar el enlace.
+  if (tokenQr) {
+    if (!usuario) {
+      return (
+        <>
+          <div style={{ padding: '16px', textAlign: 'center', background: '#eff8f6' }}>
+            <strong>Confirmación de llegada de Manos Amigas</strong>
+            <p>Inicia sesión como universitario asignado para continuar.</p>
+            <button type="button" onClick={cerrarQr}>Volver al inicio</button>
+          </div>
+          <Login
+            onNavigateHome={cerrarQr}
+            onNavigateRegister={() => { cerrarQr(); setCurrentView('crear-cuenta'); }}
+            onLoginSuccess={handleLoginSuccess}
+            onForgotPassword={() => { cerrarQr(); setCurrentView('recuperar'); }}
+          />
+          {errorSesion && <p role="alert">{errorSesion}</p>}
+        </>
+      );
+    }
+    return <ConfirmarLlegadaQR token={tokenQr} usuario={usuario}
+      onVolver={cerrarQr} onCambiarCuenta={handleLogout} />;
   }
 
   // Dashboard del adulto mayor autenticado
