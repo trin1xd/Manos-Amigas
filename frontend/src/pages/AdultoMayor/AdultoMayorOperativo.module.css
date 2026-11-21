@@ -763,11 +763,18 @@
 @media (max-width: 900px) {
   .salirTexto { display: none; }
 }
-@media (max-width: 380px) {
+@media (max-width: 320px) {
   .accesibilidadSlot aside > button span { display: none; }
   .accesibilidadSlot aside > button { padding: 8px 11px; }
 }
 
 @media (max-width: 900px) {
   .botonSalir { width: 44px; min-width: 44px; padding: 0 !important; border-radius: 50% !important; background: rgba(255,255,255,.16) !important; border: 1px solid rgba(255,255,255,.6) !important; color: #fff !important; }
+}
+
+/* Móvil: botones de la solicitud lado a lado y "Actualizar" discreto */
+@media (max-width: 560px) {
+  .acciones { flex-wrap: nowrap; gap: 8px; }
+  .acciones > button { width: auto; flex: 1 1 0; min-height: 44px; padding: 8px 6px; font-size: .88rem; }
+  .tituloFila > button { width: auto; }
 }
