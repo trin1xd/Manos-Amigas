@@ -22,6 +22,7 @@ Render bloquea SMTP saliente en puertos 25, 465 y 587 para servicios gratuitos. 
 
 - Solo el servidor maneja la API key.
 - Los códigos no se muestran en la pantalla ni en los logs del servidor.
+- Si el proveedor todavía no está activado, las solicitudes deben fallar de forma segura; no se debe simular que un correo se entregó.
 - Los códigos emitidos sin entrega real se invalidan.
 - Las habilitaciones administrativas de prueba se mantienen desactivadas.
 - Usar únicamente correos de prueba propios con autorización, nunca credenciales de terceros.
