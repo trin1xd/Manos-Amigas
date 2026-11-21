@@ -916,3 +916,19 @@
 .servicioIcono { background: #e8f6f3; color: #146d70; }
 :global(html.modo-oscuro) .accesoIcono,
 :global(html.modo-oscuro) .servicioIcono { color: #a2e3e0; }
+
+/* Logo circular con aro blanco + barra en una fila */
+.cabeceraInterior { position: relative; gap: 10px; }
+.marca { min-width: 0; white-space: nowrap; }
+.marcaIcono { width: 42px; height: 42px; border-radius: 50%; background: transparent; box-shadow: 0 0 0 2px rgba(255,255,255,.9); overflow: hidden; padding: 0; }
+@media (max-width: 680px) {
+  .presentacion { padding-bottom: 12px; }
+  .presentacion h1 { font-size: 1.7rem; }
+}
+.cabeceraInterior { flex-wrap: nowrap; }
+.marca { flex: 1 1 auto; min-width: 0; }
+.marcaIcono { flex: 0 0 42px; }
+@media (max-width: 440px) {
+  .marca > span:not([aria-hidden="true"]) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .marca { flex: 0 0 auto; margin-right: auto; }
+}

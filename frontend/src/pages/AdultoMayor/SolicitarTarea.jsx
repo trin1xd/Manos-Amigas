@@ -78,7 +78,7 @@ export default function SolicitarTarea({ servicio, onVolver, onConfirmar, onVerS
           <span className={styles.confirmacionIcono} aria-hidden="true">✓</span>
           <h2 id="titulo-solicitud">Solicitud de prueba creada</h2>
           <p>Agregamos la solicitud a <strong>Mis solicitudes</strong> de esta demostración.</p>
-          <p className={styles.alertaDemo}>No se guardó en SQL Server, no se realizó ningún cobro y ningún estudiante recibió la solicitud. Se perderá al recargar la página.</p>
+          <p className={styles.alertaDemo}>No se guardó, no se realizó ningún cobro y ningún estudiante recibió la solicitud. Se perderá al recargar la página.</p>
           <button type="button" className={styles.botonPrimario} onClick={onVerSolicitudes}>
             Ver mis solicitudes de prueba
           </button>

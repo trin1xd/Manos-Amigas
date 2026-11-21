@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import UiIcon from '../../components/ui/UiIcon';
+import logoIcono from '../../assets/images/logo-icono.png';
 import styles from './AdultoMayorDashboard.module.css';
 import ui from './AdultoMayorOperativo.module.css';
 import SeguimientoServicios from '../Seguimiento/SeguimientoServicios';
@@ -667,22 +668,29 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
     <div className={styles.pagina} data-manos-panel="true">
       <header className={styles.cabecera}>
         <div className={styles.cabeceraInterior}>
-          <div className={styles.marca}><span className={styles.marcaIcono} aria-hidden="true"><UiIcon name="heart" size={23} /></span><span>Manos Amigas</span></div>
-          <button type="button" className={styles.cerrarSesion} onClick={onLogout}>Cerrar sesión</button>
+          <div className={styles.marca}><span className={styles.marcaIcono} aria-hidden="true"><img src={logoIcono} alt="" className={ui.logoImg} /></span><span>Manos Amigas</span></div>
+          <div className={ui.accionesBarra}>
+            <div id="manos-accesibilidad-slot" className={ui.accesibilidadSlot} />
+            <button type="button" className={`${styles.cerrarSesion} ${ui.botonSalir}`} onClick={onLogout} aria-label="Cerrar sesión" title="Cerrar sesión">
+              <UiIcon name="logout" size={20} />
+              <span className={ui.salirTexto}>Cerrar sesión</span>
+            </button>
+          </div>
         </div>
       </header>
       <div className={styles.contenedor}>
-        <div className={styles.presentacion}>
-          <p className={styles.sobretitulo}>Espacio de adulto mayor</p>
-          <h1>Hola, {nombre}</h1>
-          <p>¿En qué podemos ayudarte hoy?</p>
-          <div id="manos-accesibilidad-slot" className={styles.accesibilidadSlot} />
-        </div>
+        {vista !== 'inicio' && (
+          <div className={styles.presentacion}>
+            <p className={styles.sobretitulo}>Espacio de adulto mayor</p>
+            <h1>Hola, {nombre}</h1>
+            <p>¿En qué podemos ayudarte hoy?</p>
+          </div>
+        )}
         <div className={styles.layout}>
           <button type="button" className={styles.menuMovil} aria-expanded={menuAbierto}
             aria-controls="navegacion-adulto" onClick={() => setMenuAbierto(abierto => !abierto)}>
             <span aria-hidden="true">☰</span>
-            {menuAbierto ? 'Ocultar secciones' : 'Ver secciones del panel'}
+            {menuAbierto ? 'Cerrar menú' : '¿Qué quieres hacer?'}
             <span aria-hidden="true">{menuAbierto ? '−' : '+'}</span>
           </button>
           <aside id="navegacion-adulto" className={`${styles.barraLateral} ${menuAbierto ? styles.barraLateralAbierta : ''}`}>
@@ -893,7 +901,6 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
                 <h2 id="titulo-solicitudes" className={styles.tituloSeccion}>Mis solicitudes</h2>
                 <button type="button" className={styles.botonPrimario} onClick={refrescar}>Actualizar</button>
               </div>
-              <p className={styles.textoAyuda}>Estas solicitudes están guardadas en Manos Amigas y vinculadas a tu cuenta.</p>
               {cargando && <p role="status">Cargando solicitudes...</p>}
               {errorCarga && <p className={styles.errorSolicitud} role="alert">{errorCarga}</p>}
               {!cargando && !errorCarga && solicitudes.length === 0 && (
@@ -911,8 +918,7 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
                         <h3>{iconoServicio(sol.servicio)} {sol.servicio} · #{sol.id}</h3>
                         <span className={ui.etiquetaEstado}>{sol.estado}</span>
                       </div>
-                      <p><strong>Fecha:</strong> {fechaBonita(sol.fecha_solicitada)}</p>
-                      <p><strong>Duración:</strong> {sol.duracion_horas || 'No indicada'} hora(s)</p>
+                      <p><strong>Fecha:</strong> {fechaBonita(sol.fecha_solicitada)} · {sol.duracion_horas || 'duración no indicada'}{sol.duracion_horas ? ' hora(s)' : ''}</p>
                       <p><strong>Descripción:</strong> {sol.descripcion || 'Sin descripción'}</p>
                       <div className={ui.acciones}>
                         {sol.estado === 'PENDIENTE' && (

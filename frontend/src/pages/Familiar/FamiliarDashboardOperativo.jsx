@@ -145,7 +145,7 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
       });
       setForm(FORM_INICIAL);
       cambiarVista('solicitudes');
-      setMensaje(`Solicitud #${nueva.id} guardada en SQL Server. Estado: ${nueva.estado}.`);
+      setMensaje(`Solicitud #${nueva.id} guardada. Estado: ${nueva.estado}.`);
     } catch (err) {
       setError(err.message || 'No se pudo guardar la solicitud.');
     } finally {

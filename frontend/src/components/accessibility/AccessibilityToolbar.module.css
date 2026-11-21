@@ -68,3 +68,5 @@
   .portada .activador { width: 100%; min-height: 45px; }
   .portada .panel { position: absolute; bottom: calc(100% + 10px); top: auto; }
 }
+
+.simbolo { white-space: nowrap; width: 26px; }

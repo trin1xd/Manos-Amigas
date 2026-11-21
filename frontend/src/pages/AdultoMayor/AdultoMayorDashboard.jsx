@@ -163,7 +163,7 @@ export default function AdultoMayorDashboard({ usuario, onLogout }) {
           {vista === 'solicitudes' && (
             <section aria-labelledby="titulo-solicitudes">
               <h2 id="titulo-solicitudes" className={styles.tituloSeccion}>Mis solicitudes</h2>
-              <p className={styles.alertaDemo}>Estas solicitudes son simuladas y solo existen mientras esta página esté abierta. No están guardadas en SQL Server ni se han enviado a estudiantes.</p>
+              <p className={styles.alertaDemo}>Estas solicitudes son simuladas y solo existen mientras esta página esté abierta. No están guardadas ni se han enviado a estudiantes.</p>
               {solicitudesDemo.length === 0 ? (
                 <div className={styles.panelVacio}>
                   <span className={styles.iconoVacio} aria-hidden="true">📋</span>

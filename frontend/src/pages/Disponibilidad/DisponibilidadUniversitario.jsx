@@ -45,7 +45,7 @@ export default function DisponibilidadUniversitario() {
     try {
       const guardadas = await guardarDisponibilidad(franjas);
       setFranjas(guardadas);
-      setMensaje('Disponibilidad semanal guardada en SQL Server.');
+      setMensaje('Disponibilidad semanal guardada.');
     } catch (err) {
       setError(err.message || 'No fue posible guardar la disponibilidad.');
     } finally { setGuardando(false); }
