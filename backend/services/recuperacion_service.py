@@ -17,7 +17,7 @@ from database.connection import get_connection
 from database.backend import repository
 repo = repository('recuperacion')
 from services.auth_service import ServiceError
-from utils import brevo_sender
+from utils import apps_script_sender, brevo_sender
 from utils import validators as v
 
 LOG = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ TOKEN_RE = re.compile(r'^[A-Za-z0-9_-]{40,64}$')
 
 
 def _smtp_configurada():
-    return (brevo_sender.configurado() or all(os.getenv(c, '').strip() for c in
+    return (apps_script_sender.configurado() or brevo_sender.configurado() or all(os.getenv(c, '').strip() for c in
                ('MAIL_SMTP_HOST', 'MAIL_SMTP_USER', 'MAIL_SMTP_PASSWORD', 'MAIL_FROM')))
 
 
@@ -39,6 +39,14 @@ def _url_recuperacion(token):
 
 
 def _enviar_correo(destino, token):
+    if apps_script_sender.configurado():
+        contenido = (
+            'Se solicitó recuperar tu contraseña de Manos Amigas.\\n\\n'
+            f'Abre este enlace (vence en 20 minutos, se puede usar una sola vez):\\n{_url_recuperacion(token)}\\n\\n'
+            'Si no realizaste esta solicitud, ignora el mensaje.\\n'
+        )
+        apps_script_sender.enviar(destino, 'Manos Amigas: recuperar contraseña', contenido)
+        return
     if brevo_sender.configurado():
         contenido = (
             'Se solicitó recuperar tu contraseña de Manos Amigas.\n\n'
