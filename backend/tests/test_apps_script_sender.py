@@ -49,8 +49,8 @@ def test_correo_firmado_y_compatible_con_gmail(configuracion):
         assert req.get_method() == "POST"
         assert req.get_header("Content-type") == "application/json"
         datos = json.loads(req.data)
-        firmado = (f"{datos['timestamp']}\\n{datos['to']}\\n"
-                   f"{datos['subject']}\\n{datos['body']}")
+        firmado = (f"{datos['timestamp']}\n{datos['to']}\n"
+                   f"{datos['subject']}\n{datos['body']}")
         firma = hmac.new(
             b"clave-ficticia-segura-prueba", firmado.encode("utf-8"),
             hashlib.sha256
