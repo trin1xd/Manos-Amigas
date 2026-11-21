@@ -91,3 +91,30 @@ def test_entrada_invalida_no_crea_usuarios(contexto, monkeypatch):
         response = client.post('/api/auth/demo', json=data)
         assert response.status_code == 400
     assert len(db.users) == 0
+
+
+def test_registro_duplicado_identifica_correo_y_rut(contexto, monkeypatch):
+    """No obligar a buscar qué dato fue rechazado."""
+    client, _db = contexto
+    monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'true')
+    datos = {
+        'nombre_completo': 'Persona de ejemplo',
+        'rut': '12345678-5',
+        'fecha_nacimiento': '2002-01-01',
+        'telefono': '+56912345678',
+        'email': 'prueba.correo@gmail.com',
+        'password': 'clave-de-ejemplo-123',
+        'universidad': 'Universidad de ejemplo',
+        'carrera': 'Carrera de ejemplo',
+        'anio_cursa': 2,
+        'contacto_emergencia_nombre': 'Persona de ejemplo',
+        'contacto_emergencia_telefono': '+56912345678',
+    }
+    primero = client.post('/api/auth/register/universitario', json=datos)
+    assert primero.status_code == 201
+    segundo = client.post('/api/auth/register/universitario', json=datos)
+    assert segundo.status_code == 409
+    errores = segundo.get_json().get('errors', {})
+    assert 'rut' in errores
+    assert 'email' in errores
+    assert 'correo_institucional' in errores
