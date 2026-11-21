@@ -203,9 +203,28 @@ def register_user(role, data, *, cuenta_demo=False):
         conn.rollback()
         raise
     except (pyodbc.IntegrityError, psycopg.IntegrityError):
-        # Respaldo ante duplicados simultáneos (las restricciones UNIQUE de SQL Server).
+        # En una carrera entre registros el INSERT puede fallar por UNIQUE
+        # incluso si la primera comprobación no detectó duplicados.
+        # Después de rollback, comprobar qué campo está repetido para dar
+        # una respuesta útil en vez del mensaje genérico.
         conn.rollback()
-        raise ServiceError("El RUT o el correo ya están registrados.", 409)
+        duplicados = {}
+        try:
+            otro_cursor = conn.cursor()
+            if repo.rut_exists(otro_cursor, d["rut"]):
+                duplicados["rut"] = "Este RUT ya está asociado a otra cuenta (puede ser de una prueba anterior)."
+            if repo.email_exists(otro_cursor, d["email"]):
+                duplicados["email"] = "Este correo ya está registrado. Puedes intentar iniciar sesión."
+            if role == UNIVERSITARIO and repo.institutional_email_exists(
+                    otro_cursor, d["correo_institucional"]):
+                duplicados["correo_institucional"] = "Este correo ya está asociado a un perfil universitario."
+        except Exception:
+            # Mantener un mensaje genérico si no es posible reconsultar.
+            duplicados = {}
+        raise ServiceError(
+            "Revisa el RUT y el correo; alguno ya está registrado." if not duplicados
+            else "Revisa los campos marcados: ya existen datos registrados.",
+            409, duplicados)
     except Exception:
         conn.rollback()
         raise
