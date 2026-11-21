@@ -360,3 +360,12 @@
   .rejillaAcciones .tarjetaBoton { font-size: .85rem; padding: 8px 10px; min-height: 42px; }
   .seccionPasos { display: none; }
 }
+
+/* Móvil: bloques de bienvenida compactos */
+@media (max-width: 680px) {
+  .heroOculto { display: none; }
+  .heroCompacto { padding: 12px 14px; margin-bottom: 14px; }
+  .heroCompacto > div > *:not(.estadoEnHero) { display: none; }
+  .heroCompacto .estadoEnHero { margin-top: 0; }
+  .heroCompacto .heroIcono { display: none; }
+}

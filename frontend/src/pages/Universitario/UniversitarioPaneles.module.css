@@ -35,3 +35,20 @@
   .lista { grid-template-columns: 1fr; }
   .acciones > button { flex: 1 1 100%; }
 }
+
+/* Etiquetas compactas y borde de color en tarjetas */
+.item { border-left: 5px solid #1f8a8a; }
+.lista > li:nth-child(even) { border-left-color: #f28c38; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.meta div { background: #eef6f4; border-radius: 20px; padding: 5px 11px; }
+.meta div:nth-child(3) { background: #fff2dd; }
+.meta dt { color: #4e686d; }
+.botonSecundario.pequeno, .encabezado .botonSecundario { min-height: 40px; padding: 8px 14px; }
+@media (max-width: 680px) {
+  .panelLista { background: transparent; border: 0; box-shadow: none; padding: 0; }
+  .panelLista .descripcion { font-size: .92rem; }
+  .item { padding: 14px; gap: 8px; }
+}
+.meta div { display: block; line-height: 1.4; }
+.meta dt, .meta dd { display: inline; }
+.meta dd { margin-left: 4px; }

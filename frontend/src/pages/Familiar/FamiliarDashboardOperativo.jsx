@@ -217,7 +217,7 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
     >
       {vista === 'inicio' && (
         <>
-          <section className={dash.hero} aria-labelledby="fam-titulo-inicio">
+          <section className={`${dash.hero} ${dash.heroOculto}`} aria-labelledby="fam-titulo-inicio">
             <div>
               <p className={dash.heroEyebrow}>Cuidar también es acompañar</p>
               <h2 id="fam-titulo-inicio">Más tranquilidad para tu familia</h2>
@@ -255,6 +255,7 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
               </article>
             </div>
           </section>
+          <p className={dash.aviso}>Manos Amigas no presta servicios médicos ni realiza pagos desde este panel.</p>
         </>
       )}
 

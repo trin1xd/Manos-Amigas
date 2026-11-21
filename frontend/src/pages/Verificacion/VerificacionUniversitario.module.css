@@ -13,3 +13,8 @@
 .error { color: #991b1b; font-weight: 600; }
 .exito { color: #166534; font-weight: 600; }
 @media (prefers-color-scheme: dark) { .datos { background: #dbeafe; } }
+
+.fichas { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.fichas li { background: #fff; border: 1px solid #cbd5e1; border-radius: 999px; padding: .3rem .8rem; font-size: .9rem; }
+.cabecera button { background: #eef8f6; color: #116a6a; border: 1px solid #9dcac8; padding: .45rem .9rem; }
+.datos { margin: .8rem 0; }
