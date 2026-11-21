@@ -190,7 +190,11 @@ function App() {
   // Paneles por rol: la sesión fue validada mediante /api/auth/me.
   if (usuario?.rol === 'UNIVERSITARIO') {
     return (
-      <UniversitarioDashboard usuario={usuario} onLogout={handleLogout} />
+      <UniversitarioDashboard usuario={usuario} onLogout={handleLogout}
+        onVerificacionCompleta={async () => {
+          const data = await getMe();
+          if (data?.user) setUsuario(data.user);
+        }} />
     );
   }
 
