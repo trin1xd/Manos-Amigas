@@ -341,3 +341,12 @@
   }
   .accessibility > .accessibilityButton { padding: 8px 5px; }
 }
+
+.feriaPanel { width: 100%; max-width: 350px; margin-top: 18px; padding: 17px; border-radius: 18px; background: #fff; color: #244044; display: grid; gap: 9px; text-align: center; }
+.feriaPanel > strong { font-size: 1.1rem; }
+.feriaPanel > p { font-size: .88rem; line-height: 1.5; }
+.feriaBoton { width: 100%; min-height: 48px; border-radius: 12px; background: #176d6b; color: #fff; font-weight: 800; padding: 10px; }
+.feriaBoton:hover { background: #105250; }
+.feriaBoton:disabled { opacity: .65; cursor: wait; }
+.feriaBoton:focus-visible { outline: 3px solid #f28c38; outline-offset: 2px; }
+.feriaError { color: #a31f1f; font-weight: 700; }

@@ -7,6 +7,7 @@ import AccessibilityToolbar from '../accessibility/AccessibilityToolbar';
 export default function Hero({
   onLoginClick,
   onCreateAccountClick,
+  onDemoClick,
 }) {
   const [textoGrande, setTextoGrande] = useState(() => {
     try {
@@ -16,6 +17,22 @@ export default function Hero({
     }
   });
   const [mostrarAyuda, setMostrarAyuda] = useState(false);
+  const [demoCargando, setDemoCargando] = useState('');
+  const [errorDemo, setErrorDemo] = useState('');
+  const feria = import.meta.env.VITE_MODO_FERIA === 'true';
+
+  async function probarComo(rol) {
+    if (demoCargando) return;
+    setErrorDemo('');
+    setDemoCargando(rol);
+    try {
+      await onDemoClick(rol);
+    } catch (e) {
+      setErrorDemo(e.message || 'No pudimos iniciar la demostración.');
+    } finally {
+      setDemoCargando('');
+    }
+  }
 
   useEffect(() => {
     const sincronizarTexto = (evento) => setTextoGrande(Boolean(evento.detail));
@@ -57,8 +74,9 @@ export default function Hero({
         </div>
 
         <p className={styles.subtitle}>
-          Conectamos a familias con estudiantes universitarios
-          verificados para brindar apoyo seguro en tareas del día a día.
+          {feria
+            ? 'Estás en una demostración académica con cuentas ficticias. Explora cómo se solicitan y coordinan ayudas, sin servicios reales.'
+            : 'Conectamos a familias con estudiantes universitarios verificados para brindar apoyo seguro en tareas del día a día.'}
         </p>
 
         <div className={styles.ctas}>
@@ -78,6 +96,22 @@ export default function Hero({
             Crear cuenta
           </button>
         </div>
+
+        {feria && (
+          <div className={styles.feriaPanel}>
+            <strong>¿Quieres probar la aplicación?</strong>
+            <p>Entra sin registrarte ni usar datos personales. Todo es una demostración.</p>
+            <button type="button" className={styles.feriaBoton}
+              onClick={() => probarComo('ADULTO_MAYOR')} disabled={!!demoCargando}>
+              {demoCargando === 'ADULTO_MAYOR' ? 'Ingresando...' : 'Probar como adulto mayor'}
+            </button>
+            <button type="button" className={styles.feriaBoton}
+              onClick={() => probarComo('UNIVERSITARIO')} disabled={!!demoCargando}>
+              {demoCargando === 'UNIVERSITARIO' ? 'Ingresando...' : 'Probar como universitario'}
+            </button>
+            {errorDemo && <p role="alert" className={styles.feriaError}>{errorDemo}</p>}
+          </div>
+        )}
 
         <div className={styles.accessibility}>
           <div id="manos-accesibilidad-home" className={styles.accesibilidadIntegrada}>

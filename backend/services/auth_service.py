@@ -1,5 +1,6 @@
 """Reglas de negocio de registro e inicio de sesión."""
 import pyodbc
+import secrets
 import psycopg
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -7,7 +8,8 @@ from database.connection import get_connection
 from database.backend import repository
 repo = repository('user')
 from utils import validators as v
-from utils.rut import normalize_rut
+from utils.rut import normalize_rut, calculate_dv
+from utils.feria_demo import activa as feria_activa
 
 DOMINIO_CORREO_UNIVERSITARIO = 'correo.uss.cl'
 
@@ -112,7 +114,7 @@ def _validate(data, role):
         errors["correo_institucional"] = "Debe ser distinto del correo personal."
 
     if role == UNIVERSITARIO and "correo_institucional" in clean:
-        if not correo_institucional_aceptado(clean["correo_institucional"]):
+        if not feria_activa() and not correo_institucional_aceptado(clean["correo_institucional"]):
             errors["correo_institucional"] = "Usa tu correo universitario terminado en @correo.uss.cl."
 
     if errors:
@@ -149,6 +151,10 @@ def _insert_profile(cursor, role, id_usuario, d):
 
 def register_user(role, data):
     """Registra Usuario + perfil específico en UNA transacción."""
+    # En feria sólo se usan cuentas de demostración: no pedir correo USS.
+    if role == UNIVERSITARIO and feria_activa():
+        data = dict(data)
+        data['correo_institucional'] = f"feria-{secrets.token_hex(12)}@demo.invalid"
     d = _validate(data, role)
     password_hash = generate_password_hash(d["password"])
 
@@ -183,6 +189,10 @@ def register_user(role, data):
             id_rol=id_rol,
         )
         _insert_profile(cursor, role, id_usuario, d)
+        if role == UNIVERSITARIO and feria_activa():
+            # Solo perfiles NUEVOS; no habilita automáticamente los pendientes
+            # previos, ni activa el botón administrativo de verificación.
+            repo.habilitar_universitario_para_feria(cursor, id_usuario)
         conn.commit()
     except ServiceError:
         conn.rollback()
@@ -199,7 +209,7 @@ def register_user(role, data):
 
     user = {"id": id_usuario, "nombre": d["nombre_completo"], "rol": role}
     if role == UNIVERSITARIO:
-        user["estado_verificacion"] = "PENDIENTE_VERIFICACION"
+        user["estado_verificacion"] = "VERIFICADO" if feria_activa() else "PENDIENTE_VERIFICACION"
     return user
 
 
@@ -264,3 +274,44 @@ def get_user_by_id(user_id):
         user["estado_verificacion"] = found["estado_verificacion"]
     user['_password_version'] = found.get('password_version', 0)
     return user
+
+
+
+def crear_usuario_feria(rol):
+    """Crea una cuenta ficticia exclusiva por visitante y devuelve su sesión.
+
+    No se pide RUT, domicilio, email ni datos reales. Si se desactiva el
+    interruptor, el endpoint deja de crear cuentas, pero los usuarios normales
+    anteriores siguen pudiendo iniciar sesión.
+    """
+    if not feria_activa():
+        raise ServiceError('La demostración sin registro no está disponible.', 404)
+    if rol not in (ADULTO_MAYOR, UNIVERSITARIO):
+        raise ServiceError('Elige adulto mayor o universitario.', 400)
+    referencia = secrets.token_hex(6)
+    cuerpo_rut = str(secrets.randbelow(70000000) + 10000000)
+    datos = {
+        'nombre_completo': f'Visitante Feria {referencia[:4].upper()}',
+        'rut': f'{cuerpo_rut}-{calculate_dv(cuerpo_rut)}',
+        'telefono': '+56911111111',
+        'email': f'visitante-{referencia}@demo.invalid',
+        'password': secrets.token_urlsafe(24),
+        'fecha_nacimiento': '1950-05-20' if rol == ADULTO_MAYOR else '2002-05-20',
+    }
+    if rol == ADULTO_MAYOR:
+        datos.update({
+            'direccion': 'Dirección ficticia para feria',
+            'contacto_confianza_nombre': 'Contacto de demostración',
+            'contacto_confianza_telefono': '+56922222222',
+            'indicaciones_acceso': 'Cuenta de demostración, sin visita real.',
+        })
+    else:
+        datos.update({
+            'universidad': 'Universidad de demostración',
+            'carrera': 'Carrera de prueba',
+            'anio_cursa': 2,
+            'contacto_emergencia_nombre': 'Contacto de demostración',
+            'contacto_emergencia_telefono': '+56922222222',
+        })
+    register_user(rol, datos)
+    return login(datos['email'], datos['password'])

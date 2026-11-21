@@ -86,3 +86,14 @@ export function logout() {
   clearToken();
 }
 
+
+
+/** Sesión independiente y ficticia para explorar el prototipo de feria. */
+export async function entrarDemo(rol) {
+  const data = await apiRequest('/auth/demo', {
+    method: 'POST',
+    body: JSON.stringify({ rol }),
+  });
+  if (data?.access_token) setToken(data.access_token);
+  return data;
+}
