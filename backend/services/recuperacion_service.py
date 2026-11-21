@@ -41,9 +41,9 @@ def _url_recuperacion(token):
 def _enviar_correo(destino, token):
     if brevo_sender.configurado():
         contenido = (
-            'Se solicitó recuperar tu contraseña de Manos Amigas.\\n\\n'
-            f'Abre este enlace (vence en 20 minutos, se puede usar una sola vez):\\n{_url_recuperacion(token)}\\n\\n'
-            'Si no realizaste esta solicitud, ignora el mensaje.\\n'
+            'Se solicitó recuperar tu contraseña de Manos Amigas.\n\n'
+            f'Abre este enlace (vence en 20 minutos, se puede usar una sola vez):\n{_url_recuperacion(token)}\n\n'
+            'Si no realizaste esta solicitud, ignora el mensaje.\n'
         )
         brevo_sender.enviar(destino, 'Manos Amigas: recuperar contraseña', contenido)
         return
