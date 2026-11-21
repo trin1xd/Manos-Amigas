@@ -43,6 +43,7 @@ export default function VerificacionUniversitario({ onVerificacionCompleta }) {
   }
 
   const pendiente = datos?.estado_verificacion === 'PENDIENTE_VERIFICACION';
+  const perfilFicticio = feria && datos?.correo_institucional?.endsWith('@demo.invalid');
   return <section className={styles.panel} aria-labelledby="correo-inst-titulo">
     <div className={styles.cabecera}>
       <div>
@@ -55,7 +56,8 @@ export default function VerificacionUniversitario({ onVerificacionCompleta }) {
     {error && <p className={styles.error} role="alert">{error}</p>}
     {mensaje && <p className={styles.exito} role="status">{mensaje}</p>}
     {cargando && <p role="status">Consultando estado...</p>}
-    {datos && <div className={styles.datos}>
+    {perfilFicticio && <p className={styles.exito}>¡Perfil de prueba habilitado! Puedes explorar las solicitudes y postulaciones sin confirmar ningún correo.</p>}
+    {datos && !perfilFicticio && <div className={styles.datos}>
       <p><strong>{feria ? 'Correo registrado:' : 'Correo institucional:'}</strong> {datos.correo_institucional}</p>
       <p><strong>Correo confirmado:</strong> {datos.correo_confirmado ? 'Sí' : 'No'}</p>
       <p><strong>Estado del perfil:</strong> {datos.estado_verificacion}</p>
@@ -73,7 +75,7 @@ export default function VerificacionUniversitario({ onVerificacionCompleta }) {
         <button type="submit" disabled={ocupado || codigo.length !== 6}>Confirmar código</button>
       </form>
     </div>}
-    {datos?.correo_confirmado && <p className={styles.exito}>{feria ? '¡Correo confirmado! Tu perfil quedó habilitado para probar la aplicación.' : 'El correo institucional fue confirmado. Tu cuenta no se aprueba automáticamente.'}</p>}
-    {datos && !pendiente && !datos.correo_confirmado && <p className={styles.aviso}>{feria && datos.estado_verificacion === 'VERIFICADO' ? 'Estás usando un perfil ficticio habilitado para la feria. No necesitas confirmar ningún correo para probar la aplicación.' : 'Tu perfil ya tiene una decisión anterior. Los códigos están disponibles para cuentas pendientes.'}</p>}
+    {datos?.correo_confirmado && !perfilFicticio && <p className={styles.exito}>{feria ? '¡Correo confirmado! Tu perfil quedó habilitado para probar la aplicación.' : 'El correo institucional fue confirmado. Tu cuenta no se aprueba automáticamente.'}</p>}
+    {datos && !perfilFicticio && !pendiente && !datos.correo_confirmado && <p className={styles.aviso}>{feria && datos.estado_verificacion === 'VERIFICADO' ? 'Estás usando un perfil ficticio habilitado para la feria. No necesitas confirmar ningún correo para probar la aplicación.' : 'Tu perfil ya tiene una decisión anterior. Los códigos están disponibles para cuentas pendientes.'}</p>}
   </section>;
 }
