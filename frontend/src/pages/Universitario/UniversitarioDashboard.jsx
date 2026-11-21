@@ -49,7 +49,7 @@ const ESTADOS = {
   },
 };
 
-export default function UniversitarioDashboard({ usuario, onLogout }) {
+export default function UniversitarioDashboard({ usuario, onLogout, onVerificacionCompleta }) {
   const [vista, setVista] = useState('inicio');
   const estado = ESTADOS[usuario?.estado_verificacion] || {
     etiqueta: 'Verificación sin información',
@@ -147,7 +147,7 @@ export default function UniversitarioDashboard({ usuario, onLogout }) {
         <AgendaServicios />
       )}
       {vista === 'verificacion' && (
-        <VerificacionUniversitario />
+        <VerificacionUniversitario onVerificacionCompleta={onVerificacionCompleta} />
       )}
       {vista === 'perfil' && (
         <section className={styles.panel} aria-labelledby="uni-perfil">
