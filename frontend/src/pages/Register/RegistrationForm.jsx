@@ -6,6 +6,8 @@ import {
 } from '../../services/authService';
 import styles from './RegistrationForm.module.css';
 
+const FERIA = import.meta.env.VITE_MODO_FERIA === 'true';
+
 const COMMON_FIELDS = [
   { name: 'nombre_completo', label: 'Nombre completo', required: true, maxLength: 150, autoComplete: 'name' },
   { name: 'rut', label: 'RUT', required: true, placeholder: '12.345.678-5', maxLength: 20 },
@@ -30,7 +32,7 @@ const SETTINGS = {
   },
   UNIVERSITARIO: {
     title: 'Registro universitario',
-    description: 'Tu cuenta quedará pendiente de verificación antes de poder prestar servicios.',
+    description: FERIA ? 'Cuenta de demostración: podrás probar las solicitudes sin aprobación administrativa.' : 'Tu cuenta quedará pendiente de verificación antes de poder prestar servicios.',
     register: registerUniversitario,
     fields: [
       ...COMMON_FIELDS,
@@ -38,7 +40,7 @@ const SETTINGS = {
       { name: 'universidad', label: 'Universidad', required: true, maxLength: 150 },
       { name: 'carrera', label: 'Carrera', required: true, maxLength: 150 },
       { name: 'anio_cursa', label: 'Año que cursas', required: true, type: 'number', min: 1, max: 10 },
-      { name: 'correo_institucional', label: 'Correo institucional', required: true, type: 'email', maxLength: 255 },
+      ...(!FERIA ? [{ name: 'correo_institucional', label: 'Correo institucional', required: true, type: 'email', maxLength: 255 }] : []),
       { name: 'contacto_emergencia_nombre', label: 'Nombre del contacto de emergencia', required: true, maxLength: 150 },
       { name: 'contacto_emergencia_telefono', label: 'Teléfono del contacto de emergencia', required: true, type: 'tel', maxLength: 20 },
     ],
@@ -99,7 +101,7 @@ export default function RegistrationForm({ role, onBack, onLogin }) {
             <div role="status" className={styles.success}>
               <h1>¡Registro completado!</h1>
               <p>{role === 'UNIVERSITARIO'
-                ? 'Tu cuenta fue creada y está pendiente de verificación. Todavía no puedes ofrecer servicios.'
+                ? (FERIA ? 'Tu cuenta de demostración está lista. Ya puedes iniciar sesión y probar las tareas.' : 'Tu cuenta fue creada y está pendiente de verificación. Todavía no puedes ofrecer servicios.')
                 : 'Tu cuenta fue creada correctamente.'}</p>
               <button className={styles.submit} onClick={onLogin}>Ir a iniciar sesión</button>
             </div>
