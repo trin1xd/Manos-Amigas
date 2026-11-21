@@ -171,7 +171,7 @@ export default function UniversitarioDashboard({ usuario, onLogout, onVerificaci
             <div><dt>Estado de cuenta</dt><dd>{usuario?.estado || 'No disponible'}</dd></div>
             <div><dt>Verificación</dt><dd>{estado.etiqueta}</dd></div>
           </dl>
-          <p className={styles.aviso}>La universidad, carrera y los documentos de verificación no están disponibles en el endpoint de perfil actual; no se inventan esos datos.</p>
+          <p className={styles.aviso}>La universidad, la carrera y los documentos de verificación se mostrarán aquí en una próxima etapa.</p>
         </section>
       )}
     </DashboardLayout>

@@ -369,3 +369,9 @@
   .heroCompacto .estadoEnHero { margin-top: 0; }
   .heroCompacto .heroIcono { display: none; }
 }
+
+/* Perfil: datos en dos columnas en celular */
+@media (max-width: 680px) {
+  .datos { grid-template-columns: 1fr 1fr; column-gap: 12px; }
+  .datos div { grid-template-columns: 1fr; gap: 2px; padding: 11px 0; }
+}
