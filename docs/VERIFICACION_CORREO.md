@@ -45,3 +45,27 @@ Con `FERIA_REGISTRO_LIBRE=true` y `DB_ENGINE=postgres`:
 - No equivale a una comprobación real de identidad o matrícula; es un acceso para la feria académica.
 
 **Atención:** mientras no exista un remitente Brevo y una API key configurados en Render, el backend tiene las rutas implementadas pero NO entrega códigos reales. Nunca colocar API keys en el repositorio o enviarlas por chat.
+
+
+## Envío desde Gmail mediante Google Apps Script (alternativa a Brevo)
+
+No requiere cuenta de Brevo. Solo el Gmail separado que el equipo creó para Manos Amigas.
+
+1. Abre el proyecto en https://script.google.com y sustituye `Código.gs` por el contenido de `integraciones/apps-script/Code.gs`. Guarda los cambios.
+2. Ejecuta la función `prepararConexion` exactamente **una vez**. Autoriza el proyecto (propio) y abre su **Registro de ejecución**. Aparecerá `MAIL_APPS_SCRIPT_SECRET=<clave>`. La clave es privada: **no pegar en chats, GitHub ni código frontend**.
+3. En Render, en el servicio **backend** `manos-amigas-supabase-test`, sección Environment, crea `MAIL_APPS_SCRIPT_SECRET` con el valor que imprimió Apps Script (solo la parte posterior al signo igual).
+4. En Apps Script, selecciona **Implementar > Nueva implementación > Aplicación web**; ejecuta como **Yo** y concede acceso a **Cualquiera** (es el backend Render quien llama por HTTPS, sin sesión de Google). Completa la autorización si se solicita.
+5. Copia la URL de aplicación web que termina en `/exec`, y guárdala en la sección Environment del backend como `MAIL_APPS_SCRIPT_URL`. **No** uses el ID del proyecto ni una URL terminada en `/dev`.
+6. Render redeplegará su servicio al cambiar estas variables. Desde el sitio público de la feria, crea una cuenta universitaria usando un correo real (Gmail, Outlook o USS), inicia sesión, abre Verificación, envía el código y confírmalo. Tras confirmar no necesita administración.
+
+El botón **Probar como universitario** sigue creando usuarios ficticios sin verificación. No usa Gmail ni consume cuota.
+
+### Seguridad y cuotas
+- La aplicación web ejecuta como la cuenta de Manos Amigas, pero requiere una **firma HMAC-SHA256** por petición antes de usar `MailApp.sendEmail`. La clave se guarda en las propiedades del Apps Script y en variables privadas de Render; nunca en el repositorio ni en el navegador.
+- La firma incluye la fecha, el destinatario, el asunto y el cuerpo del correo y se acepta solo durante dos minutos. El script bloquea una repetición accidental de la misma firma.
+- El backend valida los códigos de seis dígitos (15 min, máximo 5 intentos), no Apps Script. Apps Script solo entrega mensajes.
+- La cuota de Gmail personal está limitada por Google y puede ser inferior a la demanda de una feria concurrida; revisar el valor de `MailApp.getRemainingDailyQuota()`.
+- Si cambia el código del script ya publicado, crea una **nueva versión** en `Implementar > Administrar implementaciones` (o realiza una implementación nueva y cambia la URL en Render).
+- No ejecutar `prepararConexion` otra vez mientras esté funcionando: hacerlo cambia la clave, por lo que habrá que actualizar Render.
+- No escribir ni compartir la clave, los códigos OTP o los enlaces de recuperación en capturas públicas.
+- El proveedor Gmail tiene prioridad sobre Brevo y SMTP cuando las dos variables `MAIL_APPS_SCRIPT_*` están definidas.
