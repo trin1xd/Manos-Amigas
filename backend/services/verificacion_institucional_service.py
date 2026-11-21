@@ -1,4 +1,7 @@
-"""Verifica el control del buzon universitario; NO acredita identidad ni habilita tareas."""
+"""Comprueba un código de correo. En feria, habilita la cuenta tras confirmarlo.
+
+No constituye una comprobación de identidad ni de matrícula.
+"""
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 import hashlib
@@ -13,7 +16,8 @@ from database.connection import get_connection
 from database.backend import repository
 repo = repository('verificacion_institucional')
 from services.auth_service import ServiceError, correo_institucional_aceptado
-from utils import brevo_sender
+from utils import brevo_sender, validators
+from utils.feria_demo import activa as feria_activa
 
 MIN_ENVIOS_SEGUNDOS = 90
 MAX_ENVIOS_DIA = 5
@@ -33,7 +37,18 @@ def _hash_codigo(user_id, codigo):
 
 
 def _permitido(correo):
-    # Política exacta: no se permiten subdominios ni direcciones parecidas.
+    # En la feria cualquier participante puede verificar un buzón REAL propio.
+    # Nunca enviar a los correos ficticios creados por los botones de demo.
+    if feria_activa():
+        if not isinstance(correo, str):
+            return False
+        direccion = correo.strip().lower()
+        dominio = direccion.rsplit('@', 1)[-1]
+        return (validators.check_email(direccion) is None
+                and dominio not in ('demo.invalid', 'example.com', 'example.org',
+                                    'example.net', 'test', 'invalid', 'localhost')
+                and not dominio.endswith('.invalid'))
+    # Fuera de la feria sigue vigente la política USS.
     return correo_institucional_aceptado(correo)
 
 
@@ -106,7 +121,7 @@ def solicitar_codigo(usuario):
         if perfil['verificado']:
             raise ServiceError('Este correo ya está confirmado.', 409)
         if not _permitido(perfil['correo']):
-            raise ServiceError('El dominio institucional no está habilitado para el piloto.', 403)
+            raise ServiceError('Necesitas un correo válido al que tengas acceso para recibir el código.', 403)
         actual = repo.codigo(cur, uid, lock=True)
         if actual and actual['ultimo'] and actual['ultimo'] > ahora - timedelta(seconds=MIN_ENVIOS_SEGUNDOS):
             raise ServiceError('Espera 90 segundos antes de solicitar otro código.', 429)
@@ -134,8 +149,8 @@ def solicitar_codigo(usuario):
             rollback.rollback()
         finally:
             rollback.close()
-        raise ServiceError('No fue posible entregar el código. Revisa la configuración SMTP.', 503) from None
-    return {'message': 'Código enviado al correo institucional registrado; vence en 15 minutos.'}
+        raise ServiceError('No fue posible enviar el código. Revisa la configuración del correo.', 503) from None
+    return {'message': 'Código enviado al correo registrado; vence en 15 minutos.'}
 
 
 def confirmar_codigo(usuario, payload):
@@ -161,11 +176,17 @@ def confirmar_codigo(usuario, payload):
                 repo.fallo_codigo(cur, uid)
                 conn.commit()  # Conservar intentos fallidos incluso cuando se responde 400.
             raise ServiceError('Código inválido, expirado o agotado. Solicita uno nuevo.', 400)
-        if not repo.confirmar_correo(cur, uid):
+        habilitar_al_confirmar = feria_activa()
+        # En una sola transacción, el código válido habilita la cuenta
+        # para postular SIN requerir la cuenta administradora.
+        if not repo.confirmar_correo(cur, uid, habilitar_al_confirmar):
             raise ServiceError('El perfil cambió de estado. Actualiza la página.', 409)
         repo.auditar(cur, uid, uid, 'CORREO_CONFIRMADO')
         conn.commit()
-        return {'correo_confirmado': True}
+        return {
+            'correo_confirmado': True,
+            'estado_verificacion': 'VERIFICADO' if habilitar_al_confirmar else 'PENDIENTE_VERIFICACION',
+        }
     except Exception:
         conn.rollback()
         raise
