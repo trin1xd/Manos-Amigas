@@ -61,7 +61,7 @@ def test_visitante_ingresa_directamente_y_consulta_su_perfil(contexto, monkeypat
         assert db.profiles[0]['estado_verificacion'] == 'VERIFICADO'
 
 
-def test_registro_publico_universitario_sin_correo_uss_es_habilitado(contexto, monkeypatch):
+def test_registro_publico_universitario_espera_codigo(contexto, monkeypatch):
     client, db = contexto
     monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'true')
     datos = {
@@ -69,7 +69,7 @@ def test_registro_publico_universitario_sin_correo_uss_es_habilitado(contexto, m
         'rut': '12345678-5',
         'fecha_nacimiento': '2002-03-10',
         'telefono': '+56911112222',
-        'email': 'universitaria@example.com',
+        'email': 'universitaria@gmail.com',
         'password': 'clave-demostracion-123',
         'universidad': 'Universidad de prueba',
         'carrera': 'Enfermería',
@@ -79,9 +79,9 @@ def test_registro_publico_universitario_sin_correo_uss_es_habilitado(contexto, m
     }
     response = client.post('/api/auth/register/universitario', json=datos)
     assert response.status_code == 201, response.get_json()
-    assert response.get_json()['user']['estado_verificacion'] == 'VERIFICADO'
-    assert db.profiles[0]['correo_institucional'].endswith('@demo.invalid')
-    assert db.profiles[0]['estado_verificacion'] == 'VERIFICADO'
+    assert response.get_json()['user']['estado_verificacion'] == 'PENDIENTE_VERIFICACION'
+    assert db.profiles[0]['correo_institucional'] == 'universitaria@gmail.com'
+    assert db.profiles[0]['estado_verificacion'] == 'PENDIENTE_VERIFICACION'
 
 
 def test_entrada_invalida_no_crea_usuarios(contexto, monkeypatch):
