@@ -43,24 +43,27 @@ export default function VerificacionUniversitario({ onVerificacionCompleta }) {
   }
 
   const pendiente = datos?.estado_verificacion === 'PENDIENTE_VERIFICACION';
+  const habilitadoFeria = feria && datos?.estado_verificacion === 'VERIFICADO' && !datos?.correo_confirmado && !pendiente;
   const perfilFicticio = feria && datos?.correo_institucional?.endsWith('@demo.invalid');
   return <section className={styles.panel} aria-labelledby="correo-inst-titulo">
     <div className={styles.cabecera}>
       <div>
-        <h2 id="correo-inst-titulo">{feria ? 'Verifica tu correo para probar la aplicación' : 'Confirmación de correo institucional'}</h2>
-        <p>{feria ? 'Te enviaremos un código de seis dígitos al correo con el que te registraste. También puedes usar Gmail u Outlook.' : 'Demuestra que tienes acceso a tu correo universitario terminado en @correo.uss.cl.'}</p>
+        <h2 id="correo-inst-titulo">{habilitadoFeria ? 'Tu perfil de prueba está habilitado' : feria ? 'Verifica tu correo para probar la aplicación' : 'Confirmación de correo institucional'}</h2>
+        {!habilitadoFeria && <p>{feria ? 'Te enviaremos un código de seis dígitos al correo con el que te registraste. También puedes usar Gmail u Outlook.' : 'Demuestra que tienes acceso a tu correo universitario terminado en @correo.uss.cl.'}</p>}
       </div>
       <button type="button" onClick={actualizar} disabled={cargando || ocupado}>Actualizar</button>
     </div>
-    <p className={styles.aviso}>{feria ? 'En esta demostración, confirmar el código habilita las tareas inmediatamente, sin revisión del administrador. Esto solo confirma que tienes acceso al correo, no tu identidad ni tu matrícula.' : 'Confirmar este correo no valida automáticamente identidad, matrícula ni antecedentes. La revisión de la cuenta es un proceso independiente.'}</p>
+    {!habilitadoFeria && <p className={styles.aviso}>{feria ? 'En esta demostración, confirmar el código habilita las tareas inmediatamente, sin revisión del administrador. Esto solo confirma que tienes acceso al correo, no tu identidad ni tu matrícula.' : 'Confirmar este correo no valida automáticamente identidad, matrícula ni antecedentes. La revisión de la cuenta es un proceso independiente.'}</p>}
     {error && <p className={styles.error} role="alert">{error}</p>}
     {mensaje && <p className={styles.exito} role="status">{mensaje}</p>}
     {cargando && <p role="status">Consultando estado...</p>}
     {perfilFicticio && <p className={styles.exito}>¡Perfil de prueba habilitado! Puedes explorar las solicitudes y postulaciones sin confirmar ningún correo.</p>}
     {datos && !perfilFicticio && <div className={styles.datos}>
-      <p><strong>{feria ? 'Correo registrado:' : 'Correo institucional:'}</strong> {datos.correo_institucional}</p>
-      <p><strong>Correo confirmado:</strong> {datos.correo_confirmado ? 'Sí' : 'No'}</p>
-      <p><strong>Estado del perfil:</strong> {datos.estado_verificacion}</p>
+      <ul className={styles.fichas}>
+        <li><strong>{feria ? 'Correo registrado:' : 'Correo institucional:'}</strong> {datos.correo_institucional}</li>
+        <li><strong>Correo confirmado:</strong> {datos.correo_confirmado ? 'Sí' : 'No'}</li>
+        <li><strong>Estado del perfil:</strong> {datos.estado_verificacion}</li>
+      </ul>
       {!datos.dominio_admitido && !datos.correo_confirmado && <p className={styles.aviso}>{feria ? 'Esta cuenta no tiene un correo real para recibir códigos. Puedes probar las tareas directamente con el perfil ficticio.' : 'Solo se aceptan correos terminados en @correo.uss.cl. Si registraste otro, contacta a administración.'}</p>}
     </div>}
     {datos && pendiente && !datos.correo_confirmado && <div className={styles.bloque}>
@@ -76,6 +79,6 @@ export default function VerificacionUniversitario({ onVerificacionCompleta }) {
       </form>
     </div>}
     {datos?.correo_confirmado && !perfilFicticio && <p className={styles.exito}>{feria ? '¡Correo confirmado! Tu perfil quedó habilitado para probar la aplicación.' : 'El correo institucional fue confirmado. Tu cuenta no se aprueba automáticamente.'}</p>}
-    {datos && !perfilFicticio && !pendiente && !datos.correo_confirmado && <p className={styles.aviso}>{feria && datos.estado_verificacion === 'VERIFICADO' ? 'Estás usando un perfil ficticio habilitado para la feria. No necesitas confirmar ningún correo para probar la aplicación.' : 'Tu perfil ya tiene una decisión anterior. Los códigos están disponibles para cuentas pendientes.'}</p>}
+    {datos && !perfilFicticio && !pendiente && !datos.correo_confirmado && <p className={styles.aviso}>{feria && datos.estado_verificacion === 'VERIFICADO' ? 'Demo de feria: tu perfil ya está habilitado y no necesitas confirmar ningún correo. Confirmar un correo no valida identidad ni matrícula.' : 'Tu perfil ya tiene una decisión anterior. Los códigos están disponibles para cuentas pendientes.'}</p>}
   </section>;
 }

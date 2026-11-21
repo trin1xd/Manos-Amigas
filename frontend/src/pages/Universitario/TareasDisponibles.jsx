@@ -93,7 +93,7 @@ export default function TareasDisponibles({ usuario, onLogout }) {
   }
 
   return (
-    <section className={dash.panel} aria-labelledby="uni-oportunidades" aria-busy={cargando}>
+    <section className={`${dash.panel} ${styles.panelLista}`} aria-labelledby="uni-oportunidades" aria-busy={cargando}>
       <div className={styles.encabezado}>
         <h2 id="uni-oportunidades">Tareas disponibles</h2>
         <button type="button" className={styles.botonSecundario} onClick={actualizar} disabled={cargando}>
@@ -174,9 +174,8 @@ export default function TareasDisponibles({ usuario, onLogout }) {
       )}
 
       <p className={styles.notaPago}>
-        El pago estimado es una propuesta que se está validando: el precio de referencia de {RANGO_PRECIO_TEXTO} por tarea de 1 a 2 horas (según el esfuerzo), menos {COMISION_PLATAFORMA_PORCENTAJE}% de comisión de la plataforma.
+        El pago estimado es una propuesta que se está validando: el precio de referencia de {RANGO_PRECIO_TEXTO} por tarea de 1 a 2 horas (según el esfuerzo), menos {COMISION_PLATAFORMA_PORCENTAJE}% de comisión de la plataforma. Postular no asegura la tarea: la persona que la pidió decide.
       </p>
-      <p className={dash.aviso}>Manos Amigas no presta servicios médicos ni realiza pagos desde este panel. Postular no asegura la tarea: la persona que la pidió decide.</p>
     </section>
   );
 }

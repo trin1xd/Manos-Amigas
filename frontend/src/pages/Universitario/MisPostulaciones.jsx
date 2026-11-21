@@ -48,7 +48,7 @@ export default function MisPostulaciones({ onLogout }) {
   }
 
   return (
-    <section className={dash.panel} aria-labelledby="uni-postulaciones" aria-busy={cargando}>
+    <section className={`${dash.panel} ${styles.panelLista}`} aria-labelledby="uni-postulaciones" aria-busy={cargando}>
       <div className={styles.encabezado}>
         <h2 id="uni-postulaciones">Mis postulaciones</h2>
         <button type="button" className={styles.botonSecundario} onClick={actualizar} disabled={cargando}>
@@ -95,7 +95,6 @@ export default function MisPostulaciones({ onLogout }) {
         </ul>
       )}
 
-      <p className={dash.aviso}>Manos Amigas no entrega datos de contacto en esta versión y no realiza pagos desde este panel.</p>
     </section>
   );
 }

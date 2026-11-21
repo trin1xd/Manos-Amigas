@@ -21,7 +21,7 @@
 .exito { color: #146342; background: #e0f7e9; border-radius: 10px; padding: 13px; }
 .aviso { color: #624a29; background: #fff7e8; border-left: 3px solid #f28c38; border-radius: 9px; padding: 12px; }
 .vacio { background: #fff; padding: 20px; border: 1px solid #d2e5e2; border-radius: 14px; }
-@media(max-width: 540px) { .fechas { grid-template-columns: 1fr; } .encabezado button { width: 100%; } }
+@media(max-width: 540px) { .fechas { gap: 8px; } .fechas div { padding: 8px; } .fechas dt { font-size: .78rem; } .fechas dd { font-size: .88rem; } .encabezado button { width: auto; min-height: 40px; padding: 8px 14px; } }
 
 .bloqueQr { margin: 14px 0; padding: 15px; background: #f1faf8; border: 1px solid #a8d7cd; border-radius: 12px; }
 .botonQr { min-height: 46px; width: 100%; background: #126a68; color: white; border-radius: 10px; padding: 10px 16px; font-weight: 800; }

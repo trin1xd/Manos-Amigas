@@ -69,7 +69,7 @@ export default function UniversitarioDashboard({ usuario, onLogout, onVerificaci
     >
       {vista === 'inicio' && (
         <>
-          <section className={styles.hero} aria-labelledby="titulo-universitario">
+          <section className={`${styles.hero} ${styles.heroCompacto}`} aria-labelledby="titulo-universitario">
             <div>
               <p className={styles.heroEyebrow}>Tu comunidad cuenta contigo</p>
               <h2 id="titulo-universitario">Conecta tu tiempo con una buena causa</h2>
