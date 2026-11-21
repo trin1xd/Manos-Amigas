@@ -13,6 +13,7 @@ from database.connection import get_connection
 from database.backend import repository
 repo = repository('verificacion_institucional')
 from services.auth_service import ServiceError, correo_institucional_aceptado
+from utils import brevo_sender
 
 MIN_ENVIOS_SEGUNDOS = 90
 MAX_ENVIOS_DIA = 5
@@ -37,10 +38,17 @@ def _permitido(correo):
 
 
 def _smtp_lista():
-    return all(os.getenv(x, '').strip() for x in ('MAIL_SMTP_HOST', 'MAIL_SMTP_USER', 'MAIL_SMTP_PASSWORD', 'MAIL_FROM'))
+    return (brevo_sender.configurado() or all(os.getenv(x, '').strip() for x in ('MAIL_SMTP_HOST', 'MAIL_SMTP_USER', 'MAIL_SMTP_PASSWORD', 'MAIL_FROM')))
 
 
 def _mandar_codigo(correo, codigo):
+    if brevo_sender.configurado():
+        contenido = ('Tu código de confirmación de Manos Amigas es: ' + codigo +
+            '\nCaduca en 15 minutos. No lo compartas con nadie.\n'
+            'Si no lo solicitaste, ignora este mensaje.\n')
+        brevo_sender.enviar(
+            correo, 'Manos Amigas: confirma tu correo institucional', contenido)
+        return
     mensaje = EmailMessage()
     mensaje['Subject'] = 'Manos Amigas: confirma tu correo institucional'
     mensaje['From'] = os.environ['MAIL_FROM']
