@@ -81,8 +81,16 @@ export default function RegistrationForm({ role, onBack, onLogin }) {
         setMessage('No fue posible completar el registro.');
       }
     } catch (error) {
-      setFieldErrors(error.fields || {});
-      setMessage(error.message || 'No se pudo conectar con el servidor.');
+      const errores = error.fields || {};
+      setFieldErrors(errores);
+      if (error.status === 409) {
+        const detalles = [...new Set(Object.values(errores).filter(Boolean))];
+        setMessage(detalles.length
+          ? detalles.join(' ')
+          : 'El RUT o el correo electrónico ya está registrado. Revisa ambos campos. Si usaste el mismo correo en una prueba anterior, intenta iniciar sesión.');
+      } else {
+        setMessage(error.message || 'No se pudo conectar con el servidor.');
+      }
     } finally {
       setSubmitting(false);
     }
