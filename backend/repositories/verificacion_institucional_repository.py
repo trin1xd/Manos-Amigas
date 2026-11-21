@@ -44,9 +44,13 @@ def fallo_codigo(cur, user_id):
         WHERE id_universitario=? AND intentos<5''', (user_id,))
 
 
-def confirmar_correo(cur, user_id):
-    cur.execute('''UPDATE dbo.PerfilUniversitario SET correo_institucional_verificado=1
-        WHERE id_usuario=? AND estado_verificacion='PENDIENTE_VERIFICACION' ''', (user_id,))
+def confirmar_correo(cur, user_id, habilitar=False):
+    # Mantiene compatibilidad con el motor original cuando no hay feria.
+    estado = 'VERIFICADO' if habilitar else 'PENDIENTE_VERIFICACION'
+    cur.execute('''UPDATE dbo.PerfilUniversitario
+        SET correo_institucional_verificado=1, estado_verificacion=?
+        WHERE id_usuario=? AND estado_verificacion='PENDIENTE_VERIFICACION'
+          AND correo_institucional_verificado=0''', (estado, user_id))
     if cur.rowcount != 1:
         return False
     cur.execute('''UPDATE dbo.CodigosCorreoInstitucional

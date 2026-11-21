@@ -45,9 +45,14 @@ def fallo_codigo(cur, user_id):
         WHERE id_universitario=%s AND intentos<5''', (user_id,))
 
 
-def confirmar_correo(cur, user_id):
-    cur.execute('''UPDATE public."PerfilUniversitario" SET correo_institucional_verificado=TRUE
-        WHERE id_usuario=%s AND estado_verificacion='PENDIENTE_VERIFICACION' ''', (user_id,))
+def confirmar_correo(cur, user_id, habilitar=False):
+    # La aprobación por correo solo se aplica si el servicio ya validó
+    # un código vigente, de un solo uso y del usuario autenticado.
+    estado = 'VERIFICADO' if habilitar else 'PENDIENTE_VERIFICACION'
+    cur.execute('''UPDATE public."PerfilUniversitario"
+        SET correo_institucional_verificado=TRUE, estado_verificacion=%s
+        WHERE id_usuario=%s AND estado_verificacion='PENDIENTE_VERIFICACION'
+          AND correo_institucional_verificado=FALSE''', (estado, user_id))
     if cur.rowcount != 1:
         return False
     cur.execute('''UPDATE public."CodigosCorreoInstitucional"

@@ -109,7 +109,7 @@ def _validate(data, role):
         else:
             clean[name] = value
 
-    if (role == UNIVERSITARIO and "correo_institucional" in clean
+    if (role == UNIVERSITARIO and not feria_activa() and "correo_institucional" in clean
             and clean["correo_institucional"] == clean.get("email")):
         errors["correo_institucional"] = "Debe ser distinto del correo personal."
 
@@ -149,12 +149,17 @@ def _insert_profile(cursor, role, id_usuario, d):
         )
 
 
-def register_user(role, data):
+def register_user(role, data, *, cuenta_demo=False):
     """Registra Usuario + perfil específico en UNA transacción."""
-    # En feria sólo se usan cuentas de demostración: no pedir correo USS.
     if role == UNIVERSITARIO and feria_activa():
         data = dict(data)
-        data['correo_institucional'] = f"feria-{secrets.token_hex(12)}@demo.invalid"
+        if cuenta_demo:
+            # Solo el ingreso ficticio de un clic queda habilitado al instante.
+            data['correo_institucional'] = f"feria-{secrets.token_hex(12)}@demo.invalid"
+        else:
+            # Un registro real durante la feria confirma su propio correo
+            # personal (también Gmail/Outlook), sin exigir dirección USS.
+            data['correo_institucional'] = data.get('email', '')
     d = _validate(data, role)
     password_hash = generate_password_hash(d["password"])
 
@@ -189,9 +194,9 @@ def register_user(role, data):
             id_rol=id_rol,
         )
         _insert_profile(cursor, role, id_usuario, d)
-        if role == UNIVERSITARIO and feria_activa():
-            # Solo perfiles NUEVOS; no habilita automáticamente los pendientes
-            # previos, ni activa el botón administrativo de verificación.
+        if role == UNIVERSITARIO and feria_activa() and cuenta_demo:
+            # Las cuentas ficticias de un clic NO requieren buzón real.
+            # Un registro normal sí debe confirmar su propio correo.
             repo.habilitar_universitario_para_feria(cursor, id_usuario)
         conn.commit()
     except ServiceError:
@@ -209,7 +214,7 @@ def register_user(role, data):
 
     user = {"id": id_usuario, "nombre": d["nombre_completo"], "rol": role}
     if role == UNIVERSITARIO:
-        user["estado_verificacion"] = "VERIFICADO" if feria_activa() else "PENDIENTE_VERIFICACION"
+        user["estado_verificacion"] = "VERIFICADO" if feria_activa() and cuenta_demo else "PENDIENTE_VERIFICACION"
     return user
 
 
@@ -313,5 +318,5 @@ def crear_usuario_feria(rol):
             'contacto_emergencia_nombre': 'Contacto de demostración',
             'contacto_emergencia_telefono': '+56922222222',
         })
-    register_user(rol, datos)
+    register_user(rol, datos, cuenta_demo=True)
     return login(datos['email'], datos['password'])
