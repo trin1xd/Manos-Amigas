@@ -19,6 +19,11 @@ function textoAnio(anio) {
   return numero > 0 ? `${numero}.º año` : null;
 }
 
+function textoCalificacion(valor) {
+  const numero = Number(valor);
+  return valor != null && numero > 0 ? `★ ${numero.toFixed(1)} / 5` : '★ Sin calificaciones aún';
+}
+
 /**
  * Ficha mínima del estudiante que postula. Solo muestra lo que entrega el backend para
  * decidir con más confianza: nombre, carrera, universidad, año y estado de verificación.
@@ -40,6 +45,7 @@ export default function FichaEstudiante({ postulacion }) {
       </p>
       <div className={styles.etiquetas}>
         {verificacion && <span className={`${styles.etiqueta} ${verificacion.clase}`}>{verificacion.texto}</span>}
+        <span className={styles.etiqueta}>{textoCalificacion(postulacion.estudiante_calificacion_promedio)}</span>
         <span className={styles.etiqueta}>{ESTADO_POSTULACION[postulacion.estado] || postulacion.estado}</span>
       </div>
     </div>
@@ -49,7 +55,7 @@ export default function FichaEstudiante({ postulacion }) {
 export function NotaFichaEstudiante() {
   return (
     <p className={styles.nota}>
-      La verificación es una habilitación de prueba: todavía no se validan documentos ni identidades reales.
+      La verificación es una habilitación de prueba: todavía no se validan documentos ni identidades reales. La foto del estudiante y el promedio de calificaciones estarán disponibles en una próxima etapa.
     </p>
   );
 }

@@ -86,7 +86,7 @@ export default function AccessibilityToolbar({ integrada = false }) {
         aria-controls="manos-accesibilidad-opciones"
         onClick={() => setAbierto(anterior => !anterior)}
       >
-        <UiIcon name="accessibility" size={19} />
+        <UiIcon name="settings" size={19} />
         <span>Accesibilidad</span>
         <UiIcon name="chevron-down" size={16} />
       </button>

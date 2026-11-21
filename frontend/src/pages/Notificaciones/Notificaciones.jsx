@@ -79,7 +79,7 @@ export default function Notificaciones() {
       <div className={styles.encabezado}>
         <div>
           <h2 id="aviso-titulo">🔔 Avisos internos</h2>
-          <p>Notificaciones de tus solicitudes y servicios. Se consultan desde SQL Server.</p>
+          <p>Notificaciones de tus solicitudes y servicios.</p>
         </div>
         <div className={styles.acciones}>
           <button type="button" onClick={actualizar} disabled={cargando || trabajando}>Actualizar</button>

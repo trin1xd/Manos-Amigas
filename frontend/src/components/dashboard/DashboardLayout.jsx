@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import UiIcon from '../ui/UiIcon';
+import logoIcono from '../../assets/images/logo-icono.png';
 import styles from './DashboardLayout.module.css';
 
 // Conserva los mismos identificadores de vista: cambia solo la presentación del menú.
@@ -62,15 +63,19 @@ export default function DashboardLayout({
       <header className={styles.barra}>
         <div className={styles.barraInterior}>
           <div className={styles.marca}>
-            <span className={styles.logo} aria-hidden="true"><UiIcon name="heart" size={24} /></span>
+            <span className={styles.logo} aria-hidden="true"><img src={logoIcono} alt="" className={styles.logoImg} /></span>
             <span>
               <strong>Manos Amigas</strong>
               <small>Ayuda entre generaciones</small>
             </span>
           </div>
-          <button className={styles.salir} type="button" onClick={onLogout}>
-            Cerrar sesión <span aria-hidden="true">↗</span>
-          </button>
+          <div className={styles.accionesBarra}>
+            <div id="manos-accesibilidad-slot" className={styles.accesibilidadSlot} />
+            <button className={styles.salir} type="button" onClick={onLogout} aria-label="Cerrar sesión" title="Cerrar sesión">
+              <UiIcon name="logout" size={20} />
+              <span className={styles.salirTexto}>Cerrar sesión</span>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -82,7 +87,6 @@ export default function DashboardLayout({
             <p className={styles.subtitulo}>{subtitulo}</p>
           </div>
           <div className={styles.controlesBienvenida}>
-            <div id="manos-accesibilidad-slot" className={styles.accesibilidadSlot} />
             <span className={styles.etiquetaRol}>{tituloRol}</span>
           </div>
         </div>
@@ -96,7 +100,7 @@ export default function DashboardLayout({
             onClick={() => setMenuAbierto((abierto) => !abierto)}
           >
             <UiIcon name="menu" size={20} />
-            <span>{menuAbierto ? 'Ocultar secciones' : 'Ver secciones del panel'}</span>
+            <span>{menuAbierto ? 'Cerrar menú' : '¿Qué quieres hacer?'}</span>
             <span aria-hidden="true">{menuAbierto ? '−' : '+'}</span>
           </button>
 
