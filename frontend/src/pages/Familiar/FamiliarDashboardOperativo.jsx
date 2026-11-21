@@ -283,7 +283,7 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
       )}
 
       {vista === 'solicitudes' && (
-        <section className={dash.panel} aria-labelledby="fam-solicitudes">
+        <section className={`${dash.panel} ${styles.panelLista}`} aria-labelledby="fam-solicitudes">
           <div className={styles.encabezado}>
             <h2 id="fam-solicitudes">Solicitudes de tus familiares</h2>
             <button type="button" className={styles.botonSecundario} onClick={actualizar} disabled={cargando || accionEnCurso}>Actualizar</button>
@@ -303,8 +303,7 @@ export default function FamiliarDashboardOperativo({ usuario, onLogout }) {
                     <span className={styles.estado}>{sol.estado}</span>
                   </div>
                   <p><strong>Para:</strong> {sol.adulto_nombre || 'Adulto mayor autorizado'}</p>
-                  <p><strong>Fecha:</strong> {fechaLegible(sol.fecha_solicitada)}</p>
-                  <p><strong>Duración:</strong> {sol.duracion_horas ?? 'No indicada'} hora(s)</p>
+                  <p><strong>Fecha:</strong> {fechaLegible(sol.fecha_solicitada)} · {sol.duracion_horas ? `${sol.duracion_horas} hora(s)` : 'duración no indicada'}</p>
                   <p><strong>Descripción:</strong> {sol.descripcion || 'Sin descripción'}</p>
                   <div className={styles.acciones}>
                     {sol.estado === 'PENDIENTE' && (

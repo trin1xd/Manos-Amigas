@@ -36,3 +36,13 @@
 .precioReferencial div span { color: #446b6b; font-size: .93rem; }
 .montoPrecio { color: #0d6264; font-size: 1.4rem; white-space: nowrap; }
 @media (max-width: 600px) { .precioReferencial { flex-direction: column; align-items: flex-start; } }
+
+/* Solicitudes de familiares: más compactas en celular */
+@media (max-width: 600px) {
+  .panelLista { background: transparent; border: 0; box-shadow: none; padding: 0; }
+  .panelLista .item { padding: 14px; border-left: 5px solid #1f8a8a; }
+  .panelLista .item p { margin: 6px 0; }
+  .panelLista .acciones { flex-wrap: nowrap; gap: 8px; }
+  .panelLista .acciones > button { width: auto; flex: 1 1 0; min-height: 44px; padding: 8px 6px; font-size: .88rem; }
+  .panelLista .encabezado > button { min-height: 40px; padding: 8px 14px; }
+}

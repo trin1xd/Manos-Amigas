@@ -41,19 +41,19 @@ const SECCIONES = [
 ];
 
 const ICONOS = {
-  'cortar leña': 'arbol',
+  'cortar leña': 'tronco',
   'aseo y orden': 'destellos',
   'tareas del hogar': 'destellos',
   'cocina y comida': 'cubiertos',
-  'trámites': 'documento',
+  'trámites': 'documento-visto',
   'compras': 'carrito',
   'jardín y huerto': 'hoja',
   'arreglos menores': 'llave inglesa',
-  'compañía': 'usuarios',
-  'acompañamiento': 'usuarios',
+  'compañía': 'compania-corazon',
+  'acompañamiento': 'compania-corazon',
   'mascotas': 'paw-print',
-  'ayuda con tecnología': 'celular',
-  'apoyo digital': 'celular',
+  'ayuda con tecnología': 'celular-corazon',
+  'apoyo digital': 'celular-corazon',
 };
 
 function iconoServicio(nombre) {
@@ -94,7 +94,7 @@ const GRUPOS_CATALOGO = [
     nombre: 'Compañía',
     descripcion: 'Visitas y paseos',
     color: '#e8648a',
-    icono: 'usuarios',
+    icono: 'compania-corazon',
   },
   {
     id: 'hogar',
@@ -115,7 +115,7 @@ const GRUPOS_CATALOGO = [
     nombre: 'Tecnología',
     descripcion: 'Celular y videollamadas',
     color: '#3b7dd8',
-    icono: 'celular',
+    icono: 'celular-corazon',
   },
 ];
 
