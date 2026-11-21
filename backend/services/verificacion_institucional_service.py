@@ -44,8 +44,8 @@ def _smtp_lista():
 def _mandar_codigo(correo, codigo):
     if brevo_sender.configurado():
         contenido = ('Tu código de confirmación de Manos Amigas es: ' + codigo +
-            '\\nCaduca en 15 minutos. No lo compartas con nadie.\\n'
-            'Si no lo solicitaste, ignora este mensaje.\\n')
+            '\nCaduca en 15 minutos. No lo compartas con nadie.\n'
+            'Si no lo solicitaste, ignora este mensaje.\n')
         brevo_sender.enviar(
             correo, 'Manos Amigas: confirma tu correo institucional', contenido)
         return
