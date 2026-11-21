@@ -115,3 +115,14 @@ def find_user_by_email(cursor, email):
 def find_user_by_id(cursor, user_id):
     cursor.execute(_USER_FIELDS + ' WHERE u.id_usuario = %s', (user_id,))
     return _fetch_user(cursor)
+
+
+def habilitar_universitario_para_feria(cursor, id_usuario):
+    """Marca apta exclusivamente una cuenta creada durante el piloto de feria."""
+    cursor.execute('''
+        UPDATE public."PerfilUniversitario"
+        SET estado_verificacion = 'VERIFICADO'
+        WHERE id_usuario = %s AND estado_verificacion = 'PENDIENTE_VERIFICACION'
+    ''', (id_usuario,))
+    if cursor.rowcount != 1:
+        raise RuntimeError('No se pudo habilitar la cuenta universitaria de demostración.')
