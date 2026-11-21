@@ -70,3 +70,17 @@
 }
 
 .simbolo { white-space: nowrap; width: 26px; }
+
+/* Portada en celular: el panel de Ajustes se centra en la pantalla y no se corta */
+@media (max-width: 600px) {
+  .portada .panel {
+    position: fixed;
+    top: 50%;
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%);
+    width: min(326px, calc(100vw - 24px));
+    max-height: 80dvh;
+  }
+}

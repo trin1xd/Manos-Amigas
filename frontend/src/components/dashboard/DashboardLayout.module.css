@@ -375,3 +375,9 @@
   .datos { grid-template-columns: 1fr 1fr; column-gap: 12px; }
   .datos div { grid-template-columns: 1fr; gap: 2px; padding: 11px 0; }
 }
+
+/* Corrige el panel de Ajustes cortado: se ancla a la barra superior, no al botón */
+.accesibilidadSlot { position: static; }
+@media (max-width: 600px) {
+  .accesibilidadSlot aside > div { left: 12px; right: 12px; width: auto; }
+}
