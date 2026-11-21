@@ -328,7 +328,7 @@
 @media (max-width: 900px) {
   .salirTexto { display: none; }
 }
-@media (max-width: 380px) {
+@media (max-width: 320px) {
   .accesibilidadSlot aside > button span { display: none; }
   .accesibilidadSlot aside > button { padding: 8px 11px; }
 }
@@ -347,4 +347,16 @@
 @media (max-width: 440px) {
   .marca > span:not([aria-hidden="true"]) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .marca { flex: 0 0 auto; margin-right: auto; }
+}
+
+/* Estado de cuenta dentro del bloque verde del inicio del estudiante */
+.estadoEnHero { margin-top: 14px; }
+.estadoEnHero .estadoTexto { margin: 10px 0 0; font-size: .92rem; color: #eefaf8; }
+@media (max-width: 680px) {
+  .rejillaAcciones { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .rejillaAcciones .tarjeta { align-items: center; text-align: center; padding: 14px 10px; gap: 8px; }
+  .rejillaAcciones .tarjeta p { display: none; }
+  .rejillaAcciones .tarjeta h3 { font-size: 1rem; }
+  .rejillaAcciones .tarjetaBoton { font-size: .85rem; padding: 8px 10px; min-height: 42px; }
+  .seccionPasos { display: none; }
 }

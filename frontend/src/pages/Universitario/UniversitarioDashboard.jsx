@@ -74,21 +74,17 @@ export default function UniversitarioDashboard({ usuario, onLogout, onVerificaci
               <p className={styles.heroEyebrow}>Tu comunidad cuenta contigo</p>
               <h2 id="titulo-universitario">Conecta tu tiempo con una buena causa</h2>
               <p>Consulta tu estado de verificación y prepárate para ayudar en tareas cotidianas no médicas.</p>
+              <div className={styles.estadoEnHero}>
+                <span className={`${styles.estado} ${estado.estilo}`}>● {estado.etiqueta}</span>
+                <p className={styles.estadoTexto}>{estado.descripcion}</p>
+              </div>
             </div>
             <span className={styles.heroIcono} aria-hidden="true"><UiIcon name="graduation-cap" size={36} /></span>
           </section>
 
-          <section className={styles.panel} aria-labelledby="titulo-verificacion">
-            <h2 id="titulo-verificacion">Estado de tu cuenta</h2>
-            <div className={styles.separacion}>
-              <span className={`${styles.estado} ${estado.estilo}`}>● {estado.etiqueta}</span>
-            </div>
-            <p className={styles.estadoTexto}>{estado.descripcion}</p>
-          </section>
-
           <section className={styles.separacion} aria-labelledby="titulo-acciones-universitario">
             <h2 id="titulo-acciones-universitario" className={styles.tituloSeccion}>¿Qué quieres revisar?</h2>
-            <div className={styles.rejilla}>
+            <div className={`${styles.rejilla} ${styles.rejillaAcciones}`}>
               <article className={styles.tarjeta}>
                 <span className={styles.tarjetaIcono} aria-hidden="true"><UiIcon name="catalogo" size={26} /></span>
                 <h3>Explorar tareas</h3>
@@ -105,10 +101,26 @@ export default function UniversitarioDashboard({ usuario, onLogout, onVerificaci
                   Ver mis postulaciones <span aria-hidden="true">→</span>
                 </button>
               </article>
+              <article className={styles.tarjeta}>
+                <span className={styles.tarjetaIcono} aria-hidden="true"><UiIcon name="agenda" size={26} /></span>
+                <h3>Mi agenda</h3>
+                <p>Consulta tus compromisos y servicios agendados.</p>
+                <button type="button" className={styles.tarjetaBoton} onClick={() => setVista('agenda')}>
+                  Ver mi agenda <span aria-hidden="true">→</span>
+                </button>
+              </article>
+              <article className={styles.tarjeta}>
+                <span className={styles.tarjetaIcono} aria-hidden="true"><UiIcon name="calificaciones" size={26} /></span>
+                <h3>Calificaciones</h3>
+                <p>Revisa y deja calificaciones de los servicios finalizados.</p>
+                <button type="button" className={styles.tarjetaBoton} onClick={() => setVista('calificaciones')}>
+                  Ver calificaciones <span aria-hidden="true">→</span>
+                </button>
+              </article>
             </div>
           </section>
 
-          <section className={styles.separacion} aria-labelledby="titulo-pasos-uni">
+          <section className={`${styles.separacion} ${styles.seccionPasos}`} aria-labelledby="titulo-pasos-uni">
             <h2 id="titulo-pasos-uni" className={styles.tituloSeccion}>Cómo funcionará</h2>
             <div className={styles.pasos}>
               <div className={styles.paso}><span className={styles.pasoNumero}>1</span><strong>Crea tu cuenta</strong><p>Regístrate con tus datos universitarios.</p></div>

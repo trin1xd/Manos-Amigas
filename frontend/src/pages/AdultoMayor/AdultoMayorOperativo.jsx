@@ -774,7 +774,7 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
                     <UiIcon name="chat" size={36} />
                   </div>
                   <div className={ui.infoInicio}>
-                    <span className={ui.tituloTarjetaInicio}>Pedir ayuda por WhatsApp</span>
+                    <span className={ui.tituloTarjetaInicio}>Contáctanos por WhatsApp</span>
                     <span className={ui.descripcionTarjetaInicio}>Escríbenos y te respondemos</span>
                   </div>
                 </a>
@@ -899,7 +899,7 @@ export default function AdultoMayorOperativo({ usuario, onLogout }) {
             <section aria-labelledby="titulo-solicitudes">
               <div className={ui.tituloFila}>
                 <h2 id="titulo-solicitudes" className={styles.tituloSeccion}>Mis solicitudes</h2>
-                <button type="button" className={styles.botonPrimario} onClick={refrescar}>Actualizar</button>
+                <button type="button" className={ui.botonActualizar} onClick={refrescar}>↻ Actualizar</button>
               </div>
               {cargando && <p role="status">Cargando solicitudes...</p>}
               {errorCarga && <p className={styles.errorSolicitud} role="alert">{errorCarga}</p>}

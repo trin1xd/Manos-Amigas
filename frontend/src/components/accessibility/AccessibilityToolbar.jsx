@@ -84,10 +84,11 @@ export default function AccessibilityToolbar({ integrada = false }) {
         className={styles.activador}
         aria-expanded={abierto}
         aria-controls="manos-accesibilidad-opciones"
+        title="Ajustes de visualización: tamaño de letra, contraste y modo oscuro"
         onClick={() => setAbierto(anterior => !anterior)}
       >
         <UiIcon name="settings" size={19} />
-        <span>Accesibilidad</span>
+        <span>Ajustes</span>
         <UiIcon name="chevron-down" size={16} />
       </button>
       {abierto && <div className={styles.panel} id="manos-accesibilidad-opciones">
