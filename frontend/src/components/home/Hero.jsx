@@ -74,8 +74,9 @@ export default function Hero({
         </div>
 
         <p className={styles.subtitle}>
-          Conectamos a familias con estudiantes universitarios
-          verificados para brindar apoyo seguro en tareas del día a día.
+          {feria
+            ? 'Estás en una demostración académica con cuentas ficticias. Explora cómo se solicitan y coordinan ayudas, sin servicios reales.'
+            : 'Conectamos a familias con estudiantes universitarios verificados para brindar apoyo seguro en tareas del día a día.'}
         </p>
 
         <div className={styles.ctas}>
