@@ -1,5 +1,8 @@
 import styles from './Footer.module.css';
 
+const WHATSAPP_NUMERO = '56941679024';
+const ENLACE_WHATSAPP = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent('Hola, quiero conocer más sobre Manos Amigas.')}`;
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
@@ -21,7 +24,7 @@ export default function Footer() {
               <a href="#" id="footer-facebook" className={styles.socialLink} aria-label="Facebook">
                 <svg viewBox="0 0 24 24" fill="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </a>
-              <a href="#" id="footer-whatsapp" className={styles.socialLink} aria-label="WhatsApp">
+              <a href={ENLACE_WHATSAPP} target="_blank" rel="noopener noreferrer" id="footer-whatsapp" className={styles.socialLink} aria-label="Contáctanos por WhatsApp">
                 <svg viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </a>
             </div>
@@ -41,9 +44,7 @@ export default function Footer() {
           <nav className={styles.linksCol} aria-label="Soporte">
             <h4 className={styles.colTitle}>Soporte</h4>
             <ul>
-              <li><a href="#">Preguntas frecuentes</a></li>
-              <li><a href="#">Centro de ayuda</a></li>
-              <li><a href="#">Contáctanos</a></li>
+              <li><a href={ENLACE_WHATSAPP} target="_blank" rel="noopener noreferrer">Contáctanos por WhatsApp</a></li>
             </ul>
           </nav>
 
