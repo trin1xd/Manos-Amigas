@@ -23,6 +23,7 @@ import {
   getMe,
   hasToken,
   logout,
+  entrarDemo,
 } from './services/sessionService';
 
 function tokenQrEnUrl() {
@@ -101,6 +102,13 @@ function App() {
   }, []);
 
   // Se ejecuta después del login exitoso
+  async function handleDemoLogin(rol) {
+    const data = await entrarDemo(rol);
+    if (!data?.user) throw new Error('No se pudo crear la sesión de demostración.');
+    setUsuario(data.user);
+    setErrorSesion('');
+  }
+
   async function handleLoginSuccess() {
     try {
       const data = await getMe();
@@ -260,6 +268,7 @@ function App() {
           onCreateAccountClick={() =>
             setCurrentView('crear-cuenta')
           }
+          onDemoClick={handleDemoLogin}
         />
         <ComoFunciona />
         <Seguridad />
