@@ -32,7 +32,7 @@ jobs:
       - name: Verificar sintaxis de Python
         run: python -m compileall -q database repositories services routes tests
       - name: Pruebas unitarias PostgreSQL sin conexión externa
-        run: python -m pytest -q tests/test_postgres_*.py tests/test_seguimiento.py tests/test_calificaciones.py tests/test_correo_https.py tests/test_verificacion_correo.py tests/test_feria_acceso.py tests/test_codigo_habilita_feria.py
+        run: python -m pytest -q tests/test_postgres_*.py tests/test_seguimiento.py tests/test_calificaciones.py tests/test_correo_https.py tests/test_apps_script_sender.py tests/test_verificacion_correo.py tests/test_feria_acceso.py tests/test_codigo_habilita_feria.py
 
   frontend-build:
     runs-on: ubuntu-latest

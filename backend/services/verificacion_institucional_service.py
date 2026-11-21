@@ -16,7 +16,7 @@ from database.connection import get_connection
 from database.backend import repository
 repo = repository('verificacion_institucional')
 from services.auth_service import ServiceError, correo_institucional_aceptado
-from utils import brevo_sender, validators
+from utils import apps_script_sender, brevo_sender, validators
 from utils.feria_demo import activa as feria_activa
 
 MIN_ENVIOS_SEGUNDOS = 90
@@ -53,10 +53,16 @@ def _permitido(correo):
 
 
 def _smtp_lista():
-    return (brevo_sender.configurado() or all(os.getenv(x, '').strip() for x in ('MAIL_SMTP_HOST', 'MAIL_SMTP_USER', 'MAIL_SMTP_PASSWORD', 'MAIL_FROM')))
+    return (apps_script_sender.configurado() or brevo_sender.configurado() or all(os.getenv(x, '').strip() for x in ('MAIL_SMTP_HOST', 'MAIL_SMTP_USER', 'MAIL_SMTP_PASSWORD', 'MAIL_FROM')))
 
 
 def _mandar_codigo(correo, codigo):
+    if apps_script_sender.configurado():
+        contenido = ('Tu código de confirmación de Manos Amigas es: ' + codigo +
+            '\\nCaduca en 15 minutos. No lo compartas con nadie.\\n'
+            'Si no lo solicitaste, ignora este mensaje.\\n')
+        apps_script_sender.enviar(correo, 'Manos Amigas: confirma tu correo', contenido)
+        return
     if brevo_sender.configurado():
         contenido = ('Tu código de confirmación de Manos Amigas es: ' + codigo +
             '\nCaduca en 15 minutos. No lo compartas con nadie.\n'
