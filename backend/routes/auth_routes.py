@@ -4,6 +4,7 @@ from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, j
 from services import auth_service
 from services.auth_service import ADULTO_MAYOR, FAMILIAR, UNIVERSITARIO, ServiceError
 from utils.auth_decorators import require_role
+from utils.feria_demo import activa as feria_activa
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -89,3 +90,29 @@ def prueba_universitario():
         "message": "Acceso permitido a universitario.",
         "user": g.current_user,
     })
+
+
+
+@auth_bp.post("/demo")
+def ingresar_feria():
+    """Entrada de un clic, solo con la variable FERIA_REGISTRO_LIBRE=true."""
+    if not feria_activa():
+        return jsonify({"success": False, "message": "Demostración desactivada."}), 404
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict) or set(data) != {'rol'}:
+        return jsonify({"success": False, "message": "Elige un perfil de prueba."}), 400
+    try:
+        user = auth_service.crear_usuario_feria(data['rol'])
+    except ServiceError as error:
+        return _error(error)
+    password_version = user.pop("_password_version", 0)
+    access_token = create_access_token(
+        identity=str(user["id"]),
+        additional_claims={"rol": user["rol"], "pwd_ver": password_version},
+    )
+    return jsonify({
+        "success": True,
+        "user": user,
+        "access_token": access_token,
+        "message": "Cuenta ficticia de demostración creada.",
+    }), 201
