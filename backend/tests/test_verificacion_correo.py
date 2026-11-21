@@ -155,7 +155,7 @@ def test_confirmacion_valida_no_aprueba_automaticamente(monkeypatch):
         'hash': digest, 'vence': svc._utc() + timedelta(minutes=10), 'intentos': 0})
     monkeypatch.setattr(svc.repo, 'confirmar_correo', lambda *_args: True)
     monkeypatch.setattr(svc.repo, 'auditar', lambda *_args: events.append(_args[-1]))
-    assert svc.confirmar_codigo(ALUMNO, {'codigo': '012345'}) == {'correo_confirmado': True}
+    assert svc.confirmar_codigo(ALUMNO, {'codigo': '012345'}) == {'correo_confirmado': True, 'estado_verificacion': 'PENDIENTE_VERIFICACION'}
     assert c.commits == 1
     assert events == ['CORREO_CONFIRMADO']
 
