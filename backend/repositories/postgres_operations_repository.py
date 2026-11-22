@@ -249,10 +249,19 @@ def postulaciones_solicitud(cursor, solicitud_id):
                pu.universidad AS estudiante_universidad,
                pu.carrera AS estudiante_carrera,
                pu.anio_cursa AS estudiante_anio,
-               pu.estado_verificacion AS estudiante_verificacion
+               pu.estado_verificacion AS estudiante_verificacion,
+               notas.promedio AS estudiante_calificacion_promedio,
+               notas.total AS estudiante_calificaciones_total
         FROM public."Postulaciones" p
         JOIN public."Usuarios" u ON u.id_usuario = p.id_universitario
         LEFT JOIN public."PerfilUniversitario" pu ON pu.id_usuario = p.id_universitario
+        LEFT JOIN LATERAL (
+            SELECT ROUND(AVG(c.puntaje)::numeric, 1)::double precision AS promedio,
+                   COUNT(*)::integer AS total
+            FROM public."Calificaciones" c
+            WHERE c.id_evaluado = p.id_universitario
+              AND c.tipo = 'ADULTO_A_UNIVERSITARIO'
+        ) notas ON TRUE
         WHERE p.id_solicitud = %s
         ORDER BY p.fecha_creacion, p.id_postulacion
     ''', (solicitud_id,))
