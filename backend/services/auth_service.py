@@ -157,9 +157,12 @@ def register_user(role, data, *, cuenta_demo=False):
             # Solo el ingreso ficticio de un clic queda habilitado al instante.
             data['correo_institucional'] = f"feria-{secrets.token_hex(12)}@demo.invalid"
         else:
-            # Un registro real durante la feria confirma su propio correo
-            # personal (también Gmail/Outlook), sin exigir dirección USS.
-            data['correo_institucional'] = data.get('email', '')
+            # En feria, el correo REAL para confirmar es Usuarios.email.
+            # El campo institucional heredado mantiene una referencia interna
+            # única para no impedir que una persona legítima se registre si
+            # un perfil anterior reservó su correo USS durante las pruebas.
+            # No modificamos ni borramos el perfil anterior.
+            data['correo_institucional'] = f"feria-registro-{secrets.token_hex(12)}@demo.invalid"
     d = _validate(data, role)
     password_hash = generate_password_hash(d["password"])
 

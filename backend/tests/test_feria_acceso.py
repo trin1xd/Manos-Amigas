@@ -80,7 +80,9 @@ def test_registro_publico_universitario_espera_codigo(contexto, monkeypatch):
     response = client.post('/api/auth/register/universitario', json=datos)
     assert response.status_code == 201, response.get_json()
     assert response.get_json()['user']['estado_verificacion'] == 'PENDIENTE_VERIFICACION'
-    assert db.profiles[0]['correo_institucional'] == 'universitaria@gmail.com'
+    assert db.profiles[0]['correo_institucional'].startswith('feria-registro-')
+    assert db.profiles[0]['correo_institucional'].endswith('@demo.invalid')
+    assert db.users[0]['email'] == 'universitaria@gmail.com'
     assert db.profiles[0]['estado_verificacion'] == 'PENDIENTE_VERIFICACION'
 
 
@@ -117,4 +119,37 @@ def test_registro_duplicado_identifica_correo_y_rut(contexto, monkeypatch):
     errores = segundo.get_json().get('errors', {})
     assert 'rut' in errores
     assert 'email' in errores
-    assert 'correo_institucional' in errores
+    # La referencia institucional de feria es única por registro,
+    # por lo que el duplicado corresponde al correo de acceso y al RUT.
+    assert 'correo_institucional' not in errores
+
+
+def test_correo_uss_ocupado_por_prueba_no_impide_nuevo_registro(contexto, monkeypatch):
+    """Un email reservado en otro perfil no supone cuenta creada por su dueño."""
+    client, db = contexto
+    monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'true')
+    correo_uss = 'persona.real@correo.uss.cl'
+    # Simula un perfil antiguo distinto que reservó el correo institucional.
+    db.profiles.append({'id_usuario': 9999,
+                        'correo_institucional': correo_uss,
+                        'tipo': 'UNIVERSITARIO',
+                        'estado_verificacion': 'PENDIENTE_VERIFICACION'})
+    datos = {
+        'nombre_completo': 'Estudiante de prueba',
+        'rut': '12345678-5',
+        'fecha_nacimiento': '2002-03-10',
+        'telefono': '+56911112222',
+        'email': correo_uss,
+        'password': 'clave-demostracion-123',
+        'universidad': 'Universidad San Sebastián',
+        'carrera': 'Enfermería',
+        'anio_cursa': 2,
+        'contacto_emergencia_nombre': 'Contacto de prueba',
+        'contacto_emergencia_telefono': '+56933334444',
+    }
+    response = client.post('/api/auth/register/universitario', json=datos)
+    assert response.status_code == 201, response.get_json()
+    assert db.users[0]['email'] == correo_uss
+    assert db.profiles[0]['correo_institucional'] == correo_uss
+    assert db.profiles[1]['correo_institucional'].endswith('@demo.invalid')
+    assert db.profiles[1]['estado_verificacion'] == 'PENDIENTE_VERIFICACION'
