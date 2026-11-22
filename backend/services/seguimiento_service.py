@@ -8,6 +8,7 @@ repo = repository('seguimiento')
 notif_repo = repository('notificaciones')
 ops_repo = repository('operations')
 from services.auth_service import ServiceError
+from services.operations_service import _estudiante_habilitado
 
 ACCIONES = ('LLEGADA', 'INICIO', 'TERMINO', 'CONFIRMAR')
 
@@ -55,9 +56,8 @@ def realizar(user, id_solicitud, datos):
         if accion in ('LLEGADA', 'INICIO', 'TERMINO'):
             if user['rol'] != 'UNIVERSITARIO' or solicitud['id_estudiante'] != user['id']:
                 raise ServiceError('Solo el estudiante asignado puede registrar esta acción.', 403)
-            if (user.get('estado_verificacion') != 'VERIFICADO'
-                    or not ops_repo.estudiante_verificado(cur, user['id'])):
-                raise ServiceError('La verificación del estudiante no está vigente.', 403)
+            if not _estudiante_habilitado(cur, user):
+                raise ServiceError('El acceso del universitario no está vigente.', 403)
         else:
             if user['rol'] == 'ADULTO_MAYOR':
                 autorizado = solicitud['id_adulto_mayor'] == user['id']
