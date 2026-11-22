@@ -69,3 +69,17 @@ El botón **Probar como universitario** sigue creando usuarios ficticios sin ver
 - No ejecutar `prepararConexion` otra vez mientras esté funcionando: hacerlo cambia la clave, por lo que habrá que actualizar Render.
 - No escribir ni compartir la clave, los códigos OTP o los enlaces de recuperación en capturas públicas.
 - El proveedor Gmail tiene prioridad sobre Brevo y SMTP cuando las dos variables `MAIL_APPS_SCRIPT_*` están definidas.
+
+
+### Correo USS previamente ocupado en una prueba
+En el entorno de feria, los nuevos registros universitarios conservan el correo real
+en `Usuarios.email`. El campo histórico `PerfilUniversitario.correo_institucional`
+recibe una referencia interna única terminada en `@demo.invalid`, por lo que un
+correo USS utilizado como institucional en un perfil anterior no bloquea a la
+persona que intenta registrar su dirección real.
+
+Las pantallas de verificación, la comprobación de dominio y el envío del código
+utilizan **`Usuarios.email` durante la feria**, nunca esa referencia interna.
+Fuera de feria se mantiene la validación institucional original. No se modifica
+ni borra ningún perfil anterior, y siguen vigentes los controles de duplicidad
+de `Usuarios.email` y RUT.
