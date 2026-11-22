@@ -119,7 +119,9 @@ def test_registro_duplicado_identifica_correo_y_rut(contexto, monkeypatch):
     errores = segundo.get_json().get('errors', {})
     assert 'rut' in errores
     assert 'email' in errores
-    assert 'correo_institucional' in errores
+    # La referencia institucional de feria es única por registro,
+    # por lo que el duplicado corresponde al correo de acceso y al RUT.
+    assert 'correo_institucional' not in errores
 
 
 def test_correo_uss_ocupado_por_prueba_no_impide_nuevo_registro(contexto, monkeypatch):
