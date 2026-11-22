@@ -32,7 +32,7 @@ const SETTINGS = {
   },
   UNIVERSITARIO: {
     title: 'Registro universitario',
-    description: FERIA ? 'Regístrate con un correo al que tengas acceso. Confirma el código recibido y podrás probar las tareas sin esperar al administrador.' : 'Tu cuenta quedará pendiente de verificación antes de poder prestar servicios.',
+    description: FERIA ? 'Crea tu cuenta para probar el prototipo. No necesitas confirmar tu correo ni esperar aprobación.' : 'Tu cuenta quedará pendiente de verificación antes de poder prestar servicios.',
     register: registerUniversitario,
     fields: [
       ...COMMON_FIELDS,
@@ -109,7 +109,7 @@ export default function RegistrationForm({ role, onBack, onLogin }) {
             <div role="status" className={styles.success}>
               <h1>¡Registro completado!</h1>
               <p>{role === 'UNIVERSITARIO'
-                ? (FERIA ? '¡Cuenta creada! Inicia sesión, entra a Verificación y confirma el código que recibirás en tu correo para poder postular. No necesitas aprobación administrativa.' : 'Tu cuenta fue creada y está pendiente de verificación. Todavía no puedes ofrecer servicios.')
+                ? (FERIA ? '¡Cuenta creada! Inicia sesión y podrás probar las tareas y postulaciones. La verificación de correo estará disponible en una versión futura.' : 'Tu cuenta fue creada y está pendiente de verificación. Todavía no puedes ofrecer servicios.')
                 : 'Tu cuenta fue creada correctamente.'}</p>
               <button className={styles.submit} onClick={onLogin}>Ir a iniciar sesión</button>
             </div>
