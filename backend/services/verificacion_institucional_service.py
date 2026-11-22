@@ -145,7 +145,19 @@ def solicitar_codigo(usuario):
             raise ServiceError('Espera 90 segundos antes de solicitar otro código.', 429)
         conteo = (actual['envios'] if actual and actual['dia'] == ahora.date() else 0) + 1
         if conteo > MAX_ENVIOS_DIA:
-            raise ServiceError('Superaste el límite diario de códigos.', 429)
+            # El código antiguo contaba los envíos que Google rechazaba.
+            # Recuperar UNA solicitud de feria cuando el último código quedó
+            # invalidado y sin uso; sin relajar el máximo de cinco entregas.
+            anterior_fallido = (feria_activa() and actual
+                               and actual.get('hash') is None
+                               and actual.get('vence') is None
+                               and actual['envios'] == MAX_ENVIOS_DIA
+                               and actual['dia'] == ahora.date())
+            if (not anterior_fallido
+                    or not hasattr(repo, 'recuperar_un_intento_fallido_anterior')
+                    or not repo.recuperar_un_intento_fallido_anterior(cur, uid, ahora.date())):
+                raise ServiceError('Superaste el límite diario de códigos.', 429)
+            conteo = MAX_ENVIOS_DIA
         repo.emitir_codigo(cur, uid, digest, ahora + timedelta(minutes=MINUTOS_VIGENCIA), ahora.date(), conteo)
         repo.auditar(cur, uid, uid, 'CODIGO_SOLICITADO')
         conn.commit()

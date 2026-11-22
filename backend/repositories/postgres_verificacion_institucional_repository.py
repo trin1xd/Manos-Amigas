@@ -37,8 +37,28 @@ def emitir_codigo(cur, user_id, digest, expira, hoy, conteo):
 
 
 def invalidar_codigo(cur, user_id, digest):
+    # Solo si sigue vigente ESTE código: reembolsar el envío que nunca fue
+    # aceptado por el proveedor. Un envío posterior no debe perder su cupo.
+    # El último intento conserva su fecha para exigir 90 s entre solicitudes.
     cur.execute('''UPDATE public."CodigosCorreoInstitucional"
-        SET codigo_hash=NULL,vence_utc=NULL WHERE id_universitario=%s AND codigo_hash=%s''', (user_id, digest))
+        SET codigo_hash=NULL,vence_utc=NULL,
+            envios_dia=GREATEST(envios_dia-1,0)
+        WHERE id_universitario=%s AND codigo_hash=%s''', (user_id, digest))
+
+
+def recuperar_un_intento_fallido_anterior(cur, user_id, hoy):
+    """Recuperación acotada para errores anteriores a la corrección.
+
+    Solo cuentas pendientes de feria con código ya invalidado por un error
+    anterior. Bajo bloqueo de fila se devuelve un único cupo antes de
+    reemplazarlo por la nueva solicitud. No altera cuentas aprobadas.
+    """
+    cur.execute('''UPDATE public."CodigosCorreoInstitucional"
+        SET envios_dia=envios_dia-1
+        WHERE id_universitario=%s AND dia_envios_utc=%s
+          AND codigo_hash IS NULL AND vence_utc IS NULL
+          AND envios_dia=5''', (user_id, hoy))
+    return cur.rowcount == 1
 
 
 def fallo_codigo(cur, user_id):
