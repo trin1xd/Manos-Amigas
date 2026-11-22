@@ -83,3 +83,18 @@ utilizan **`Usuarios.email` durante la feria**, nunca esa referencia interna.
 Fuera de feria se mantiene la validación institucional original. No se modifica
 ni borra ningún perfil anterior, y siguen vigentes los controles de duplicidad
 de `Usuarios.email` y RUT.
+
+### Si Apps Script responde `ok:false` y no llega ningún código
+La integración entrega un `motivo` no sensible: `firma_invalida`,
+`cuota_agotada`, `error_gmail`, `solicitud_invalida`, etc. El backend lo
+traduce a un mensaje concreto en la pantalla de verificación sin mostrar
+secretos, códigos ni correos.
+
+Al actualizar el archivo `integraciones/apps-script/Code.gs`, **no ejecutar**
+`prepararConexion`: eso reemplaza la clave compartida. Solo copiar el código
+nuevo en el proyecto Apps Script, guardarlo y **Implementar > Administrar
+implementaciones > Editar > Versión: Nueva versión > Implementar**; así la
+URL `/exec` se conserva. La nueva implementación debe ejecutar como titular
+y estar accesible a «Cualquiera». Si el mensaje es `firma_invalida`, comparar
+manualmente la propiedad `MANOS_AMIGAS_SECRET` con la variable
+`MAIL_APPS_SCRIPT_SECRET` en Render, sin compartir valores por chat.
