@@ -4,7 +4,7 @@ def perfil(cur, user_id, lock=False):
     locking = 'FOR UPDATE OF p' if lock else ''
     cur.execute(f'''
         SELECT p.correo_institucional, p.correo_institucional_verificado,
-               p.estado_verificacion
+               p.estado_verificacion, u.email AS correo_cuenta
         FROM public."PerfilUniversitario" p
         JOIN public."Usuarios" u ON u.id_usuario=p.id_usuario
         JOIN public."Roles" r ON r.id_rol=u.id_rol
@@ -12,7 +12,8 @@ def perfil(cur, user_id, lock=False):
         {locking}
     ''', (user_id,))
     row = cur.fetchone()
-    return {'correo': row[0], 'verificado': bool(row[1]), 'estado': row[2]} if row else None
+    return {'correo': row[0], 'verificado': bool(row[1]),
+            'estado': row[2], 'correo_cuenta': row[3]} if row else None
 
 
 def codigo(cur, user_id, lock=False):
