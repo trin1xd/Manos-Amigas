@@ -12,6 +12,8 @@ import DisponibilidadUniversitario from '../Disponibilidad/DisponibilidadUnivers
 import AgendaServicios from '../Agenda/AgendaServicios';
 import VerificacionUniversitario from '../Verificacion/VerificacionUniversitario';
 
+const FERIA = import.meta.env.VITE_MODO_FERIA === 'true';
+
 const NAVEGACION = [
   { id: 'inicio', nombre: 'Inicio', icono: '🏠' },
   { id: 'oportunidades', nombre: 'Tareas', icono: '🧹' },
@@ -24,7 +26,7 @@ const NAVEGACION = [
   { id: 'agenda', nombre: 'Agenda', icono: '📆' },
   { id: 'verificacion', nombre: 'Verificación', icono: '✅' },
   { id: 'perfil', nombre: 'Mi perfil', icono: '👤' },
-];
+].filter(item => !FERIA || item.id !== 'verificacion');
 
 const ESTADOS = {
   PENDIENTE_VERIFICACION: {
@@ -51,7 +53,11 @@ const ESTADOS = {
 
 export default function UniversitarioDashboard({ usuario, onLogout, onVerificacionCompleta }) {
   const [vista, setVista] = useState('inicio');
-  const estado = ESTADOS[usuario?.estado_verificacion] || {
+  const estado = FERIA && usuario?.acceso_feria
+    ? { etiqueta: 'Acceso de demostración',
+        descripcion: 'Puedes explorar y postular a tareas de prueba sin verificar el correo. La verificación quedará para una versión futura.',
+        estilo: styles.estadoOk }
+    : ESTADOS[usuario?.estado_verificacion] || {
     etiqueta: 'Verificación sin información',
     descripcion: 'No pudimos determinar el estado de verificación de tu perfil. No se habilitan tareas.',
     estilo: styles.estadoAlerta,
@@ -73,7 +79,7 @@ export default function UniversitarioDashboard({ usuario, onLogout, onVerificaci
             <div>
               <p className={styles.heroEyebrow}>Tu comunidad cuenta contigo</p>
               <h2 id="titulo-universitario">Conecta tu tiempo con una buena causa</h2>
-              <p>Consulta tu estado de verificación y prepárate para ayudar en tareas cotidianas no médicas.</p>
+              <p>{FERIA ? 'Prueba las funciones de Manos Amigas en un entorno de demostración.' : 'Consulta tu estado de verificación y prepárate para ayudar en tareas cotidianas no médicas.'}</p>
               <div className={styles.estadoEnHero}>
                 <span className={`${styles.estado} ${estado.estilo}`}>● {estado.etiqueta}</span>
                 <p className={styles.estadoTexto}>{estado.descripcion}</p>
@@ -88,7 +94,7 @@ export default function UniversitarioDashboard({ usuario, onLogout, onVerificaci
               <article className={styles.tarjeta}>
                 <span className={styles.tarjetaIcono} aria-hidden="true"><UiIcon name="catalogo" size={26} /></span>
                 <h3>Explorar tareas</h3>
-                <p>Revisa las solicitudes abiertas de adultos mayores y postula cuando tu perfil esté verificado.</p>
+                <p>{FERIA ? 'Explora las solicitudes de prueba y postula sin confirmar tu correo.' : 'Revisa las solicitudes abiertas de adultos mayores y postula cuando tu perfil esté verificado.'}</p>
                 <button type="button" className={styles.tarjetaBoton} onClick={() => setVista('oportunidades')}>
                   Ver sección de tareas <span aria-hidden="true">→</span>
                 </button>
@@ -124,8 +130,8 @@ export default function UniversitarioDashboard({ usuario, onLogout, onVerificaci
             <h2 id="titulo-pasos-uni" className={styles.tituloSeccion}>Cómo funcionará</h2>
             <div className={styles.pasos}>
               <div className={styles.paso}><span className={styles.pasoNumero}>1</span><strong>Crea tu cuenta</strong><p>Regístrate con tus datos universitarios.</p></div>
-              <div className={styles.paso}><span className={styles.pasoNumero}>2</span><strong>Verifica tu perfil</strong><p>La validación deberá completarse antes de ofrecer servicios.</p></div>
-              <div className={styles.paso}><span className={styles.pasoNumero}>3</span><strong>Ayuda con una tarea</strong><p>Solo cuando las tareas y postulaciones estén habilitadas.</p></div>
+              <div className={styles.paso}><span className={styles.pasoNumero}>2</span><strong>{FERIA ? 'Explora la demostración' : 'Verifica tu perfil'}</strong><p>{FERIA ? 'La verificación por correo estará disponible en una versión futura.' : 'La validación deberá completarse antes de ofrecer servicios.'}</p></div>
+              <div className={styles.paso}><span className={styles.pasoNumero}>3</span><strong>Ayuda con una tarea</strong><p>{FERIA ? 'Simula una postulación y revisa el recorrido de la aplicación.' : 'Solo cuando las tareas y postulaciones estén habilitadas.'}</p></div>
             </div>
           </section>
           <p className={styles.aviso}>Manos Amigas no presta servicios médicos, no asigna tareas automáticamente en esta versión y no realiza pagos desde este panel.</p>
@@ -158,7 +164,7 @@ export default function UniversitarioDashboard({ usuario, onLogout, onVerificaci
       {vista === 'agenda' && (
         <AgendaServicios />
       )}
-      {vista === 'verificacion' && (
+      {!FERIA && vista === 'verificacion' && (
         <VerificacionUniversitario onVerificacionCompleta={onVerificacionCompleta} />
       )}
       {vista === 'perfil' && (
@@ -169,7 +175,7 @@ export default function UniversitarioDashboard({ usuario, onLogout, onVerificaci
             <div><dt>Nombre</dt><dd>{usuario?.nombre || 'No disponible'}</dd></div>
             <div><dt>Tipo de cuenta</dt><dd>Universitario</dd></div>
             <div><dt>Estado de cuenta</dt><dd>{usuario?.estado || 'No disponible'}</dd></div>
-            <div><dt>Verificación</dt><dd>{estado.etiqueta}</dd></div>
+            <div><dt>{FERIA ? 'Acceso al prototipo' : 'Verificación'}</dt><dd>{estado.etiqueta}</dd></div>
           </dl>
           <p className={styles.aviso}>La universidad, la carrera y los documentos de verificación se mostrarán aquí en una próxima etapa.</p>
         </section>
