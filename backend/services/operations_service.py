@@ -13,6 +13,23 @@ repo = repository('operations')
 notif_repo = repository('notificaciones')
 agenda_repo = repository('agenda')
 from services.auth_service import ServiceError
+from utils.feria_demo import activa as feria_activa
+
+
+def _estudiante_habilitado(cursor, user):
+    """El acceso temporal de feria no convierte la cuenta en verificada."""
+    estado = user.get('estado_verificacion')
+    if estado == 'VERIFICADO':
+        return bool(repo.estudiante_verificado(cursor, user['id']))
+    if (feria_activa() and estado == 'PENDIENTE_VERIFICACION'
+            and hasattr(repo, 'estudiante_pendiente_feria')):
+        return bool(repo.estudiante_pendiente_feria(cursor, user['id']))
+    return False
+
+
+def _perfil_utilizable(user):
+    return user.get('estado_verificacion') == 'VERIFICADO' or (
+        feria_activa() and user.get('estado_verificacion') == 'PENDIENTE_VERIFICACION')
 
 
 @contextmanager
@@ -107,22 +124,22 @@ def mis_solicitudes(user):
 
 
 def disponibles(user):
-    if user.get('estado_verificacion') != 'VERIFICADO':
-        raise ServiceError('Tu perfil universitario debe estar verificado para consultar tareas.', 403)
+    if not _perfil_utilizable(user):
+        raise ServiceError('Tu perfil universitario no tiene acceso a las tareas.', 403)
     with _db() as cursor:
-        # Segunda comprobación en la BD antes de consultar datos de terceros.
-        if not repo.estudiante_verificado(cursor, user['id']):
-            raise ServiceError('Tu verificación no está vigente.', 403)
+        # Se comprueba la cuenta en BD, incluso durante la demostración.
+        if not _estudiante_habilitado(cursor, user):
+            raise ServiceError('Tu acceso universitario no está vigente.', 403)
         return repo.solicitudes_disponibles(cursor)
 
 
 def postular(user, solicitud_id):
     solicitud_id = _id(solicitud_id, 'id_solicitud')
-    if user.get('estado_verificacion') != 'VERIFICADO':
-        raise ServiceError('Solo pueden postular universitarios verificados.', 403)
+    if not _perfil_utilizable(user):
+        raise ServiceError('Tu perfil universitario no tiene acceso a postular.', 403)
     with _db(write=True) as cursor:
-        if not repo.estudiante_verificado(cursor, user['id']):
-            raise ServiceError('Tu verificación no está vigente.', 403)
+        if not _estudiante_habilitado(cursor, user):
+            raise ServiceError('Tu acceso universitario no está vigente.', 403)
         sol = repo.solicitud(cursor, solicitud_id, lock=True)
         if not sol:
             raise ServiceError('Solicitud no encontrada.', 404)
@@ -160,7 +177,9 @@ def aceptar(user, solicitud_id, postulacion_id):
         sol = _solicitud_autorizada(cursor, user, solicitud_id, lock=True)
         if sol['estado'] != 'PENDIENTE' or datetime.fromisoformat(sol['fecha_solicitada']) <= datetime.now():
             raise ServiceError('La solicitud ya no está disponible para asignar.', 409)
-        post = repo.postulacion_aceptable(cursor, solicitud_id, postulacion_id)
+        post = (repo.postulacion_aceptable_feria(cursor, solicitud_id, postulacion_id)
+                if feria_activa()
+                else repo.postulacion_aceptable(cursor, solicitud_id, postulacion_id))
         if not post or post['estado'] != 'PENDIENTE':
             raise ServiceError('La postulación no está disponible o el estudiante ya no está verificado.', 409)
         # El bloqueo de estudiante y la comprobación ocurren bajo esta MISMA transacción.
