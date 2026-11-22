@@ -98,3 +98,38 @@ def test_repo_actualiza_correo_y_estado_juntos():
     assert "estado_verificacion=%s" in query
     assert params == ("VERIFICADO", 35)
     assert "codigo_hash=NULL" in cur.queries[1][0]
+
+
+def test_solo_correo_real_del_usuario_recibe_codigo(feria, monkeypatch):
+    enviados = []
+    cuenta = 'estudiante.real@correo.uss.cl'
+    perfil = {
+        'correo': 'feria-registro-prueba@demo.invalid',
+        'correo_cuenta': cuenta,
+        'estado': 'PENDIENTE_VERIFICACION',
+        'verificado': False,
+    }
+    monkeypatch.setattr(svc, '_smtp_lista', lambda: True)
+    monkeypatch.setattr(svc.repo, 'perfil', lambda *args, **kwargs: perfil)
+    monkeypatch.setattr(svc.repo, 'codigo', lambda *args, **kwargs: None)
+    monkeypatch.setattr(svc.repo, 'emitir_codigo', lambda *args, **kwargs: None)
+    monkeypatch.setattr(svc.repo, 'auditar', lambda *args, **kwargs: None)
+    monkeypatch.setattr(svc, '_mandar_codigo',
+                        lambda correo, numero: enviados.append((correo, numero)))
+    estado = svc.estado(ALUMNO)
+    assert estado['correo_institucional'] == cuenta
+    assert estado['dominio_admitido'] is True
+    resultado = svc.solicitar_codigo(ALUMNO)
+    assert '15 minutos' in resultado['message']
+    assert len(enviados) == 1
+    assert enviados[0][0] == cuenta
+    assert len(enviados[0][1]) == 6
+    assert enviados[0][1].isdigit()
+
+
+def test_firma_otp_fuera_de_feria_conserva_destino_institucional(feria, monkeypatch):
+    monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'false')
+    perfil = {'correo': 'alumno@correo.uss.cl', 'correo_cuenta': 'personal@gmail.com'}
+    assert svc._correo_para_confirmar(perfil) == 'alumno@correo.uss.cl'
+    monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'true')
+    assert svc._correo_para_confirmar(perfil) == 'personal@gmail.com'
