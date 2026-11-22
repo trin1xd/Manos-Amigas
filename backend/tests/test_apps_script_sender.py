@@ -18,11 +18,12 @@ class Respuesta:
     status = 200
     url = "https://script.googleusercontent.com/macros/echo?x=prueba"
 
-    def __init__(self, ok=True):
+    def __init__(self, ok=True, motivo=None):
         self.ok = ok
+        self.motivo = motivo
 
     def read(self, *_):
-        return json.dumps({"ok": self.ok}).encode("utf-8")
+        return json.dumps({"ok": self.ok, "motivo": self.motivo}).encode("utf-8")
 
     def __enter__(self):
         return self
@@ -122,3 +123,29 @@ def test_error_de_conexion_seguro(configuracion):
     with pytest.raises(sender.AppsScriptDeliveryError) as error:
         sender.enviar("persona@gmail.com", "asunto", "mensaje")
     assert error.value.motivo == "fallo_conexion"
+
+
+@pytest.mark.parametrize("motivo,esperado", [
+    ("firma_invalida", "firma_invalida"),
+    ("cuota_agotada", "cuota_agotada"),
+    ("error_gmail", "error_gmail"),
+    ("clave_ausente", "clave_script_ausente"),
+    ("error_interno", "error_interno"),
+    ("desconocido", "solicitud_rechazada"),
+])
+def test_diagnostico_apps_script_sin_secreto(configuracion, motivo, esperado):
+    configuracion.setattr(sender, "urlopen",
+                          lambda *args, **kwargs: Respuesta(ok=False, motivo=motivo))
+    with pytest.raises(sender.AppsScriptDeliveryError) as error:
+        sender.enviar("persona@correo.uss.cl", "asunto", "mensaje privado")
+    assert error.value.motivo == esperado
+    assert "persona@correo.uss.cl" not in str(error.value)
+    assert "mensaje privado" not in str(error.value)
+
+
+def test_respuesta_malformada_no_rompe_diagnostico(configuracion):
+    configuracion.setattr(sender, "urlopen",
+                          lambda *args, **kwargs: Respuesta(ok=False, motivo={"inesperado": True}))
+    with pytest.raises(sender.AppsScriptDeliveryError) as error:
+        sender.enviar("persona@gmail.com", "asunto", "mensaje")
+    assert error.value.motivo == "solicitud_rechazada"
