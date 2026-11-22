@@ -30,7 +30,9 @@ def test_feria_acepta_correos_personales_reales_sin_uss(feria):
     assert not svc._permitido("prueba@example.com")
 
 
-def test_codigo_correcto_habilita_sin_intervencion_administradora(feria, monkeypatch):
+def test_codigo_correcto_se_conserva_fuera_de_feria(feria, monkeypatch):
+    # OTP conservado para otra versión; hoy no está activo en la feria.
+    monkeypatch.setattr(svc, 'feria_activa', lambda: False)
     token = "012345"
     hash_correcto = svc._hash_codigo(ALUMNO["id"], token)
     recibido = []
@@ -44,13 +46,14 @@ def test_codigo_correcto_habilita_sin_intervencion_administradora(feria, monkeyp
         recibido.append((user_id, habilitar)) or True))
     monkeypatch.setattr(svc.repo, "auditar", lambda cur, uid, actor, evt: eventos.append(evt))
     out = svc.confirmar_codigo(ALUMNO, {"codigo": token})
-    assert out == {"correo_confirmado": True, "estado_verificacion": "VERIFICADO"}
-    assert recibido == [(ALUMNO["id"], True)]
+    assert out == {"correo_confirmado": True, "estado_verificacion": "PENDIENTE_VERIFICACION"}
+    assert recibido == [(ALUMNO["id"], False)]
     assert eventos == ["CORREO_CONFIRMADO"]
     assert feria.commits == 1
 
 
 def test_codigo_ajeno_o_incorrecto_no_habilita(feria, monkeypatch):
+    monkeypatch.setattr(svc, 'feria_activa', lambda: False)
     hash_correcto = svc._hash_codigo(ALUMNO["id"], "123456")
     llamados = []
     monkeypatch.setattr(svc.repo, "perfil", lambda *args, **kw: {
@@ -100,11 +103,12 @@ def test_repo_actualiza_correo_y_estado_juntos():
     assert "codigo_hash=NULL" in cur.queries[1][0]
 
 
-def test_solo_correo_real_del_usuario_recibe_codigo(feria, monkeypatch):
+def test_codigo_institucional_del_futuro_tiene_destinatario_real(feria, monkeypatch):
+    monkeypatch.setattr(svc, 'feria_activa', lambda: False)
     enviados = []
     cuenta = 'estudiante.real@correo.uss.cl'
     perfil = {
-        'correo': 'feria-registro-prueba@demo.invalid',
+        'correo': cuenta,
         'correo_cuenta': cuenta,
         'estado': 'PENDIENTE_VERIFICACION',
         'verificado': False,
@@ -157,7 +161,8 @@ def test_reposicion_historica_solo_para_codigo_invalidado():
     assert params == (12, fecha)
 
 
-def test_feria_permite_un_reintento_tras_rechazos_antiguos(feria, monkeypatch):
+def test_codigo_futuro_respeta_limite_ante_fallos_antiguos(feria, monkeypatch):
+    monkeypatch.setattr(svc, 'feria_activa', lambda: False)
     # El módulo de servicio se importa sin DB_ENGINE en algunos tests;
     # para esta prueba usar explícitamente el repositorio PostgreSQL.
     monkeypatch.setattr(svc, 'repo', db_repo)
@@ -188,12 +193,13 @@ def test_feria_permite_un_reintento_tras_rechazos_antiguos(feria, monkeypatch):
     monkeypatch.setattr(svc, '_mandar_codigo', falla_google)
     with pytest.raises(ServiceError) as error:
         svc.solicitar_codigo(ALUMNO)
-    assert error.value.status == 503
-    assert eventos == ['recuperado', ('codigo', 5), 'reembolsado']
-    assert feria.commits == 2
+    assert error.value.status == 429
+    assert eventos == []
+    assert feria.commits == 0
 
 
-def test_feria_no_supera_cinco_si_el_ultimo_codigo_sigue_activo(feria, monkeypatch):
+def test_fuera_de_feria_no_supera_cinco_si_codigo_sigue_activo(feria, monkeypatch):
+    monkeypatch.setattr(svc, 'feria_activa', lambda: False)
     monkeypatch.setattr(svc, 'repo', db_repo)
     hoy = svc._utc().date()
     previo = {
