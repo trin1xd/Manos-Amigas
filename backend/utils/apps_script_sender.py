@@ -10,8 +10,27 @@ import json
 import os
 import re
 import time
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
+
+
+class AppsScriptDeliveryError(RuntimeError):
+    """Diagnóstico controlado: ningún motivo incluye correo, clave ni código."""
+    def __init__(self, motivo):
+        self.motivo = motivo
+        super().__init__(motivo)
+
+
+def _motivo_http(status):
+    if status in (401, 403):
+        return "acceso_denegado"
+    if status == 404:
+        return "url_no_encontrada"
+    if status == 405:
+        return "metodo_no_permitido"
+    return "error_http"
+
 
 
 def configurado():
@@ -21,14 +40,14 @@ def configurado():
 
 def enviar(destino, asunto, contenido):
     if not configurado():
-        raise RuntimeError("Apps Script no está configurado.")
+        raise AppsScriptDeliveryError("configuracion_incompleta")
     url = os.environ["MAIL_APPS_SCRIPT_URL"].strip()
     parsed = urlparse(url)
     if (parsed.scheme != "https"
             or parsed.hostname != "script.google.com"
             or not re.fullmatch(r"/macros/s/[A-Za-z0-9_-]+/exec", parsed.path)
             or parsed.query or parsed.fragment):
-        raise RuntimeError("MAIL_APPS_SCRIPT_URL debe ser el enlace /exec oficial de Google Apps Script.")
+        raise AppsScriptDeliveryError("url_invalida")
 
     # La firma cubre cada campo, incluyendo el código del mensaje, y caduca
     # a los dos minutos. Google verifica la misma firma antes de enviar.
@@ -50,13 +69,21 @@ def enviar(destino, asunto, contenido):
                            "Accept": "application/json"}, method="POST")
     # Apps Script redirige la respuesta JSON a script.googleusercontent.com.
     # urllib sigue esa redirección; comprobar que Google respondió ok:true.
-    with urlopen(req, timeout=25) as respuesta:
-        if respuesta.status != 200:
-            raise RuntimeError("Google Apps Script no aceptó la solicitud.")
-        final_url = urlparse(respuesta.url)
-        if final_url.scheme != "https" or final_url.hostname not in (
-                "script.google.com", "script.googleusercontent.com"):
-            raise RuntimeError("Respuesta recibida desde un dominio inesperado.")
-        resultado = json.loads(respuesta.read(8192))
-        if resultado.get("ok") is not True:
-            raise RuntimeError("Google Apps Script rechazó el envío.")
+    try:
+        with urlopen(req, timeout=25) as respuesta:
+            if respuesta.status != 200:
+                raise AppsScriptDeliveryError(_motivo_http(respuesta.status))
+            final_url = urlparse(respuesta.url)
+            if final_url.scheme != "https" or final_url.hostname not in (
+                    "script.google.com", "script.googleusercontent.com"):
+                raise AppsScriptDeliveryError("origen_inesperado")
+            try:
+                resultado = json.loads(respuesta.read(8192))
+            except (ValueError, UnicodeDecodeError):
+                raise AppsScriptDeliveryError("respuesta_no_json") from None
+            if not isinstance(resultado, dict) or resultado.get("ok") is not True:
+                raise AppsScriptDeliveryError("solicitud_rechazada")
+    except HTTPError as error:
+        raise AppsScriptDeliveryError(_motivo_http(error.code)) from None
+    except (URLError, TimeoutError, OSError):
+        raise AppsScriptDeliveryError("fallo_conexion") from None
