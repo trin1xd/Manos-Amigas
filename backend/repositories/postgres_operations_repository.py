@@ -192,6 +192,21 @@ def estudiante_verificado(cursor, student_id):
     return _one(cursor)
 
 
+def estudiante_pendiente_feria(cursor, student_id):
+    """En la feria admite acceso temporal solo a estudiantes activos pendientes."""
+    cursor.execute('''
+        SELECT u.id_usuario AS id
+        FROM public."PerfilUniversitario" p
+        JOIN public."Usuarios" u ON u.id_usuario=p.id_usuario
+        JOIN public."Roles" r ON r.id_rol=u.id_rol
+        WHERE p.id_usuario=%s AND u.estado='ACTIVO'
+          AND r.nombre='UNIVERSITARIO'
+          AND p.estado_verificacion='PENDIENTE_VERIFICACION'
+        LIMIT 1
+    ''', (student_id,))
+    return _one(cursor)
+
+
 def postulacion_existente(cursor, solicitud_id, student_id):
     cursor.execute('''
         SELECT id_postulacion AS id FROM public."Postulaciones"
@@ -253,6 +268,21 @@ def postulacion_aceptable(cursor, solicitud_id, post_id):
         JOIN public."Roles" rol ON rol.id_rol = cuenta.id_rol
         WHERE p.id_solicitud = %s AND p.id_postulacion = %s
           AND u.estado_verificacion = 'VERIFICADO'
+          AND cuenta.estado = 'ACTIVO' AND rol.nombre = 'UNIVERSITARIO'
+    ''', (solicitud_id, post_id))
+    return _one(cursor)
+
+
+def postulacion_aceptable_feria(cursor, solicitud_id, post_id):
+    """Permite aceptar cuentas pendientes en la demo; no las verifica."""
+    cursor.execute('''
+        SELECT p.id_postulacion AS id, p.estado
+        FROM public."Postulaciones" p
+        JOIN public."PerfilUniversitario" u ON u.id_usuario = p.id_universitario
+        JOIN public."Usuarios" cuenta ON cuenta.id_usuario = p.id_universitario
+        JOIN public."Roles" rol ON rol.id_rol = cuenta.id_rol
+        WHERE p.id_solicitud = %s AND p.id_postulacion = %s
+          AND u.estado_verificacion IN ('VERIFICADO', 'PENDIENTE_VERIFICACION')
           AND cuenta.estado = 'ACTIVO' AND rol.nombre = 'UNIVERSITARIO'
     ''', (solicitud_id, post_id))
     return _one(cursor)

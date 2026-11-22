@@ -80,6 +80,7 @@ def test_registro_publico_universitario_espera_codigo(contexto, monkeypatch):
     response = client.post('/api/auth/register/universitario', json=datos)
     assert response.status_code == 201, response.get_json()
     assert response.get_json()['user']['estado_verificacion'] == 'PENDIENTE_VERIFICACION'
+    assert response.get_json()['user']['acceso_feria'] is True
     assert db.profiles[0]['correo_institucional'].startswith('feria-registro-')
     assert db.profiles[0]['correo_institucional'].endswith('@demo.invalid')
     assert db.users[0]['email'] == 'universitaria@gmail.com'
@@ -153,3 +154,58 @@ def test_correo_uss_ocupado_por_prueba_no_impide_nuevo_registro(contexto, monkey
     assert db.profiles[0]['correo_institucional'] == correo_uss
     assert db.profiles[1]['correo_institucional'].endswith('@demo.invalid')
     assert db.profiles[1]['estado_verificacion'] == 'PENDIENTE_VERIFICACION'
+
+
+def test_feria_acceso_universitario_pendiente_sin_confirmacion(contexto, monkeypatch):
+    from services import operations_service as ops
+    monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'true')
+    assert auth_service._acceso_feria('PENDIENTE_VERIFICACION')
+    assert ops._perfil_utilizable({'estado_verificacion': 'PENDIENTE_VERIFICACION'})
+    assert auth_service._acceso_feria('VERIFICADO')
+    for estado in ('RECHAZADO', 'SUSPENDIDO', None):
+        assert not auth_service._acceso_feria(estado)
+        assert not ops._perfil_utilizable({'estado_verificacion': estado})
+    monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'false')
+    assert not auth_service._acceso_feria('PENDIENTE_VERIFICACION')
+    assert not ops._perfil_utilizable({'estado_verificacion': 'PENDIENTE_VERIFICACION'})
+
+
+def test_feria_codigo_clausurado_sin_acceso_a_bd_ni_mail(contexto, monkeypatch):
+    from services import verificacion_institucional_service as verification
+    from services.auth_service import ServiceError
+    monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'true')
+    monkeypatch.setattr(verification, 'get_connection',
+                        lambda: pytest.fail('No debe consultar la base para enviar códigos'))
+    monkeypatch.setattr(verification, '_smtp_lista',
+                        lambda: pytest.fail('No debe consultar proveedores de correo'))
+    usuario = {'id': 21, 'rol': 'UNIVERSITARIO'}
+    for llamar in (
+        lambda: verification.solicitar_codigo(usuario),
+        lambda: verification.confirmar_codigo(usuario, {'codigo': '123456'}),
+    ):
+        with pytest.raises(ServiceError) as ex:
+            llamar()
+        assert ex.value.status == 410
+        assert 'pausada' in ex.value.message
+
+
+def test_operaciones_feria_exigen_estudiante_activo_y_pendiente(contexto, monkeypatch):
+    from services import operations_service as ops
+    monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'true')
+    estados = []
+    class RepoFalso:
+        def estudiante_pendiente_feria(self, _cursor, uid):
+            estados.append(uid)
+            return {'id': uid}
+        def estudiante_verificado(self, _cursor, uid):
+            return {'id': uid}
+    monkeypatch.setattr(ops, 'repo', RepoFalso())
+    assert ops._estudiante_habilitado(None, {
+        'id': 21, 'estado_verificacion': 'PENDIENTE_VERIFICACION'})
+    assert estados == [21]
+    for estado in ('RECHAZADO', 'SUSPENDIDO'):
+        assert not ops._estudiante_habilitado(None, {
+            'id': 21, 'estado_verificacion': estado})
+    monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'false')
+    assert not ops._estudiante_habilitado(None, {
+        'id': 21, 'estado_verificacion': 'PENDIENTE_VERIFICACION'})
