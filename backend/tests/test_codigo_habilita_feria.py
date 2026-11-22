@@ -175,7 +175,7 @@ def test_codigo_futuro_respeta_limite_ante_fallos_antiguos(feria, monkeypatch):
     monkeypatch.setattr(svc, '_smtp_lista', lambda: True)
     monkeypatch.setattr(svc.repo, 'perfil', lambda *a, **kw: {
         'correo_cuenta': 'persona@correo.uss.cl',
-        'correo': 'feria-registro@demo.invalid',
+        'correo': 'persona@correo.uss.cl',
         'estado': 'PENDIENTE_VERIFICACION',
         'verificado': False,
     })
@@ -210,7 +210,7 @@ def test_fuera_de_feria_no_supera_cinco_si_codigo_sigue_activo(feria, monkeypatc
     monkeypatch.setattr(svc, '_smtp_lista', lambda: True)
     monkeypatch.setattr(svc.repo, 'perfil', lambda *a, **kw: {
         'correo_cuenta': 'persona@correo.uss.cl',
-        'correo': 'feria-registro@demo.invalid',
+        'correo': 'persona@correo.uss.cl',
         'estado': 'PENDIENTE_VERIFICACION',
         'verificado': False,
     })
