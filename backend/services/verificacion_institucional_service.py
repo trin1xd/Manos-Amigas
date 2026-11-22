@@ -121,6 +121,10 @@ def estado(usuario):
 
 
 def solicitar_codigo(usuario):
+    if feria_activa():
+        raise ServiceError(
+            'La verificación por correo está pausada en esta demostración. '
+            'Puedes usar las tareas sin código.', 410)
     if not _smtp_lista():
         raise ServiceError('El envío de correos no está configurado. Contacta a soporte.', 503)
     uid = usuario['id']
@@ -207,6 +211,10 @@ def solicitar_codigo(usuario):
 
 
 def confirmar_codigo(usuario, payload):
+    if feria_activa():
+        raise ServiceError(
+            'La verificación por correo está pausada en esta demostración. '
+            'Puedes usar las tareas sin código.', 410)
     if not isinstance(payload, dict) or set(payload) != {'codigo'} or not isinstance(payload['codigo'], str) or not re.fullmatch(r'\d{6}', payload['codigo']):
         raise ServiceError('Ingresa exactamente los seis dígitos del código.', 400)
     uid = usuario['id']
