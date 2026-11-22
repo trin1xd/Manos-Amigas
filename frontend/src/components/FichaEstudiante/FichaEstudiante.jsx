@@ -19,9 +19,14 @@ function textoAnio(anio) {
   return numero > 0 ? `${numero}.º año` : null;
 }
 
-function textoCalificacion(valor) {
-  const numero = Number(valor);
-  return valor != null && numero > 0 ? `★ ${numero.toFixed(1)} / 5` : '★ Sin calificaciones aún';
+function textoCalificacion(valor, cantidad) {
+  const promedio = Number(valor);
+  const total = Number(cantidad);
+  if (valor == null || !Number.isFinite(promedio) || promedio < 1 || promedio > 5 ||
+      !Number.isInteger(total) || total < 1) {
+    return '★ Sin calificaciones aún';
+  }
+  return `★ ${promedio.toFixed(1).replace('.', ',')} / 5 · ${total} ${total === 1 ? 'calificación' : 'calificaciones'}`;
 }
 
 /**
@@ -45,7 +50,7 @@ export default function FichaEstudiante({ postulacion }) {
       </p>
       <div className={styles.etiquetas}>
         {verificacion && <span className={`${styles.etiqueta} ${verificacion.clase}`}>{verificacion.texto}</span>}
-        <span className={styles.etiqueta}>{textoCalificacion(postulacion.estudiante_calificacion_promedio)}</span>
+        <span className={styles.etiqueta}>{textoCalificacion(postulacion.estudiante_calificacion_promedio, postulacion.estudiante_calificaciones_total)}</span>
         <span className={styles.etiqueta}>{ESTADO_POSTULACION[postulacion.estado] || postulacion.estado}</span>
       </div>
     </div>
@@ -55,7 +60,7 @@ export default function FichaEstudiante({ postulacion }) {
 export function NotaFichaEstudiante() {
   return (
     <p className={styles.nota}>
-      La verificación es una habilitación de prueba: todavía no se validan documentos ni identidades reales. La foto del estudiante y el promedio de calificaciones estarán disponibles en una próxima etapa.
+      Las estrellas muestran el promedio real de las calificaciones recibidas por servicios finalizados. Sin evaluaciones, no se asigna una nota. La foto estará disponible en una próxima etapa. Las cuentas de demostración no acreditan identidad ni matrícula.
     </p>
   );
 }
