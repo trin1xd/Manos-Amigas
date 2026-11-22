@@ -96,6 +96,16 @@ def _mandar_codigo(correo, codigo):
         server.send_message(mensaje)
 
 
+def _correo_para_confirmar(perfil):
+    """En feria confirmar el correo de acceso real, no el campo histórico USS.
+
+    Fuera de feria conserva el envío exclusivamente institucional.
+    """
+    if feria_activa():
+        return perfil.get('correo_cuenta') or perfil['correo']
+    return perfil['correo']
+
+
 def estado(usuario):
     conn = get_connection()
     try:
@@ -103,8 +113,9 @@ def estado(usuario):
         perfil = repo.perfil(cur, usuario['id'])
         if not perfil:
             raise ServiceError('Perfil universitario no disponible.', 404)
-        return {'correo_institucional': perfil['correo'], 'correo_confirmado': perfil['verificado'],
-                'estado_verificacion': perfil['estado'], 'dominio_admitido': _permitido(perfil['correo'])}
+        destino = _correo_para_confirmar(perfil)
+        return {'correo_institucional': destino, 'correo_confirmado': perfil['verificado'],
+                'estado_verificacion': perfil['estado'], 'dominio_admitido': _permitido(destino)}
     finally:
         conn.close()
 
@@ -126,7 +137,8 @@ def solicitar_codigo(usuario):
             raise ServiceError('La revisión de la cuenta ya tiene un estado definitivo.', 409)
         if perfil['verificado']:
             raise ServiceError('Este correo ya está confirmado.', 409)
-        if not _permitido(perfil['correo']):
+        destino = _correo_para_confirmar(perfil)
+        if not _permitido(destino):
             raise ServiceError('Necesitas un correo válido al que tengas acceso para recibir el código.', 403)
         actual = repo.codigo(cur, uid, lock=True)
         if actual and actual['ultimo'] and actual['ultimo'] > ahora - timedelta(seconds=MIN_ENVIOS_SEGUNDOS):
@@ -137,7 +149,6 @@ def solicitar_codigo(usuario):
         repo.emitir_codigo(cur, uid, digest, ahora + timedelta(minutes=MINUTOS_VIGENCIA), ahora.date(), conteo)
         repo.auditar(cur, uid, uid, 'CODIGO_SOLICITADO')
         conn.commit()
-        destino = perfil['correo']
     except Exception:
         conn.rollback()
         raise
