@@ -230,10 +230,19 @@ def postulaciones_solicitud(cursor, solicitud_id):
                pu.universidad AS estudiante_universidad,
                pu.carrera AS estudiante_carrera,
                pu.anio_cursa AS estudiante_anio,
-               pu.estado_verificacion AS estudiante_verificacion
+               pu.estado_verificacion AS estudiante_verificacion,
+               notas.promedio AS estudiante_calificacion_promedio,
+               notas.total AS estudiante_calificaciones_total
         FROM dbo.Postulaciones p
         JOIN dbo.Usuarios u ON u.id_usuario = p.id_universitario
         LEFT JOIN dbo.PerfilUniversitario pu ON pu.id_usuario = p.id_universitario
+        OUTER APPLY (
+            SELECT CAST(ROUND(AVG(CAST(c.puntaje AS float)), 1) AS float) AS promedio,
+                   COUNT(*) AS total
+            FROM dbo.Calificaciones c
+            WHERE c.id_evaluado = p.id_universitario
+              AND c.tipo = 'ADULTO_A_UNIVERSITARIO'
+        ) notas
         WHERE p.id_solicitud = ?
         ORDER BY p.fecha_creacion, p.id_postulacion
     ''', (solicitud_id,))
