@@ -71,7 +71,13 @@ function doPost(e) {
     const mensajeFirmado = fecha + '\n' + destino + '\n' + asunto + '\n' + cuerpo;
     const bytes = Utilities.computeHmacSha256Signature(mensajeFirmado, clave);
     const esperado = bytes.map(b => (b & 255).toString(16).padStart(2, '0')).join('');
-    if (!mismoTextoSeguro_(esperado, firma)) return respuesta_(false, 'firma_invalida');
+    if (!mismoTextoSeguro_(esperado, firma)) {
+      // Huella idéntica: mismo secreto, pero se firmaron textos diferentes.
+      // Con clientes anteriores que no envían huella, dejar motivo genérico.
+      return respuesta_(false,
+        typeof huellaRecibida === 'string' && huellaRecibida === huellaClave_(clave)
+          ? 'firma_no_coincide' : 'firma_invalida');
+    }
 
     // Bloqueo básico de un reenvío accidental de la misma solicitud.
     const cache = CacheService.getScriptCache();
