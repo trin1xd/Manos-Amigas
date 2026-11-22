@@ -177,6 +177,14 @@ def solicitar_codigo(usuario):
             'fallo_conexion': 'Render no logró conectarse con Google Apps Script. Revisa el enlace /exec.',
             'origen_inesperado': 'Google redirigió el envío fuera de los dominios esperados.',
             'error_http': 'Google respondió con un error al intentar enviar el código.',
+            'clave_script_ausente': 'La clave interna no está guardada en las propiedades de Google Apps Script.',
+            'solicitud_invalida': 'Apps Script rechazó los datos recibidos. Revisa que el código publicado esté actualizado.',
+            'hora_desincronizada': 'Los relojes de Render y Google no coinciden. Intenta nuevamente.',
+            'firma_invalida': 'La clave de Render no coincide con la guardada en Google Apps Script. Revisa MANOS_AMIGAS_SECRET en Propiedades del proyecto.',
+            'solicitud_duplicada': 'Apps Script detectó una solicitud repetida. Solicita un código nuevo.',
+            'cuota_agotada': 'La cuenta de Gmail alcanzó su límite diario de envíos desde Apps Script.',
+            'error_gmail': 'Google recibió el pedido, pero Gmail no pudo enviar el correo. Revisa los permisos de MailApp en Apps Script.',
+            'error_interno': 'Google Apps Script tuvo un error interno. Revisa Ejecuciones en el proyecto de Apps Script.',
         }
         if isinstance(error, apps_script_sender.AppsScriptDeliveryError):
             raise ServiceError(mensajes_google.get(error.motivo, 'No fue posible enviar el código.'), 503) from None
