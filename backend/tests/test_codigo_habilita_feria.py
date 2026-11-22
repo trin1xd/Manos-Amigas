@@ -158,6 +158,9 @@ def test_reposicion_historica_solo_para_codigo_invalidado():
 
 
 def test_feria_permite_un_reintento_tras_rechazos_antiguos(feria, monkeypatch):
+    # El módulo de servicio se importa sin DB_ENGINE en algunos tests;
+    # para esta prueba usar explícitamente el repositorio PostgreSQL.
+    monkeypatch.setattr(svc, 'repo', db_repo)
     hoy = svc._utc().date()
     previo = {
         'ultimo': svc._utc()-timedelta(seconds=120),
@@ -191,6 +194,7 @@ def test_feria_permite_un_reintento_tras_rechazos_antiguos(feria, monkeypatch):
 
 
 def test_feria_no_supera_cinco_si_el_ultimo_codigo_sigue_activo(feria, monkeypatch):
+    monkeypatch.setattr(svc, 'repo', db_repo)
     hoy = svc._utc().date()
     previo = {
         'ultimo': svc._utc()-timedelta(seconds=120),
