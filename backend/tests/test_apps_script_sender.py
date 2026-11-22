@@ -3,6 +3,7 @@ import hashlib
 import hmac
 import json
 from pathlib import Path
+from urllib.error import HTTPError, URLError
 import sys
 
 import pytest
@@ -76,16 +77,18 @@ def test_correo_firmado_y_compatible_con_gmail(configuracion):
 
 def test_error_de_google_no_se_considera_correo_enviado(configuracion):
     configuracion.setattr(sender, "urlopen", lambda *a, **kw: Respuesta(ok=False))
-    with pytest.raises(RuntimeError, match="rechazó"):
+    with pytest.raises(sender.AppsScriptDeliveryError) as exc:
         sender.enviar("persona@gmail.com", "Asunto", "Contenido")
+    assert exc.value.motivo == "solicitud_rechazada"
 
 
 def test_rechaza_url_no_oficial(configuracion):
     configuracion.setenv("MAIL_APPS_SCRIPT_URL", "https://sitio-falso.example/recibir")
     configuracion.setattr(sender, "urlopen", lambda *a, **kw:
                           pytest.fail("No enviar datos a dominio ajeno"))
-    with pytest.raises(RuntimeError, match="oficial"):
+    with pytest.raises(sender.AppsScriptDeliveryError) as exc:
         sender.enviar("persona@gmail.com", "Asunto", "Contenido")
+    assert exc.value.motivo == "url_invalida"
 
 
 def test_incompleto_no_se_activa(configuracion):
@@ -94,3 +97,28 @@ def test_incompleto_no_se_activa(configuracion):
     configuracion.setenv("MAIL_APPS_SCRIPT_SECRET", "prueba")
     configuracion.delenv("MAIL_APPS_SCRIPT_URL")
     assert not sender.configurado()
+
+
+@pytest.mark.parametrize("status,motivo", [
+    (403, "acceso_denegado"),
+    (404, "url_no_encontrada"),
+    (405, "metodo_no_permitido"),
+    (500, "error_http"),
+])
+def test_errores_http_sin_filtrar_informacion(configuracion, status, motivo):
+    def google_rechaza(req, timeout):
+        raise HTTPError(req.full_url, status, "Error de prueba", {}, None)
+    configuracion.setattr(sender, "urlopen", google_rechaza)
+    with pytest.raises(sender.AppsScriptDeliveryError) as error:
+        sender.enviar("persona@gmail.com", "asunto", "mensaje")
+    assert error.value.motivo == motivo
+    assert "persona@gmail.com" not in str(error.value)
+
+
+def test_error_de_conexion_seguro(configuracion):
+    def sin_red(*args, **kwargs):
+        raise URLError("Google no responde")
+    configuracion.setattr(sender, "urlopen", sin_red)
+    with pytest.raises(sender.AppsScriptDeliveryError) as error:
+        sender.enviar("persona@gmail.com", "asunto", "mensaje")
+    assert error.value.motivo == "fallo_conexion"
