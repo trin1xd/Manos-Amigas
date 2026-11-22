@@ -17,7 +17,8 @@ const ETIQUETAS_VERIFICACION = {
 };
 
 export default function TareasDisponibles({ usuario, onLogout }) {
-  const verificado = usuario?.estado_verificacion === 'VERIFICADO';
+  const feria = import.meta.env.VITE_MODO_FERIA === 'true';
+  const verificado = usuario?.estado_verificacion === 'VERIFICADO' || (feria && usuario?.acceso_feria === true);
 
   const [tareas, setTareas] = useState([]);
   const [postuladas, setPostuladas] = useState(() => new Set());
@@ -49,7 +50,8 @@ export default function TareasDisponibles({ usuario, onLogout }) {
   }, [onLogout]);
 
   useEffect(() => {
-    // Sin perfil verificado el backend respondería 403: no se llama a la API.
+    // Fuera de feria se exige verificación. En feria el backend autoriza
+    // solo cuentas activas con acceso temporal, sin cambiar el estado real.
     if (verificado) cargar();
   }, [verificado, cargar]);
 
@@ -85,9 +87,9 @@ export default function TareasDisponibles({ usuario, onLogout }) {
       <section className={`${dash.panel} ${dash.vacio}`} aria-labelledby="uni-oportunidades">
         <span className={dash.vacioIcono} aria-hidden="true">🧹</span>
         <h2 id="uni-oportunidades">Tareas disponibles</h2>
-        <p>Primero necesitas un perfil verificado para ver las tareas y postular.</p>
+        <p>Esta cuenta no tiene acceso a las tareas de demostración.</p>
         <span className={`${dash.estado} ${dash.estadoAlerta}`}>● {etiqueta}</span>
-        <p className={dash.aviso}>No se muestran tareas ni datos personales de adultos mayores mientras tu perfil no esté verificado.</p>
+        <p className={dash.aviso}>No se muestran tareas ni datos personales de otras personas sin acceso vigente.</p>
       </section>
     );
   }
