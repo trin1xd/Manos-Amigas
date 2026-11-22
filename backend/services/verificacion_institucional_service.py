@@ -156,8 +156,8 @@ def solicitar_codigo(usuario):
         conn.close()
     try:
         _mandar_codigo(destino, numero)
-    except Exception:
-        # No imprimir código ni correo; invalidar el código si falló su entrega.
+    except Exception as error:
+        # No imprimir código, correo, URL ni clave; invalidar el código fallido.
         rollback = get_connection()
         try:
             repo.invalidar_codigo(rollback.cursor(), uid, digest)
@@ -166,6 +166,20 @@ def solicitar_codigo(usuario):
             rollback.rollback()
         finally:
             rollback.close()
+        mensajes_google = {
+            'configuracion_incompleta': 'Falta configurar el enlace o la clave de Google Apps Script en Render.',
+            'url_invalida': 'La URL de Google Apps Script en Render no es válida. Debe terminar en /exec.',
+            'url_no_encontrada': 'Google no encontró la aplicación web. Revisa la URL /exec en Render.',
+            'acceso_denegado': 'Google Apps Script no permite el acceso. Revisa que la aplicación web esté publicada para Cualquiera.',
+            'metodo_no_permitido': 'Google rechazó la solicitud de envío. Revisa la implementación web de Apps Script.',
+            'solicitud_rechazada': 'Apps Script recibió el pedido pero lo rechazó. Comprueba que la clave sea la de la última ejecución de prepararConexion.',
+            'respuesta_no_json': 'Google devolvió una página en vez de la respuesta de Apps Script. Revisa el enlace /exec y sus permisos.',
+            'fallo_conexion': 'Render no logró conectarse con Google Apps Script. Revisa el enlace /exec.',
+            'origen_inesperado': 'Google redirigió el envío fuera de los dominios esperados.',
+            'error_http': 'Google respondió con un error al intentar enviar el código.',
+        }
+        if isinstance(error, apps_script_sender.AppsScriptDeliveryError):
+            raise ServiceError(mensajes_google.get(error.motivo, 'No fue posible enviar el código.'), 503) from None
         raise ServiceError('No fue posible enviar el código. Revisa la configuración del correo.', 503) from None
     return {'message': 'Código enviado al correo registrado; vence en 15 minutos.'}
 
