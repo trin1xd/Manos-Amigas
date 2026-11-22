@@ -12,9 +12,10 @@ function prepararConexion() {
   console.log('Guarda la clave en Render > backend > Environment. No la compartas.');
 }
 
-function respuesta_(ok) {
+function respuesta_(ok, motivo) {
+  // Solo diagnósticos generales. Nunca incluir direcciones, códigos ni claves.
   return ContentService
-    .createTextOutput(JSON.stringify({ok: ok}))
+    .createTextOutput(JSON.stringify({ok: ok, motivo: ok ? null : (motivo || 'error_interno')}))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -32,7 +33,7 @@ function doPost(e) {
   try {
     const datos = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     const clave = PropertiesService.getScriptProperties().getProperty('MANOS_AMIGAS_SECRET');
-    if (!clave) return respuesta_(false);
+    if (!clave) return respuesta_(false, 'clave_ausente');
 
     const fecha = datos.timestamp;
     const destino = datos.to;
@@ -40,37 +41,43 @@ function doPost(e) {
     const cuerpo = datos.body;
     const firma = datos.signature;
     if (!Number.isSafeInteger(fecha) ||
-        Math.abs(Date.now() - fecha * 1000) > 120000 ||
         typeof destino !== 'string' || destino.length > 255 ||
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(destino) ||
         typeof asunto !== 'string' || !asunto ||
         asunto.length > 150 || /[\r\n]/.test(asunto) ||
         typeof cuerpo !== 'string' || !cuerpo || cuerpo.length > 3000 ||
         typeof firma !== 'string' || !/^[0-9a-f]{64}$/.test(firma)) {
-      return respuesta_(false);
+      return respuesta_(false, 'solicitud_invalida');
+    }
+    if (Math.abs(Date.now() - fecha * 1000) > 120000) {
+      return respuesta_(false, 'hora_desincronizada');
     }
 
     const mensajeFirmado = fecha + '\n' + destino + '\n' + asunto + '\n' + cuerpo;
     const bytes = Utilities.computeHmacSha256Signature(mensajeFirmado, clave);
     const esperado = bytes.map(b => (b & 255).toString(16).padStart(2, '0')).join('');
-    if (!mismoTextoSeguro_(esperado, firma)) return respuesta_(false);
+    if (!mismoTextoSeguro_(esperado, firma)) return respuesta_(false, 'firma_invalida');
 
     // Bloqueo básico de un reenvío accidental de la misma solicitud.
     const cache = CacheService.getScriptCache();
     const llave = 'correo-' + firma;
-    if (cache.get(llave)) return respuesta_(false);
-    if (MailApp.getRemainingDailyQuota() < 1) return respuesta_(false);
+    if (cache.get(llave)) return respuesta_(false, 'solicitud_duplicada');
+    if (MailApp.getRemainingDailyQuota() < 1) return respuesta_(false, 'cuota_agotada');
 
-    MailApp.sendEmail({
-      to: destino,
-      subject: asunto,
-      body: cuerpo,
-      name: 'Manos Amigas'
-    });
+    try {
+      MailApp.sendEmail({
+        to: destino,
+        subject: asunto,
+        body: cuerpo,
+        name: 'Manos Amigas'
+      });
+    } catch (errorCorreo) {
+      return respuesta_(false, 'error_gmail');
+    }
     cache.put(llave, 'enviado', 180);
     return respuesta_(true);
   } catch (error) {
     // No mostrar el código, la clave ni datos personales en respuestas o logs.
-    return respuesta_(false);
+    return respuesta_(false, 'error_interno');
   }
 }
