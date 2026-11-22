@@ -154,10 +154,11 @@ def register_user(role, data, *, cuenta_demo=False):
     if role == UNIVERSITARIO and feria_activa():
         data = dict(data)
         if cuenta_demo:
-            # Solo el ingreso ficticio de un clic queda habilitado al instante.
+            # La cuenta ficticia sigue con el estado técnico usado por la demo.
             data['correo_institucional'] = f"feria-{secrets.token_hex(12)}@demo.invalid"
         else:
-            # En feria, el correo REAL para confirmar es Usuarios.email.
+            # En feria, el correo de acceso real queda en Usuarios.email.
+            # La confirmación de correo se ha pospuesto para una versión futura.
             # El campo institucional heredado mantiene una referencia interna
             # única para no impedir que una persona legítima se registre si
             # un perfil anterior reservó su correo USS durante las pruebas.
@@ -237,7 +238,13 @@ def register_user(role, data, *, cuenta_demo=False):
     user = {"id": id_usuario, "nombre": d["nombre_completo"], "rol": role}
     if role == UNIVERSITARIO:
         user["estado_verificacion"] = "VERIFICADO" if feria_activa() and cuenta_demo else "PENDIENTE_VERIFICACION"
+        user["acceso_feria"] = _acceso_feria(user["estado_verificacion"])
     return user
+
+
+def _acceso_feria(estado):
+    """Acceso temporal a la demo: no confirma identidad ni correo."""
+    return feria_activa() and estado in ('PENDIENTE_VERIFICACION', 'VERIFICADO')
 
 
 def login(email, password):
@@ -267,6 +274,7 @@ def login(email, password):
     }
     if found["rol"] == UNIVERSITARIO:
         user["estado_verificacion"] = found["estado_verificacion"]
+        user["acceso_feria"] = _acceso_feria(found["estado_verificacion"])
     user['_password_version'] = found.get('password_version', 0)
     return user
 
@@ -299,6 +307,7 @@ def get_user_by_id(user_id):
     }
     if found["rol"] == UNIVERSITARIO:
         user["estado_verificacion"] = found["estado_verificacion"]
+        user["acceso_feria"] = _acceso_feria(found["estado_verificacion"])
     user['_password_version'] = found.get('password_version', 0)
     return user
 
