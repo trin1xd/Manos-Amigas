@@ -29,6 +29,13 @@ function mismoTextoSeguro_(a, b) {
   return diferencia === 0;
 }
 
+function huellaClave_(clave) {
+  // Solo para detectar discrepancias; NO se devuelve la clave ni la huella.
+  const bytes = Utilities.computeDigest(
+    Utilities.DigestAlgorithm.SHA_256, clave, Utilities.Charset.UTF_8);
+  return bytes.map(b => (b & 255).toString(16).padStart(2, '0')).join('').slice(0, 16);
+}
+
 function doPost(e) {
   try {
     const datos = JSON.parse((e && e.postData && e.postData.contents) || '{}');
@@ -40,6 +47,7 @@ function doPost(e) {
     const asunto = datos.subject;
     const cuerpo = datos.body;
     const firma = datos.signature;
+    const huellaRecibida = datos.key_fingerprint;
     if (!Number.isSafeInteger(fecha) ||
         typeof destino !== 'string' || destino.length > 255 ||
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(destino) ||
@@ -53,10 +61,24 @@ function doPost(e) {
       return respuesta_(false, 'hora_desincronizada');
     }
 
+    // Comparar identificadores no reversibles antes de HMAC. Si difieren
+    // sabemos que las dos configuraciones son distintas. Nunca exponerlos.
+    if (typeof huellaRecibida === 'string' && /^[0-9a-f]{16}$/.test(huellaRecibida) &&
+        huellaRecibida !== huellaClave_(clave)) {
+      return respuesta_(false, 'clave_distinta');
+    }
+
     const mensajeFirmado = fecha + '\n' + destino + '\n' + asunto + '\n' + cuerpo;
-    const bytes = Utilities.computeHmacSha256Signature(mensajeFirmado, clave);
+    const bytes = Utilities.computeHmacSha256Signature(
+      mensajeFirmado, clave, Utilities.Charset.UTF_8);
     const esperado = bytes.map(b => (b & 255).toString(16).padStart(2, '0')).join('');
-    if (!mismoTextoSeguro_(esperado, firma)) return respuesta_(false, 'firma_invalida');
+    if (!mismoTextoSeguro_(esperado, firma)) {
+      // Huella idéntica: mismo secreto, pero se firmaron textos diferentes.
+      // Con clientes anteriores que no envían huella, dejar motivo genérico.
+      return respuesta_(false,
+        typeof huellaRecibida === 'string' && huellaRecibida === huellaClave_(clave)
+          ? 'firma_no_coincide' : 'firma_invalida');
+    }
 
     // Bloqueo básico de un reenvío accidental de la misma solicitud.
     const cache = CacheService.getScriptCache();

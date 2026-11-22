@@ -58,6 +58,8 @@ def test_correo_firmado_y_compatible_con_gmail(configuracion):
             hashlib.sha256
         ).hexdigest()
         assert hmac.compare_digest(firma, datos["signature"])
+        assert datos["key_fingerprint"] == hashlib.sha256(
+            b"clave-ficticia-segura-prueba").hexdigest()[:16]
         envios.append(datos)
         return Respuesta()
 
@@ -127,6 +129,8 @@ def test_error_de_conexion_seguro(configuracion):
 
 @pytest.mark.parametrize("motivo,esperado", [
     ("firma_invalida", "firma_invalida"),
+    ("clave_distinta", "clave_distinta"),
+    ("firma_no_coincide", "firma_no_coincide"),
     ("cuota_agotada", "cuota_agotada"),
     ("error_gmail", "error_gmail"),
     ("clave_ausente", "clave_script_ausente"),

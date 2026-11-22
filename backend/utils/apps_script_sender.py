@@ -53,16 +53,22 @@ def enviar(destino, asunto, contenido):
     # a los dos minutos. Google verifica la misma firma antes de enviar.
     timestamp = int(time.time())
     firmado = f"{timestamp}\n{destino}\n{asunto}\n{contenido}"
-    firma = hmac.new(
-        os.environ["MAIL_APPS_SCRIPT_SECRET"].encode("utf-8"),
-        firmado.encode("utf-8"), hashlib.sha256
-    ).hexdigest()
+    # El secreto generado por Apps Script es hexadecimal (sin espacios).
+    # Ignorar espacios accidentales al pegar el valor en Render.
+    clave_bytes = os.environ["MAIL_APPS_SCRIPT_SECRET"].strip().encode("utf-8")
+    firma = hmac.new(clave_bytes, firmado.encode("utf-8"), hashlib.sha256).hexdigest()
+    # Identificador no reversible de una clave aleatoria de 256 bits:
+    # detecta si Render y Google tienen claves distintas, incluso cuando
+    # ambos verificadores de HMAC devuelven "firma_invalida".
+    # Este marcador no reemplaza ni evita la comprobación HMAC.
+    huella_clave = hashlib.sha256(clave_bytes).hexdigest()[:16]
     datos = json.dumps({
         "timestamp": timestamp,
         "to": destino,
         "subject": asunto,
         "body": contenido,
         "signature": firma,
+        "key_fingerprint": huella_clave,
     }, ensure_ascii=False).encode("utf-8")
     req = Request(url, data=datos,
                   headers={"Content-Type": "application/json",
@@ -89,6 +95,8 @@ def enviar(destino, asunto, contenido):
                     "solicitud_invalida": "solicitud_invalida",
                     "hora_desincronizada": "hora_desincronizada",
                     "firma_invalida": "firma_invalida",
+                    "clave_distinta": "clave_distinta",
+                    "firma_no_coincide": "firma_no_coincide",
                     "solicitud_duplicada": "solicitud_duplicada",
                     "cuota_agotada": "cuota_agotada",
                     "error_gmail": "error_gmail",
