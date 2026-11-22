@@ -69,7 +69,8 @@ function doPost(e) {
     }
 
     const mensajeFirmado = fecha + '\n' + destino + '\n' + asunto + '\n' + cuerpo;
-    const bytes = Utilities.computeHmacSha256Signature(mensajeFirmado, clave);
+    const bytes = Utilities.computeHmacSha256Signature(
+      mensajeFirmado, clave, Utilities.Charset.UTF_8);
     const esperado = bytes.map(b => (b & 255).toString(16).padStart(2, '0')).join('');
     if (!mismoTextoSeguro_(esperado, firma)) {
       // Huella idéntica: mismo secreto, pero se firmaron textos diferentes.
