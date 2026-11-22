@@ -133,3 +133,81 @@ def test_firma_otp_fuera_de_feria_conserva_destino_institucional(feria, monkeypa
     assert svc._correo_para_confirmar(perfil) == 'alumno@correo.uss.cl'
     monkeypatch.setenv('FERIA_REGISTRO_LIBRE', 'true')
     assert svc._correo_para_confirmar(perfil) == 'personal@gmail.com'
+
+
+def test_reembolso_correo_fallido_compara_digest_y_no_elimina_limite():
+    cur = Cursor()
+    digest = b'digest-no-real'
+    db_repo.invalidar_codigo(cur, 12, digest)
+    sql, params = cur.queries[-1]
+    assert 'codigo_hash=%s' in sql
+    assert 'envios_dia=GREATEST(envios_dia-1,0)' in sql
+    assert 'ultimo_envio_utc' not in sql
+    assert params == (12, digest)
+
+
+def test_reposicion_historica_solo_para_codigo_invalidado():
+    cur = Cursor()
+    fecha = svc._utc().date()
+    assert db_repo.recuperar_un_intento_fallido_anterior(cur, 12, fecha)
+    sql, params = cur.queries[-1]
+    assert 'codigo_hash IS NULL' in sql
+    assert 'vence_utc IS NULL' in sql
+    assert 'envios_dia=5' in sql
+    assert params == (12, fecha)
+
+
+def test_feria_permite_un_reintento_tras_rechazos_antiguos(feria, monkeypatch):
+    hoy = svc._utc().date()
+    previo = {
+        'ultimo': svc._utc()-timedelta(seconds=120),
+        'dia': hoy, 'envios': 5, 'hash': None, 'vence': None
+    }
+    eventos = []
+    monkeypatch.setattr(svc, '_smtp_lista', lambda: True)
+    monkeypatch.setattr(svc.repo, 'perfil', lambda *a, **kw: {
+        'correo_cuenta': 'persona@correo.uss.cl',
+        'correo': 'feria-registro@demo.invalid',
+        'estado': 'PENDIENTE_VERIFICACION',
+        'verificado': False,
+    })
+    monkeypatch.setattr(svc.repo, 'codigo', lambda *a, **kw: previo)
+    monkeypatch.setattr(svc.repo, 'recuperar_un_intento_fallido_anterior',
+                        lambda *a: eventos.append('recuperado') or True)
+    monkeypatch.setattr(svc.repo, 'emitir_codigo',
+                        lambda cur, uid, digest, expira, fecha, conteo:
+                            eventos.append(('codigo', conteo)))
+    monkeypatch.setattr(svc.repo, 'auditar', lambda *a: None)
+    monkeypatch.setattr(svc.repo, 'invalidar_codigo',
+                        lambda *a: eventos.append('reembolsado'))
+    def falla_google(*a):
+        raise svc.apps_script_sender.AppsScriptDeliveryError('firma_invalida')
+    monkeypatch.setattr(svc, '_mandar_codigo', falla_google)
+    with pytest.raises(ServiceError) as error:
+        svc.solicitar_codigo(ALUMNO)
+    assert error.value.status == 503
+    assert eventos == ['recuperado', ('codigo', 5), 'reembolsado']
+    assert feria.commits == 2
+
+
+def test_feria_no_supera_cinco_si_el_ultimo_codigo_sigue_activo(feria, monkeypatch):
+    hoy = svc._utc().date()
+    previo = {
+        'ultimo': svc._utc()-timedelta(seconds=120),
+        'dia': hoy, 'envios': 5, 'hash': b'codigo-valido',
+        'vence': svc._utc()+timedelta(minutes=15)
+    }
+    monkeypatch.setattr(svc, '_smtp_lista', lambda: True)
+    monkeypatch.setattr(svc.repo, 'perfil', lambda *a, **kw: {
+        'correo_cuenta': 'persona@correo.uss.cl',
+        'correo': 'feria-registro@demo.invalid',
+        'estado': 'PENDIENTE_VERIFICACION',
+        'verificado': False,
+    })
+    monkeypatch.setattr(svc.repo, 'codigo', lambda *a, **kw: previo)
+    monkeypatch.setattr(svc.repo, 'recuperar_un_intento_fallido_anterior',
+                        lambda *a: pytest.fail('No recuperar cupo de correo vigente'))
+    with pytest.raises(ServiceError) as error:
+        svc.solicitar_codigo(ALUMNO)
+    assert error.value.status == 429
+    assert feria.commits == 0
