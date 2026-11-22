@@ -81,8 +81,22 @@ def enviar(destino, asunto, contenido):
                 resultado = json.loads(respuesta.read(8192))
             except (ValueError, UnicodeDecodeError):
                 raise AppsScriptDeliveryError("respuesta_no_json") from None
-            if not isinstance(resultado, dict) or resultado.get("ok") is not True:
-                raise AppsScriptDeliveryError("solicitud_rechazada")
+            if not isinstance(resultado, dict):
+                raise AppsScriptDeliveryError("respuesta_no_json")
+            if resultado.get("ok") is not True:
+                causas = {
+                    "clave_ausente": "clave_script_ausente",
+                    "solicitud_invalida": "solicitud_invalida",
+                    "hora_desincronizada": "hora_desincronizada",
+                    "firma_invalida": "firma_invalida",
+                    "solicitud_duplicada": "solicitud_duplicada",
+                    "cuota_agotada": "cuota_agotada",
+                    "error_gmail": "error_gmail",
+                    "error_interno": "error_interno",
+                }
+                motivo = resultado.get("motivo")
+                motivo_seguro = causas.get(motivo, "solicitud_rechazada") if isinstance(motivo, str) else "solicitud_rechazada"
+                raise AppsScriptDeliveryError(motivo_seguro)
     except HTTPError as error:
         raise AppsScriptDeliveryError(_motivo_http(error.code)) from None
     except (URLError, TimeoutError, OSError):
