@@ -53,7 +53,9 @@ def enviar(destino, asunto, contenido):
     # a los dos minutos. Google verifica la misma firma antes de enviar.
     timestamp = int(time.time())
     firmado = f"{timestamp}\n{destino}\n{asunto}\n{contenido}"
-    clave_bytes = os.environ["MAIL_APPS_SCRIPT_SECRET"].encode("utf-8")
+    # El secreto generado por Apps Script es hexadecimal (sin espacios).
+    # Ignorar espacios accidentales al pegar el valor en Render.
+    clave_bytes = os.environ["MAIL_APPS_SCRIPT_SECRET"].strip().encode("utf-8")
     firma = hmac.new(clave_bytes, firmado.encode("utf-8"), hashlib.sha256).hexdigest()
     # Identificador no reversible de una clave aleatoria de 256 bits:
     # detecta si Render y Google tienen claves distintas, incluso cuando
