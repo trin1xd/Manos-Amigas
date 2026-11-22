@@ -94,6 +94,7 @@ def enviar(destino, asunto, contenido):
                     "hora_desincronizada": "hora_desincronizada",
                     "firma_invalida": "firma_invalida",
                     "clave_distinta": "clave_distinta",
+                    "firma_no_coincide": "firma_no_coincide",
                     "solicitud_duplicada": "solicitud_duplicada",
                     "cuota_agotada": "cuota_agotada",
                     "error_gmail": "error_gmail",
