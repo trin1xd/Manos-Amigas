@@ -74,6 +74,7 @@ export default function MisPostulaciones({ onLogout }) {
             return (
               <li key={postulacion.id} className={styles.item}>
                 <h3 className={styles.itemTitulo}>{postulacion.servicio}</h3>
+                <p><strong>Adulto mayor a atender:</strong> {postulacion.adulto_nombre || 'Nombre no disponible'}</p>
                 <dl className={styles.meta}>
                   <div><dt>Fecha de la tarea:</dt><dd>{formatearFechaHora(postulacion.fecha_solicitada)}</dd></div>
                   <div><dt>Postulaste el:</dt><dd>{formatearFechaHora(postulacion.fecha_creacion)}</dd></div>
@@ -86,7 +87,7 @@ export default function MisPostulaciones({ onLogout }) {
                 </div>
                 {postulacion.estado === 'ACEPTADA' && (
                   <p className={styles.nota}>
-                    Tu postulación fue aceptada. La coordinación de contacto se habilitará en una próxima etapa.
+                    Tu postulación fue aceptada. Puedes coordinar el servicio desde la sección Chat.
                   </p>
                 )}
               </li>

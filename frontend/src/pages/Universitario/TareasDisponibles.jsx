@@ -107,7 +107,7 @@ export default function TareasDisponibles({ usuario, onLogout }) {
         </button>
       </div>
       <p className={styles.descripcion}>
-        Solicitudes abiertas de adultos mayores. Por privacidad solo ves el tipo de tarea, la fecha y la duración.
+        Solicitudes abiertas de adultos mayores. Puedes ver quién recibirá la ayuda, pero no su dirección ni sus datos de contacto.
       </p>
 
       {error && <p className={styles.mensajeError} role="alert">{error}</p>}
@@ -130,6 +130,7 @@ export default function TareasDisponibles({ usuario, onLogout }) {
             return (
               <li key={tarea.id} className={styles.item}>
                 <h3 className={styles.itemTitulo}>{tarea.servicio}</h3>
+                <p><strong>Adulto mayor a atender:</strong> {tarea.adulto_nombre || 'Nombre no disponible'}</p>
                 <dl className={styles.meta}>
                   <div><dt>Fecha:</dt><dd>{formatearFechaHora(tarea.fecha_solicitada)}</dd></div>
                   <div><dt>Duración:</dt><dd>{formatearDuracion(tarea.duracion_horas)}</dd></div>

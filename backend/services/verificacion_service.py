@@ -8,6 +8,7 @@ from database.backend import repository
 inst_repo = repository('verificacion_institucional')
 repo = repository('verificacion')
 from services.auth_service import ServiceError
+from utils.admin_test_gate import habilitado as aprobacion_piloto_habilitada
 
 
 def listado():
@@ -42,7 +43,8 @@ def decidir(admin, id_universitario, datos):
             raise ServiceError('Universitario no encontrado o cuenta inactiva.', 404)
         if actual['estado'] != 'PENDIENTE_VERIFICACION':
             raise ServiceError('Solo se pueden revisar cuentas pendientes. Ya existe una decisión.', 409)
-        if accion == 'APROBAR' and os.getenv('VERIFICACION_CORREO_OBLIGATORIA', 'true').lower() != 'false':
+        if (accion == 'APROBAR' and not aprobacion_piloto_habilitada()
+                and os.getenv('VERIFICACION_CORREO_OBLIGATORIA', 'true').lower() != 'false'):
             if not inst_repo.correo_confirmado(cursor, id_universitario):
                 raise ServiceError('Primero debes confirmar el correo institucional del universitario.', 409)
         if not repo.aplicar_decision(cursor, id_universitario, admin['id'], actual['estado'], nuevo, observacion):
