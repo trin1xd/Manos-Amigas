@@ -53,7 +53,7 @@ const ESTADOS = {
 
 export default function UniversitarioDashboard({ usuario, onLogout, onVerificacionCompleta }) {
   const [vista, setVista] = useState('inicio');
-  const estado = FERIA && usuario?.acceso_feria
+  const estado = FERIA && (usuario?.acceso_feria || ['PENDIENTE_VERIFICACION', 'VERIFICADO'].includes(usuario?.estado_verificacion))
     ? { etiqueta: 'Acceso de demostración',
         descripcion: 'Puedes explorar y postular a tareas de prueba sin verificar el correo. La verificación quedará para una versión futura.',
         estilo: styles.estadoOk }

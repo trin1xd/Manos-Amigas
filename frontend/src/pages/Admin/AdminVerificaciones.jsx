@@ -44,7 +44,7 @@ function Estudiante({ estudiante, onDecision, ocupado }) {
       </div>
       <dl className={styles.detalles}>
         <div><dt>Correo de cuenta</dt><dd>{estudiante.email}</dd></div>
-        <div><dt>Correo institucional declarado</dt><dd>{estudiante.correo_institucional}</dd></div>
+        <div><dt>{estudiante.correo_institucional?.endsWith('@demo.invalid') ? 'Referencia interna de la feria' : 'Correo institucional declarado'}</dt><dd>{estudiante.correo_institucional?.endsWith('@demo.invalid') ? 'Cuenta de demostración (sin correo institucional asociado)' : estudiante.correo_institucional}</dd></div>
         <div><dt>Correo institucional confirmado</dt><dd>{estudiante.correo_institucional_verificado ? 'Sí' : 'No'}</dd></div>
       </dl>
       {pendiente && (
@@ -67,7 +67,7 @@ function Estudiante({ estudiante, onDecision, ocupado }) {
             <label className={styles.check}>
               <input type="checkbox" checked={confirmacion} disabled={ocupado}
                 onChange={e => setConfirmacion(e.target.checked)} />
-              <span>Confirmo que habilito esta cuenta únicamente para pruebas locales; no he certificado su identidad ni antecedentes.</span>
+              <span>Confirmo que habilito esta cuenta solo para probar el prototipo de feria; no he certificado su correo, identidad ni antecedentes.</span>
             </label>
           )}
           {error && <p className={styles.error} role="alert">{error}</p>}
