@@ -18,7 +18,11 @@ const ETIQUETAS_VERIFICACION = {
 
 export default function TareasDisponibles({ usuario, onLogout }) {
   const feria = import.meta.env.VITE_MODO_FERIA === 'true';
-  const verificado = usuario?.estado_verificacion === 'VERIFICADO' || (feria && usuario?.acceso_feria === true);
+  // El backend siempre consulta el estado real de la cuenta antes de mostrar
+  // tareas. Esta condición de presentación también admite sesiones abiertas
+  // ANTES de incorporar `acceso_feria`, para no bloquear por caché antigua.
+  const verificado = usuario?.estado_verificacion === 'VERIFICADO' ||
+    (feria && usuario?.estado_verificacion === 'PENDIENTE_VERIFICACION');
 
   const [tareas, setTareas] = useState([]);
   const [postuladas, setPostuladas] = useState(() => new Set());
