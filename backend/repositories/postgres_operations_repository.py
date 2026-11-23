@@ -152,14 +152,17 @@ def solicitudes_familiar(cursor, id_familiar):
 
 
 def solicitudes_disponibles(cursor):
-    # No divulgar nombre, dirección, teléfono ni descripción libre del adulto mayor.
+    # El nombre identifica al beneficiario; no se exponen teléfono, RUT ni dirección.
     cursor.execute('''
         SELECT s.id_solicitud AS id, sv.nombre AS servicio,
+               adulto.nombre_completo AS adulto_nombre,
                s.fecha_solicitada, s.duracion_horas, s.estado
         FROM public."Solicitudes" s
         INNER JOIN public."Servicios" sv ON sv.id_servicio = s.id_servicio
+        INNER JOIN public."Usuarios" adulto ON adulto.id_usuario = s.id_adulto_mayor
         WHERE s.estado = 'PENDIENTE' AND s.fecha_solicitada > CURRENT_TIMESTAMP
           AND s.id_adulto_mayor IS NOT NULL AND sv.activo = TRUE
+          AND adulto.estado = 'ACTIVO'
         ORDER BY s.fecha_solicitada, s.id_solicitud
         LIMIT 100
     ''')
@@ -227,12 +230,14 @@ def crear_postulacion(cursor, solicitud_id, student_id):
 def mis_postulaciones(cursor, student_id):
     cursor.execute('''
         SELECT p.id_postulacion AS id, p.id_solicitud,
-               sv.nombre AS servicio, s.fecha_solicitada,
+               sv.nombre AS servicio, adulto.nombre_completo AS adulto_nombre,
+               s.fecha_solicitada,
                p.estado, s.estado AS estado_solicitud,
                p.fecha_creacion
         FROM public."Postulaciones" p
         JOIN public."Solicitudes" s ON s.id_solicitud = p.id_solicitud
         JOIN public."Servicios" sv ON sv.id_servicio = s.id_servicio
+        JOIN public."Usuarios" adulto ON adulto.id_usuario = s.id_adulto_mayor
         WHERE p.id_universitario = %s
         ORDER BY p.fecha_creacion DESC, p.id_postulacion DESC
     ''', (student_id,))
