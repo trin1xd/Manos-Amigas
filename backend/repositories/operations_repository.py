@@ -212,12 +212,14 @@ def crear_postulacion(cursor, solicitud_id, student_id):
 def mis_postulaciones(cursor, student_id):
     cursor.execute('''
         SELECT p.id_postulacion AS id, p.id_solicitud,
-               sv.nombre AS servicio, s.fecha_solicitada,
+               sv.nombre AS servicio, adulto.nombre_completo AS adulto_nombre,
+               s.fecha_solicitada,
                p.estado, s.estado AS estado_solicitud,
                p.fecha_creacion
         FROM dbo.Postulaciones p
         JOIN dbo.Solicitudes s ON s.id_solicitud = p.id_solicitud
         JOIN dbo.Servicios sv ON sv.id_servicio = s.id_servicio
+        JOIN dbo.Usuarios adulto ON adulto.id_usuario = s.id_adulto_mayor
         WHERE p.id_universitario = ?
         ORDER BY p.fecha_creacion DESC, p.id_postulacion DESC
     ''', (student_id,))
