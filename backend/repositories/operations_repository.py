@@ -151,14 +151,18 @@ def solicitudes_familiar(cursor, id_familiar):
 
 
 def solicitudes_disponibles(cursor):
-    # No divulgar nombre, dirección, teléfono ni descripción libre del adulto mayor.
+    # Mostrar el nombre del beneficiario solo a universitarios verificados.
+    # No divulgar dirección, RUT, teléfono ni descripción libre del adulto mayor.
     cursor.execute('''
         SELECT TOP (100) s.id_solicitud AS id, sv.nombre AS servicio,
+               adulto.nombre_completo AS adulto_nombre,
                s.fecha_solicitada, s.duracion_horas, s.estado
         FROM dbo.Solicitudes s
         INNER JOIN dbo.Servicios sv ON sv.id_servicio = s.id_servicio
+        INNER JOIN dbo.Usuarios adulto ON adulto.id_usuario = s.id_adulto_mayor
         WHERE s.estado = 'PENDIENTE' AND s.fecha_solicitada > SYSDATETIME()
           AND s.id_adulto_mayor IS NOT NULL AND sv.activo = 1
+          AND adulto.estado = 'ACTIVO'
         ORDER BY s.fecha_solicitada, s.id_solicitud
     ''')
     return _all(cursor)
