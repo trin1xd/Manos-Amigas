@@ -67,7 +67,7 @@ function Estudiante({ estudiante, onDecision, ocupado }) {
             <label className={styles.check}>
               <input type="checkbox" checked={confirmacion} disabled={ocupado}
                 onChange={e => setConfirmacion(e.target.checked)} />
-              <span>Confirmo que habilito esta cuenta únicamente para pruebas locales; no he certificado su identidad ni antecedentes.</span>
+              <span>Confirmo que habilito esta cuenta únicamente para demostrar el prototipo; no he certificado su identidad ni antecedentes.</span>
             </label>
           )}
           {error && <p className={styles.error} role="alert">{error}</p>}
@@ -145,8 +145,8 @@ export default function AdminVerificaciones({ usuario, onLogout }) {
         <h1>Revisión de universitarios</h1>
         <p className={styles.subtitulo}>Sesión de {usuario?.nombre || 'Administración'} · {pendientes} pendiente(s)</p>
         <aside className={styles.alerta} aria-label="Advertencia de seguridad">
-          <strong>Exclusivamente para desarrollo y pruebas.</strong>
-          <p>Esta pantalla NO valida cédulas, antecedentes, selfies ni condición de alumno regular. Una aprobación solo habilita un usuario ficticio para comprobar el flujo del sistema. No utilizar con personas ni servicios reales.</p>
+          <strong>Exclusivamente para demostraciones y pruebas.</strong>
+          <p>Esta pantalla NO valida cédulas, antecedentes, selfies ni condición de alumno regular. Una aprobación permite a la cuenta de demostración usar las funciones del universitario sin requerir otra verificación. No utilizar con personas ni servicios reales.</p>
         </aside>
         <div className={styles.barraAcciones}>
           <label>Mostrar
