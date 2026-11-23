@@ -1,6 +1,6 @@
-"""API exclusiva de ADMIN. Decisiones de habilitación para pruebas locales."""
+"""API exclusiva de ADMIN para habilitar cuentas ficticias de demostración."""
 import os
-from flask import Blueprint, current_app, g, jsonify, request
+from flask import Blueprint, g, jsonify, request
 from services import verificacion_service as svc
 from services.auth_service import ServiceError
 from utils.auth_decorators import require_role
@@ -21,9 +21,9 @@ def universitarios():
 @verificacion_bp.post('/universitarios/<int:id_universitario>/decision')
 @require_role('ADMIN')
 def decision(id_universitario):
-    # Doble habilitación deliberada: variable explícita y servidor de desarrollo/pruebas.
-    habilitado = (os.getenv('ADMIN_VERIFICACION_PRUEBAS', '').lower() == 'true'
-                  and (current_app.debug or current_app.testing))
+    # El ADMIN puede habilitar cuentas de demostración en Render sin activar Flask debug.
+    # El modo debe habilitarse expresamente en el entorno de evaluación.
+    habilitado = os.getenv('ADMIN_VERIFICACION_PRUEBAS', '').lower() == 'true'
     if not habilitado:
         return jsonify({'success': False, 'message': 'La habilitación administrativa de pruebas está desactivada.'}), 403
     datos = request.get_json(silent=True)
