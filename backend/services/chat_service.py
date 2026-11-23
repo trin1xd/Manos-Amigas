@@ -4,6 +4,7 @@ from database.backend import repository
 repo = repository('chat')
 ops_repo = repository('operations')
 from services.auth_service import ServiceError
+from services.operations_service import _estudiante_habilitado
 
 
 def _id(value):
@@ -64,8 +65,8 @@ def enviar(usuario, solicitud_id, payload):
         _autorizado(cur, usuario, contexto)
         if contexto['estado'] not in ('ASIGNADA', 'EN_CURSO'):
             raise ServiceError('La conversación está cerrada para nuevos mensajes.', 409)
-        if usuario['rol'] == 'UNIVERSITARIO' and usuario.get('estado_verificacion') != 'VERIFICADO':
-            raise ServiceError('El universitario debe mantener su verificación vigente.', 403)
+        if usuario['rol'] == 'UNIVERSITARIO' and not _estudiante_habilitado(cur, usuario):
+            raise ServiceError('El acceso del universitario no está vigente.', 403)
         if repo.limite_rapidez(cur, solicitud_id, usuario['id']):
             raise ServiceError('Espera unos segundos antes de enviar otro mensaje.', 429)
         mensaje_id = repo.guardar(cur, solicitud_id, usuario['id'], texto)
